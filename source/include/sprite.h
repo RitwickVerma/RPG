@@ -2,7 +2,7 @@
 #define SPRITE_H
 
 #include <SDL2/SDL.h>
-#include <string>
+#include "globals.h"
 
 struct Graphics;
 
@@ -10,15 +10,17 @@ class Sprite
 {
     public:
         Sprite();
-        Sprite(Graphics &graphics, std::string filename, int sourceX, int sourceY, int w, int h, float posX, float posY);
+        Sprite(Graphics &graphics, string filename, int sourceX, int sourceY, int w, int h, float posX, float posY);
         // virtual ~Sprite();
-        // virtual void update();
+        virtual void update();
         void draw(Graphics &graphics, int x, int y);
 
-    private:
+    protected:
         SDL_Rect _sourceRect;
         SDL_Texture *_spriteSheet;
-        std::string SPRITE_DIR;        
+    
+    private:
+        string SPRITE_DIR;        
         float _x, _y;    
 };
 

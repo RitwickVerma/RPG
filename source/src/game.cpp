@@ -26,7 +26,9 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
-    this->_player = Sprite(graphics, "character.png", 0, 0, 90, 125, 100, 100);
+    this->_player = AnimatedSprite(graphics, "character.png", 0, 0, 90, 126, 100, 100, 100);
+    this->_player.setupAnimation();
+    this->_player.playAnimation("walk_north");
 
     int LAST_TIME_MS = SDL_GetTicks();
     while(true)
@@ -56,7 +58,7 @@ void Game::gameLoop()
         
         int CURRENT_TIME_MS = SDL_GetTicks();
         int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_TIME_MS;
-        // this->update(std::min(MAX_FRAME_TIME, ELAPSED_TIME_MS));
+        this->update(std::min(MAX_FRAME_TIME, ELAPSED_TIME_MS));
         LAST_TIME_MS = CURRENT_TIME_MS;
 
         this->draw(graphics);
@@ -66,6 +68,13 @@ void Game::gameLoop()
 void Game::draw(Graphics &graphics)
 {
     graphics.clear();
+
     this->_player.draw(graphics, 100, 100);
+    
     graphics.flip();
+}
+
+void Game::update(float elapsedTime)
+{
+    this->_player.update(elapsedTime);
 }

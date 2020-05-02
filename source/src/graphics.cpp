@@ -1,8 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <string>
+
 #include "graphics.h"
-#include "globals.h"
 
 Graphics::Graphics()
 {
@@ -15,7 +14,7 @@ Graphics::~Graphics()
     SDL_DestroyWindow(this->_window);
 }
 
-SDL_Surface * Graphics::loadImage(std::string &filepath)
+SDL_Surface * Graphics::loadImage(string &filepath)
 {
     if(this->_spriteSheets.count(filepath) == 0)
         this->_spriteSheets[filepath] = IMG_Load(filepath.c_str());
