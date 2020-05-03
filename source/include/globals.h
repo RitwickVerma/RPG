@@ -6,13 +6,17 @@
 using namespace std;
 namespace globals
 {
-    const int SCREEN_WIDTH = 1920;
-    const int SCREEN_HEIGHT = 1080;
+    const int SCREEN_WIDTH = 1240;
+    const int SCREEN_HEIGHT = 720;
     const float SCALING = 1;
     // const string SPRITE_DIR = "/content/sprite/";
 
 }
 
+enum Direction
+{
+    NORTH, SOUTH, EAST, WEST
+};
 struct vector2
 {
     int x,y;

@@ -11,11 +11,11 @@ class AnimatedSprite : public Sprite
         AnimatedSprite(Graphics &graphics, string filename, int sourceX, int sourceY, int w, int h, float posX, float posY, float timeToUpdate);
 
         void playAnimation(string animation, bool repeat = true);
-        void update(int elapsedTime);
+        void update(float elapsedTime);
 
         void draw(Graphics &graphics, int x, int y);
 
-        virtual void setupAnimation();
+
     
     protected:
         double _timeToUpdate;
@@ -26,7 +26,9 @@ class AnimatedSprite : public Sprite
         void resetAnimation();
         void stopAnimation();
         void setVisibility(bool visibility);
-        virtual void animationDone(string animation);
+
+        virtual void animationDone(string animation) = 0;
+        virtual void setupAnimation() = 0;
 
     private:
         map<string, vector<SDL_Rect>> _animations;

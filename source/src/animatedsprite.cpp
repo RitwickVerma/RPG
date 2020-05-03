@@ -17,7 +17,7 @@ void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, in
 {
     for(int i=0; i<frames; i++)
     {
-        SDL_Rect tempRect = {(i+x)*w, y, w, h};
+        SDL_Rect tempRect = {x+(i*w), y, w, h};
         this->_animations[animation].push_back(tempRect);
     }
     this->_offsets[animation]=offset;
@@ -50,7 +50,7 @@ void AnimatedSprite::stopAnimation()
     this->animationDone(this->_currentAnimation);
 }
 
-void AnimatedSprite::update(int elapsedTime)
+void AnimatedSprite::update(float elapsedTime)
 {
     Sprite::update();
     this->_timeElapsed += elapsedTime;
@@ -87,14 +87,4 @@ void AnimatedSprite::draw(Graphics &graphics, int x, int y)
         // cout<<"dest:"<<destRect.x<<" "<<destRect.y<<" "<<destRect.w<<" "<<destRect.h<<endl;
         graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
     }
-}
-
-void AnimatedSprite::animationDone(string animation)
-{
-
-}
-
-void AnimatedSprite::setupAnimation()
-{
-    this->addAnimation(3, 0, 0, "walk_north", 90, 125, vector2(0,0));
 }

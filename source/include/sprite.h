@@ -18,10 +18,11 @@ class Sprite
     protected:
         SDL_Rect _sourceRect;
         SDL_Texture *_spriteSheet;
-    
+        float _x, _y; 
+
     private:
         string SPRITE_DIR;        
-        float _x, _y;    
+           
 };
 
 

@@ -1,0 +1,103 @@
+#include "player.h"
+#include "graphics.h"
+
+namespace player_constants
+{
+    const float WALK_SPEED = 0.2;
+}
+
+Player::Player(){}
+
+Player::Player(Graphics &graphics, int x, int y) :
+    AnimatedSprite(graphics, "character.png", 0, 0, 90, 125, x, y, 100)
+{
+
+    this->setupAnimation();
+    // this->playAnimation("walk_north");
+}
+
+void Player::setupAnimation()
+{
+    this->addAnimation(1, 90, 0, "idle_north", 90, 125, vector2(0,0));
+    this->addAnimation(1, 90, 250, "idle_south", 90, 125, vector2(0,0));
+    this->addAnimation(1, 90, 125, "idle_east", 90, 125, vector2(0,0));
+    this->addAnimation(1, 90, 375, "idle_west", 90, 125, vector2(0,0));
+
+    this->addAnimation(4, 0, 0, "walk_north", 90, 125, vector2(0,0));
+    this->addAnimation(4, 0, 250, "walk_south", 90, 125, vector2(0,0));
+    this->addAnimation(4, 0, 125, "walk_east", 90, 125, vector2(0,0));
+    this->addAnimation(4, 0, 375, "walk_west", 90, 125, vector2(0,0));
+}
+
+
+void Player::moveNorth()
+{
+    this->_dx = 0;
+    this->_dy = -player_constants::WALK_SPEED;
+    this->playAnimation("walk_north");
+    this->_facing = NORTH;
+}
+
+void Player::moveSouth()
+{
+    this->_dx = 0;
+    this->_dy = player_constants::WALK_SPEED;
+    this->playAnimation("walk_south");
+    this->_facing = SOUTH;
+}
+
+void Player::moveEast()
+{
+    this->_dx = player_constants::WALK_SPEED;
+    this->_dy = 0;
+    this->playAnimation("walk_east");
+    this->_facing = EAST;
+}
+
+void Player::moveWest()
+{
+    this->_dx = -player_constants::WALK_SPEED;
+    this->_dy = 0;
+    this->playAnimation("walk_west");
+    this->_facing = WEST;
+}
+
+void Player::stopMoving()
+{
+    this->_dx = 0;
+    this->_dy = 0;
+    switch(this->_facing)
+    {
+        case NORTH:
+            this->playAnimation("idle_north");
+            break;
+        case SOUTH:
+            this->playAnimation("idle_south");
+            break;
+        case EAST:
+            this->playAnimation("idle_east");
+            break;
+        case WEST:
+            this->playAnimation("idle_west");
+            break;
+    }
+
+}
+
+void Player::animationDone(string animation)
+{}
+
+void Player::update(float timeElapsed)
+{
+    this->_x += this->_dx * timeElapsed;
+    this->_y += this->_dy * timeElapsed;
+
+    // cout<<this->_x<<" "<<this->_y<<endl;
+
+    AnimatedSprite::update(timeElapsed);
+}
+
+void Player::draw(Graphics &graphics)
+{
+    AnimatedSprite::draw(graphics, this->_x, this->_y);
+}

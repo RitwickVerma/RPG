@@ -26,9 +26,7 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
-    this->_player = AnimatedSprite(graphics, "character.png", 0, 0, 90, 126, 100, 100, 100);
-    this->_player.setupAnimation();
-    this->_player.playAnimation("walk_north");
+    this->_player = Player(graphics, 100, 100);
 
     int LAST_TIME_MS = SDL_GetTicks();
     while(true)
@@ -51,10 +49,34 @@ void Game::gameLoop()
                 return;
             }
         }
+        
         if(input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
         {
             return;
         }
+        else if(input.isKeyHeld(SDL_SCANCODE_W))
+        {
+            this->_player.moveNorth();
+        }
+        else if(input.isKeyHeld(SDL_SCANCODE_S))
+        {
+            this->_player.moveSouth();
+        }
+        else if(input.isKeyHeld(SDL_SCANCODE_A))
+        {
+            this->_player.moveWest();
+        }
+        else if(input.isKeyHeld(SDL_SCANCODE_D))
+        {
+            this->_player.moveEast();
+        }
+        
+        else if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and 
+                !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D))
+        {
+            this->_player.stopMoving();
+        }
+        
         
         int CURRENT_TIME_MS = SDL_GetTicks();
         int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_TIME_MS;
@@ -69,7 +91,7 @@ void Game::draw(Graphics &graphics)
 {
     graphics.clear();
 
-    this->_player.draw(graphics, 100, 100);
+    this->_player.draw(graphics);
     
     graphics.flip();
 }

@@ -2,7 +2,7 @@
 #define INPUT_H
 
 #include <SDL2/SDL.h>
-#include <map>
+#include "globals.h"
 
 class Input
 {
