@@ -1,5 +1,3 @@
-#include <SDL2/SDL.h>
-
 #include "game.h"
 #include "graphics.h"
 #include "input.h"
@@ -27,6 +25,7 @@ void Game::gameLoop()
     Input input;
 
     this->_player = Player(graphics, 100, 100);
+    this->_level = Level(graphics, "map_1", vector2(100, 100));
 
     int LAST_TIME_MS = SDL_GetTicks();
     while(true)
@@ -91,6 +90,7 @@ void Game::draw(Graphics &graphics)
 {
     graphics.clear();
 
+    this->_level.draw(graphics);
     this->_player.draw(graphics);
     
     graphics.flip();
@@ -99,4 +99,5 @@ void Game::draw(Graphics &graphics)
 void Game::update(float elapsedTime)
 {
     this->_player.update(elapsedTime);
+    this->_level.update(elapsedTime);
 }

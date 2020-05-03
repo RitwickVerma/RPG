@@ -1,39 +1,43 @@
 #include "player.h"
 #include "graphics.h"
 
-namespace player_constants
+namespace o
 {
     const float WALK_SPEED = 0.2;
+    const string CHARACTER_SPRITE = "character.png";
+    const int _h=96;
+    const int _w=64;
 }
 
 Player::Player(){}
 
 Player::Player(Graphics &graphics, int x, int y) :
-    AnimatedSprite(graphics, "character.png", 0, 0, 90, 125, x, y, 100)
+    AnimatedSprite(graphics, o::CHARACTER_SPRITE, 0, 0, o::_w, o::_h, x, y, 100)
 {
 
     this->setupAnimation();
-    // this->playAnimation("walk_north");
+    // this->playAnimation("idle_south");
+    this->_facing=SOUTH;
 }
 
 void Player::setupAnimation()
 {
-    this->addAnimation(1, 90, 0, "idle_north", 90, 125, vector2(0,0));
-    this->addAnimation(1, 90, 250, "idle_south", 90, 125, vector2(0,0));
-    this->addAnimation(1, 90, 125, "idle_east", 90, 125, vector2(0,0));
-    this->addAnimation(1, 90, 375, "idle_west", 90, 125, vector2(0,0));
+    this->addAnimation(1, 0, o::_h*3, "idle_north", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(1, 0, o::_h*0, "idle_south", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(1, 0, o::_h*2, "idle_east", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(1, 0, o::_h*1, "idle_west", o::_w, o::_h, vector2(0,0));
 
-    this->addAnimation(4, 0, 0, "walk_north", 90, 125, vector2(0,0));
-    this->addAnimation(4, 0, 250, "walk_south", 90, 125, vector2(0,0));
-    this->addAnimation(4, 0, 125, "walk_east", 90, 125, vector2(0,0));
-    this->addAnimation(4, 0, 375, "walk_west", 90, 125, vector2(0,0));
+    this->addAnimation(4, 0, o::_h*3, "walk_north", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(4, 0, o::_h*0, "walk_south", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(4, 0, o::_h*2, "walk_east", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(4, 0, o::_h*1, "walk_west", o::_w, o::_h, vector2(0,0));
 }
 
 
 void Player::moveNorth()
 {
     this->_dx = 0;
-    this->_dy = -player_constants::WALK_SPEED;
+    this->_dy = -o::WALK_SPEED;
     this->playAnimation("walk_north");
     this->_facing = NORTH;
 }
@@ -41,14 +45,14 @@ void Player::moveNorth()
 void Player::moveSouth()
 {
     this->_dx = 0;
-    this->_dy = player_constants::WALK_SPEED;
+    this->_dy = o::WALK_SPEED;
     this->playAnimation("walk_south");
     this->_facing = SOUTH;
 }
 
 void Player::moveEast()
 {
-    this->_dx = player_constants::WALK_SPEED;
+    this->_dx = o::WALK_SPEED;
     this->_dy = 0;
     this->playAnimation("walk_east");
     this->_facing = EAST;
@@ -56,7 +60,7 @@ void Player::moveEast()
 
 void Player::moveWest()
 {
-    this->_dx = -player_constants::WALK_SPEED;
+    this->_dx = -o::WALK_SPEED;
     this->_dy = 0;
     this->playAnimation("walk_west");
     this->_facing = WEST;

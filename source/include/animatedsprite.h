@@ -1,7 +1,6 @@
 #ifndef ANIMATEDSPRITE_H
 #define ANIMATEDSPRITE_H  
 
-#include "globals.h"
 #include "sprite.h"
 
 class AnimatedSprite : public Sprite

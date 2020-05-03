@@ -34,7 +34,7 @@ void Sprite::update()
 
 void Sprite::draw(Graphics &graphics, int x, int y)
 {
-    SDL_Rect destRect = { x, y, this->_sourceRect.w * globals::SCALING, this->_sourceRect.h * globals::SCALING};
+    SDL_Rect destRect = { x, y, this->_sourceRect.w * (int)globals::SCALING, this->_sourceRect.h * (int)globals::SCALING};
     graphics.blitSurface(this->_spriteSheet, &this->_sourceRect, &destRect);
 }
 
