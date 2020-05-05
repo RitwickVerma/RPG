@@ -25,7 +25,7 @@ void Game::gameLoop()
     Input input;
 
     this->_player = Player(graphics, 100, 100);
-    this->_level = Level(graphics, "map_1", vector2(100, 100));
+    this->_level = Level(graphics, "map1.tmx", xypair(100, 100));
 
     int LAST_TIME_MS = SDL_GetTicks();
     while(true)

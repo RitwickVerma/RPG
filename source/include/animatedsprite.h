@@ -21,7 +21,7 @@ class AnimatedSprite : public Sprite
         bool _currentAnimationRepeat;
         string _currentAnimation;
 
-        void addAnimation(int frames, int x, int y, string animation, int w, int h, vector2 offset);
+        void addAnimation(int frames, int x, int y, string animation, int w, int h, xypair offset);
         void resetAnimation();
         void stopAnimation();
         void setVisibility(bool visibility);
@@ -31,7 +31,7 @@ class AnimatedSprite : public Sprite
 
     private:
         map<string, vector<SDL_Rect>> _animations;
-        map<string, vector2> _offsets;
+        map<string, xypair> _offsets;
 
         int _frameIndex;
         double _timeElapsed;

@@ -20,7 +20,7 @@ class Sprite
         float _x, _y; 
 
     private:
-        string SPRITE_DIR;        
+        string SPRITE_DIR;  
            
 };
 

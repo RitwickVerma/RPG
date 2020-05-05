@@ -13,7 +13,7 @@ AnimatedSprite::AnimatedSprite(Graphics &graphics, string filename, int sourceX,
     _currentAnimation="";
 }
 
-void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, vector2 offset)
+void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, xypair offset)
 {
     for(int i=0; i<frames; i++)
     {
@@ -82,9 +82,6 @@ void AnimatedSprite::draw(Graphics &graphics, int x, int y)
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 
-    // cout<<"in sprite "<<this->_sourceRect.w<<" "<<this->_sourceRect.h;
-        // cout<<"source"<<sourceRect.x<<" "<<sourceRect.y<<" "<<sourceRect.w<<" "<<sourceRect.h<<endl;
-        // cout<<"dest:"<<destRect.x<<" "<<destRect.y<<" "<<destRect.w<<" "<<destRect.h<<endl;
         graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
     }
 }

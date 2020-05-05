@@ -4,9 +4,9 @@
 namespace o
 {
     const float WALK_SPEED = 0.2;
-    const string CHARACTER_SPRITE = "character.png";
-    const int _h=96;
-    const int _w=64;
+    const string CHARACTER_SPRITE = "character32.png";
+    int _w=32;
+    int _h=48;
 }
 
 Player::Player(){}
@@ -14,23 +14,21 @@ Player::Player(){}
 Player::Player(Graphics &graphics, int x, int y) :
     AnimatedSprite(graphics, o::CHARACTER_SPRITE, 0, 0, o::_w, o::_h, x, y, 100)
 {
-
     this->setupAnimation();
-    // this->playAnimation("idle_south");
     this->_facing=SOUTH;
 }
 
 void Player::setupAnimation()
 {
-    this->addAnimation(1, 0, o::_h*3, "idle_north", o::_w, o::_h, vector2(0,0));
-    this->addAnimation(1, 0, o::_h*0, "idle_south", o::_w, o::_h, vector2(0,0));
-    this->addAnimation(1, 0, o::_h*2, "idle_east", o::_w, o::_h, vector2(0,0));
-    this->addAnimation(1, 0, o::_h*1, "idle_west", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(1, 0, o::_h*3, "idle_north", o::_w, o::_h, xypair(0,0));
+    this->addAnimation(1, 0, o::_h*0, "idle_south", o::_w, o::_h, xypair(0,0));
+    this->addAnimation(1, 0, o::_h*2, "idle_east", o::_w, o::_h, xypair(0,0));
+    this->addAnimation(1, 0, o::_h*1, "idle_west", o::_w, o::_h, xypair(0,0));
 
-    this->addAnimation(4, 0, o::_h*3, "walk_north", o::_w, o::_h, vector2(0,0));
-    this->addAnimation(4, 0, o::_h*0, "walk_south", o::_w, o::_h, vector2(0,0));
-    this->addAnimation(4, 0, o::_h*2, "walk_east", o::_w, o::_h, vector2(0,0));
-    this->addAnimation(4, 0, o::_h*1, "walk_west", o::_w, o::_h, vector2(0,0));
+    this->addAnimation(4, 0, o::_h*3, "walk_north", o::_w, o::_h, xypair(0,0));
+    this->addAnimation(4, 0, o::_h*0, "walk_south", o::_w, o::_h, xypair(0,0));
+    this->addAnimation(4, 0, o::_h*2, "walk_east", o::_w, o::_h, xypair(0,0));
+    this->addAnimation(4, 0, o::_h*1, "walk_west", o::_w, o::_h, xypair(0,0));
 }
 
 
