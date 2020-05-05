@@ -3,7 +3,9 @@
 
 namespace o
 {
-    const float WALK_SPEED = 0.2;
+    const float WALK_SPEED = 0.2f;
+    const float GRAVITY = 0.002f;
+    const float GRAVITY_CAP = 0.8f;
     const string CHARACTER_SPRITE = "character32.png";
     int _w=32;
     int _h=48;
@@ -11,9 +13,12 @@ namespace o
 
 Player::Player(){}
 
-Player::Player(Graphics &graphics, int x, int y) :
-    AnimatedSprite(graphics, o::CHARACTER_SPRITE, 0, 0, o::_w, o::_h, x, y, 100)
+Player::Player(Graphics &graphics, xypair spawnPoint) :
+    AnimatedSprite(graphics, o::CHARACTER_SPRITE, 0, 0, o::_w, o::_h, spawnPoint.x, spawnPoint.y, 100)
 {
+    this->_dx=0;
+    this->_dy=0;
+    this->_grounded=false;
     this->setupAnimation();
     this->_facing=SOUTH;
 }
@@ -31,6 +36,25 @@ void Player::setupAnimation()
     this->addAnimation(4, 0, o::_h*1, "walk_west", o::_w, o::_h, xypair(0,0));
 }
 
+const float Player::getX() const
+{
+    return this->_x;
+}
+
+const float Player::getY() const
+{
+    return this->_y;
+}
+
+void Player::setCurrentLevel(Level *level)
+{
+    this->_currentLevel = level;
+}
+
+Level * Player::getCurrentLevel()
+{
+    return this->_currentLevel;
+}
 
 void Player::moveNorth()
 {
@@ -89,12 +113,46 @@ void Player::stopMoving()
 void Player::animationDone(string animation)
 {}
 
+void Player::handleTileCollision(vector<Rectangle> colliding)
+{
+   for( Rectangle r : colliding)
+   {
+       sides::Side collisionSide = Sprite::getCollisionSide(r);
+       if(collisionSide != sides::NONE)
+       {
+           switch(collisionSide)
+           {
+               case sides::LEFT:
+                    this->_x=r.getRight() + 1;
+                    this->_dx=0;
+                    break;
+               case sides::RIGHT:
+                    this->_x=r.getLeft() - this->_boundingBox.getWidth() - 1;
+                    this->_dx=0;
+                    break;
+               case sides::TOP:
+                    this->_y=r.getBottom() + 1;
+                    this->_dy=0;
+                    break;
+               case sides::BOTTOM:
+                    this->_y=r.getTop() - this->_boundingBox.getHeight() - 1;
+                    this->_dy=0;
+                    this->_grounded = (this->_currentLevel->hasGravity()) ? true : false;
+                    break;
+            
+           }
+       }
+   } 
+}
+
 void Player::update(float timeElapsed)
 {
+    // Apply Gravity
+    if(this->_dy <= o::GRAVITY_CAP && this->_currentLevel->hasGravity())
+        this->_dy += o::GRAVITY * timeElapsed; 
+
     this->_x += this->_dx * timeElapsed;
     this->_y += this->_dy * timeElapsed;
-
-    // cout<<this->_x<<" "<<this->_y<<endl;
 
     AnimatedSprite::update(timeElapsed);
 }

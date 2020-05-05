@@ -4,6 +4,8 @@
 #include <bits/stdc++.h>
 #include <SDL2/SDL.h>
 
+#pragma once
+
 using namespace std;
 namespace globals
 {
@@ -12,6 +14,24 @@ namespace globals
     const float SCALING = 1;
     // const string SPRITE_DIR = "/content/sprite/";
 
+}
+
+namespace sides
+{
+    enum Side
+    {
+        TOP, BOTTOM, LEFT, RIGHT, NONE
+    };
+    inline Side getOppositeSide(Side side)
+    {
+        return 
+            side == TOP ? BOTTOM:
+            side == BOTTOM ? TOP:
+            side == LEFT ? RIGHT:
+            side == RIGHT ? LEFT:
+            NONE;
+
+    }
 }
 
 enum Direction

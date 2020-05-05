@@ -1,6 +1,8 @@
 #ifndef ANIMATEDSPRITE_H
 #define ANIMATEDSPRITE_H  
 
+#pragma once
+
 #include "sprite.h"
 
 class AnimatedSprite : public Sprite

@@ -1,6 +1,8 @@
 #ifndef TILE_H
 #define TILE_H
 
+#pragma once
+
 #include "globals.h"
 
 struct Graphics;

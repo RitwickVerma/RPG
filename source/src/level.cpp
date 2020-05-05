@@ -3,6 +3,7 @@
 #include <tmxlite/Map.hpp>
 #include <tmxlite/Layer.hpp>
 #include <tmxlite/TileLayer.hpp>
+#include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/Tileset.hpp>
 
 Level::Level()
@@ -13,8 +14,9 @@ Level::Level()
 Level::Level(Graphics &graphics, string mapName, xypair spawnPoint):Level()
 {
     _mapName=mapName;
-    _spawnPoint=spawnPoint;
+    _playerSpawnPoint=spawnPoint;
     _size=xypair(0,0);
+    this->_hasGravity = false;
 
     this->loadMap(graphics, mapName); 
 }
@@ -34,6 +36,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
 
     this->_map = vector<Tile>(this->_tileCount.y * this->_tileCount.x, Tile());
 
+    // Get all Tilesets and store them in the map _tilesets at key = firstGid
     for(auto &tileset : map.getTilesets())
     {
         string tilesetImagePath = tileset.getImagePath();
@@ -41,11 +44,16 @@ void Level::loadMap(Graphics &graphics, string mapName)
         this->_tilesets[tileset.getFirstGID()] = (Tileset(tileset_texture, tileset.getFirstGID()));
     }
 
+
+    // Get all Layers and process them one by one
     auto &layers = map.getLayers();
     auto tilesets = map.getTilesets();
     for(auto &layer : layers)
     {
+        // Ignore layers that aren't visible
         if(!layer->getVisible())    continue; 
+
+        // if layer is of tiles
         if(layer->getType() == tmx::Layer::Type::Tile)
         {
             tmx::TileLayer &tilelayer = layer->getLayerAs<tmx::TileLayer>();
@@ -74,9 +82,43 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 }
             }
         }
+
+        // if layer is of objects
+        else if(layer->getType() == tmx::Layer::Type::Object)
+        {
+            tmx::ObjectGroup &objectlayer = layer->getLayerAs<tmx::ObjectGroup>();
+
+            if(objectlayer.getName() == "collisions")
+            {
+                auto objects = objectlayer.getObjects();
+                for(auto object : objects)
+                {
+                    Rectangle r(ceil(object.getAABB().left), 
+                        ceil(object.getAABB().top), 
+                        ceil(object.getAABB().width),
+                        ceil(object.getAABB().height));
+                    
+                    this->_collisionRects.push_back(r);
+
+                }
+            }
+            else if(objectlayer.getName() == "spawn_points")
+            {
+                auto objects = objectlayer.getObjects();
+                for(auto object : objects)
+                {
+                    if(object.getName() == "player")
+                    {
+                        // cout<<object.getAABB().left;
+                        // SDL_Log(string(1, object.getAABB().left).c_str());
+                        this->_playerSpawnPoint = xypair(ceil(object.getAABB().left)*globals::SCALING, 
+                            ceil(object.getAABB().top)*globals::SCALING);
+                    }
+                }
+            }
+        }
     }
 
-    // this->_backgroundTexture=SDL_CreateTextureFromSurface(graphics.getRenderer(), graphics.loadImage(filepath));
 }
 
 void Level::update(float elapsedTime)
@@ -90,4 +132,19 @@ void Level::draw(Graphics &graphics)
     {
         tile.draw(graphics);
     }
+}
+
+vector<Rectangle> Level::checkTileCollision(const Rectangle &other)
+{
+    vector<Rectangle> collidingRects;
+    for(auto rectangle : this->_collisionRects)
+    {
+        if(rectangle.collidesWith(other))
+            collidingRects.push_back(rectangle);
+    }
+    return collidingRects;
+}
+
+const xypair Level::getPlayerSpawnPoint() const{
+    return this->_playerSpawnPoint;
 }

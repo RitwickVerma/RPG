@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#pragma once
+
 #include "player.h"
 #include "level.h"
 #include "globals.h"

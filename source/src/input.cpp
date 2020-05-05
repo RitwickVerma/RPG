@@ -4,9 +4,6 @@ void Input::beginNewFrame()
 {
     this->_pressedKeys.clear();
     this->_releasedKeys.clear();
-    // for(auto p : this->_heldKeys)
-    //     cout<<p.first<<":"<<p.second<<"  ";
-    // cout<<endl;
 }
 
 void Input::keyDownEvent(const SDL_Event &event)

@@ -24,8 +24,9 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
-    this->_player = Player(graphics, 100, 100);
     this->_level = Level(graphics, "map1.tmx", xypair(100, 100));
+    this->_player = Player(graphics, this->_level.getPlayerSpawnPoint());
+    this->_player.setCurrentLevel(&this->_level);
 
     int LAST_TIME_MS = SDL_GetTicks();
     while(true)
@@ -100,4 +101,11 @@ void Game::update(float elapsedTime)
 {
     this->_player.update(elapsedTime);
     this->_level.update(elapsedTime);
+
+    // Check collisions
+    vector<Rectangle> colliding;
+    if((colliding = this->_level.checkTileCollision(this->_player.getBoundingBox())).size() > 0)
+    {
+        this->_player.handleTileCollision(colliding);
+    }
 }
