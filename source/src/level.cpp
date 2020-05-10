@@ -11,11 +11,12 @@ Level::Level()
     MAP_DIR = "content/maps/";
 }
 
-Level::Level(Graphics &graphics, string mapName, xypair spawnPoint):Level()
+Level::Level(Graphics &graphics, string mapName, xyipair spawnPoint, Rectangle *camera):Level()
 {
     _mapName=mapName;
     _playerSpawnPoint=spawnPoint;
-    _size=xypair(0,0);
+    _size=xyipair(0,0);
+    _camera=camera;
     this->_hasGravity = false;
 
     this->loadMap(graphics, mapName); 
@@ -30,11 +31,11 @@ void Level::loadMap(Graphics &graphics, string mapName)
     tmx::Map map;
     map.load(filepath);
 
-    this->_tileSize = xypair(map.getTileSize().x, map.getTileSize().y);
-    this->_tileCount = xypair(map.getTileCount().x, map.getTileCount().y);
-    this->_size=xypair(this->_tileCount * this->_tileSize);
+    this->_tileSize = xyipair(map.getTileSize().x, map.getTileSize().y);
+    this->_tileCount = xyipair(map.getTileCount().x, map.getTileCount().y);
+    this->_size=xyipair(this->_tileCount * this->_tileSize);
 
-    this->_map = vector<Tile>(this->_tileCount.y * this->_tileCount.x, Tile());
+    this->_map = vector<vector<Tile>>(2, vector<Tile>(this->_tileCount.y * this->_tileCount.x, Tile()));
 
     // Get all Tilesets and store them in the map _tilesets at key = firstGid
     for(auto &tileset : map.getTilesets())
@@ -47,7 +48,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
 
     // Get all Layers and process them one by one
     auto &layers = map.getLayers();
-    auto tilesets = map.getTilesets();
+    auto &tilesets = map.getTilesets();
     for(auto &layer : layers)
     {
         // Ignore layers that aren't visible
@@ -58,9 +59,12 @@ void Level::loadMap(Graphics &graphics, string mapName)
         {
             tmx::TileLayer &tilelayer = layer->getLayerAs<tmx::TileLayer>();
 
-            auto tiles = tilelayer.getTiles();
+            int bfground=0;
+            if(tilelayer.getName() == "foreground") bfground=1;
+
+            auto &tiles = tilelayer.getTiles();
             int tileCounter=-1;
-            for(auto tile : tiles)
+            for(auto &tile : tiles)
             {
                 tileCounter++;
                 if(tile.ID == 0)
@@ -70,12 +74,12 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 {
                     if(tileset.hasTile(tile.ID))
                     {
-                        xypair tilesetPosition = xypair(tileset.getTile(tile.ID)->imagePosition.x, tileset.getTile(tile.ID)->imagePosition.y);
-                        xypair position = xypair((tileCounter%this->_tileCount.x)*this->_tileSize.x, (tileCounter/this->_tileCount.x)*this->_tileSize.y);
+                        xyipair tilesetPosition = xyipair(tileset.getTile(tile.ID)->imagePosition.x, tileset.getTile(tile.ID)->imagePosition.y);
+                        xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_tileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_tileSize.y);
 
-                        Tile m_tile = Tile(this->_tilesets[tileset.getFirstGID()].Texture, this->_tileSize, tilesetPosition, position);
+                        Tile m_tile = Tile(this->_tilesets[tileset.getFirstGID()].Texture, tile.ID, this->_tileSize, tilesetPosition, position);
 
-                        this->_map[tileCounter] = m_tile;
+                        this->_map[bfground][tileCounter] = m_tile;
 
                         break;
                     }
@@ -90,28 +94,28 @@ void Level::loadMap(Graphics &graphics, string mapName)
 
             if(objectlayer.getName() == "collisions")
             {
-                auto objects = objectlayer.getObjects();
-                for(auto object : objects)
+                auto &objects = objectlayer.getObjects();
+                for(auto &object : objects)
                 {
                     Rectangle r(ceil(object.getAABB().left), 
                         ceil(object.getAABB().top), 
                         ceil(object.getAABB().width),
                         ceil(object.getAABB().height));
-                    
+                    r=r*globals::SCALING; 
                     this->_collisionRects.push_back(r);
 
                 }
             }
             else if(objectlayer.getName() == "spawn_points")
             {
-                auto objects = objectlayer.getObjects();
-                for(auto object : objects)
+                auto &objects = objectlayer.getObjects();
+                for(auto &object : objects)
                 {
                     if(object.getName() == "player")
                     {
                         // cout<<object.getAABB().left;
                         // SDL_Log(string(1, object.getAABB().left).c_str());
-                        this->_playerSpawnPoint = xypair(ceil(object.getAABB().left)*globals::SCALING, 
+                        this->_playerSpawnPoint = xyipair(ceil(object.getAABB().left)*globals::SCALING, 
                             ceil(object.getAABB().top)*globals::SCALING);
                     }
                 }
@@ -122,29 +126,42 @@ void Level::loadMap(Graphics &graphics, string mapName)
 }
 
 void Level::update(float elapsedTime)
-{
+{ }
 
+void Level::draw_background(Graphics &graphics)
+{
+    for(Tile &tile : this->_map[0])
+    {   
+        tile.addOffset(this->_mapOffset);
+        if(tile.getXY().x > this->_camera->getLeft() - 10 && tile.getXY().x + this->_tileSize.x < this->_camera->getRight() + 10
+            && tile.getXY().y > this->_camera->getTop() - 10 && tile.getXY().y + this->_tileSize.y < this->_camera->getBottom() + 10)
+            tile.draw(graphics);
+    }
 }
 
-void Level::draw(Graphics &graphics)
+void Level::draw_foreground(Graphics &graphics)
 {
-    for(Tile tile : this->_map)
+    for(Tile &tile : this->_map[1])
     {
-        tile.draw(graphics);
+        tile.addOffset(this->_mapOffset);
+        if(tile.getXY().x > this->_camera->getLeft() - 10 && tile.getXY().x + this->_tileSize.x < this->_camera->getRight() + 10
+            && tile.getXY().y > this->_camera->getTop() - 10 && tile.getXY().y + this->_tileSize.y < this->_camera->getBottom() + 10)
+            tile.draw(graphics);
     }
 }
 
 vector<Rectangle> Level::checkTileCollision(const Rectangle &other)
 {
     vector<Rectangle> collidingRects;
-    for(auto rectangle : this->_collisionRects)
+    for(auto &rectangle : this->_collisionRects)
     {
+        rectangle.addOffset(this->_mapOffset);
         if(rectangle.collidesWith(other))
             collidingRects.push_back(rectangle);
     }
     return collidingRects;
 }
 
-const xypair Level::getPlayerSpawnPoint() const{
+const xyipair Level::getPlayerSpawnPoint() const{
     return this->_playerSpawnPoint;
 }

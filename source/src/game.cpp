@@ -24,8 +24,9 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
-    this->_level = Level(graphics, "map1.tmx", xypair(100, 100));
-    this->_player = Player(graphics, this->_level.getPlayerSpawnPoint());
+    Rectangle camera = Rectangle(0, 0, 640, 360);
+    this->_level = Level(graphics, "trying.tmx", xyipair(100, 100), &camera);
+    this->_player = Player(graphics, xyipair(globals::SCREEN_WIDTH/2, globals::SCREEN_HEIGHT/2), &camera);//this->_level.getPlayerSpawnPoint());
     this->_player.setCurrentLevel(&this->_level);
 
     int LAST_TIME_MS = SDL_GetTicks();
@@ -91,8 +92,20 @@ void Game::draw(Graphics &graphics)
 {
     graphics.clear();
 
-    this->_level.draw(graphics);
-    this->_player.draw(graphics);
+    this->_level.draw_background(graphics);
+    vector<Rectangle> colliding;
+    if((colliding = this->_level.checkTileCollision(Rectangle(this->_player.getBoundingBox().getLeft(), this->_player.getSpriteBox().getTop(), 
+        this->_player.getBoundingBox().getWidth(),
+        abs(this->_player.getBoundingBox().getBottom()-this->_player.getSpriteBox().getTop()) ))).size() > 0)
+    {
+        this->_level.draw_foreground(graphics);
+        this->_player.draw(graphics);
+    }
+    else
+    {
+        this->_player.draw(graphics);
+        this->_level.draw_foreground(graphics);
+    }
     
     graphics.flip();
 }

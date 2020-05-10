@@ -14,28 +14,36 @@ class Level
 { 
     public :
         Level();
-        Level(Graphics &graphics, string mapName, xypair spawnPoint);
+        Level(Graphics &graphics, string mapName, xyipair spawnPoint, Rectangle *camera = NULL);
         ~Level();
     
-    void update(float elapsedTime);
-    void draw(Graphics &graphics);
-    bool hasGravity() { return this->_hasGravity; }
-    
-    vector<Rectangle> checkTileCollision(const Rectangle &other);
-    
-    const xypair getPlayerSpawnPoint() const;
+        void update(float elapsedTime);
+        void draw_background(Graphics &graphics);
+        void draw_foreground(Graphics &graphics);
+        bool hasGravity() { return this->_hasGravity; }
+
+        xyfpair getOffset() { return _mapOffset; }
+        void setOffset(xyfpair offset) { this->_mapOffset = offset; }
+        
+        void setCamera(Rectangle *camera) { this->_camera = camera; }
+        
+        vector<Rectangle> checkTileCollision(const Rectangle &other);
+        
+        const xyipair getPlayerSpawnPoint() const;
 
     private:
         string _mapName;
         bool _hasGravity;
-        xypair _playerSpawnPoint;
-        xypair _size;
+        xyipair _playerSpawnPoint;
+        xyipair _size;
+        Rectangle *_camera;
         // SDL_Texture *_backgroundTexture;
         string MAP_DIR;        
 
-        xypair _tileSize;
-        xypair _tileCount;
-        vector<Tile> _map;
+        xyipair _tileSize;
+        xyipair _tileCount;
+        xyfpair _mapOffset;
+        vector<vector<Tile>> _map;
         map<int, Tileset> _tilesets;
         vector<Rectangle> _collisionRects;
 

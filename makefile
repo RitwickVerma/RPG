@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-Isource/include -lSDL2 -lSDL2_image -ltmxlite -g
+CFLAGS=-Isource/include -lSDL2 -lSDL2_image -ltmxlite -g -std=c++17
 SRC_DIR=./source/src
 SRC_FILES=$(wildcard $(SRC_DIR)/*.cpp)
 OBJ=main

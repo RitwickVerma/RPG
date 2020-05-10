@@ -4,7 +4,7 @@
 
 Graphics::Graphics()
 {
-    SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 0, &this->_window, &this->_renderer);
+    SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer);
     SDL_SetWindowTitle(this->_window, "Game");
 }
 
@@ -23,6 +23,7 @@ SDL_Surface * Graphics::loadImage(string &filepath)
 
 void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect) 
 {
+    // SDL_Rect tempdest = SDL_Rect(*destRect);
     SDL_RenderCopy(this->_renderer, source, sourceRect, destRect);        
 }
 

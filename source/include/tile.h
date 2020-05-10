@@ -12,15 +12,18 @@ class Tile
 {
     public:
         Tile();
-        Tile(SDL_Texture *tileset, xypair size, xypair tilesetPosition, xypair position);   
+        Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, xyfpair position);   
         void update(float elapsedTime);
         void draw(Graphics &graphics);
+        void addOffset(xyfpair offset);
+        const xyfpair getXY() const { return this->_position; }
 
     private:
+        int _ID;
         SDL_Texture *_tileset;
-        xypair _size;
-        xypair _tilesetPosition;
-        xypair _position;
+        xyipair _size;
+        xyipair _tilesetPosition;
+        xyfpair _position;
 };
 
 #endif // !TILE_H

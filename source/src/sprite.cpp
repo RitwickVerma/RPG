@@ -16,11 +16,11 @@ Sprite::Sprite(Graphics &graphics, string filename, int sourceX, int sourceY, in
     this->_sourceRect.w=w;
     this->_sourceRect.h=h;
 
-    // this->_boundingBox = Rectangle(this->_x, this->_y+this->_sourceRect.h*0.6, this->_sourceRect.w*globals::SCALING, this->_sourceRect.h*0.4*globals::SCALING);
-    this->_boundingBox = Rectangle(this->_x, this->_y, this->_sourceRect.w*globals::SCALING, this->_sourceRect.h*globals::SCALING);
+    // this->_boundingBox = Rectangle(this->_x, this->_y, this->_sourceRect.w*globals::SCALING, this->_sourceRect.h*globals::SCALING);
 
     this->_x=posX;
     this->_y=posY;
+    this->_boundingBox = Rectangle();
 
     string filepath=this->SPRITE_DIR+filename;
     this->_spriteSheet = SDL_CreateTextureFromSurface(graphics.getRenderer(), graphics.loadImage(filepath));
@@ -30,8 +30,9 @@ Sprite::Sprite(Graphics &graphics, string filename, int sourceX, int sourceY, in
 
 void Sprite::update()
 {
-    // this->_boundingBox = Rectangle(this->_x, this->_y+this->_sourceRect.h*0.5, this->_sourceRect.w*globals::SCALING, this->_sourceRect.h*globals::SCALING);
-    this->_boundingBox = Rectangle(this->_x, this->_y, this->_sourceRect.w*globals::SCALING, this->_sourceRect.h*globals::SCALING);
+    this->_destRect = { (int)this->_x, (int)this->_y, this->_sourceRect.w * (int)globals::SCALING, this->_sourceRect.h * (int)globals::SCALING};
+    this->_boundingBox = Rectangle(this->_destRect);
+    // this->_boundingBox = Rectangle(this->_x, this->_y, this->_sourceRect.w*globals::SCALING, this->_sourceRect.h*globals::SCALING);
 }
 
 const Rectangle Sprite::getBoundingBox() const{
@@ -57,7 +58,7 @@ const sides::Side Sprite::getCollisionSide(Rectangle &other) const{
 
 void Sprite::draw(Graphics &graphics, int x, int y)
 {
-    SDL_Rect destRect = { x, y, this->_sourceRect.w * (int)globals::SCALING, this->_sourceRect.h * (int)globals::SCALING};
-    graphics.blitSurface(this->_spriteSheet, &this->_sourceRect, &destRect);
+    this->_destRect = { x, y, this->_sourceRect.w * (int)globals::SCALING, this->_sourceRect.h * (int)globals::SCALING};
+    graphics.blitSurface(this->_spriteSheet, &this->_sourceRect, &this->_destRect);
 }
 

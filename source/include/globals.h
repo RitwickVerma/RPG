@@ -38,38 +38,75 @@ enum Direction
 {
     NORTH, SOUTH, EAST, WEST
 };
-struct xypair
+
+struct xyipair
 {
     int x,y;
-    xypair()
+    xyipair()
     {
         x=y=0;
     }
-    xypair(int x_pos, int y_pos)
+    xyipair(int x_pos, int y_pos)
     {
         x=x_pos;
         y=y_pos;
     }
-    xypair zero()
+    xyipair zero()
     {
-        return xypair(0,0);
+        return xyipair(0,0);
     }
 
-    xypair operator*(const float &scale)
+    xyipair operator*(const float &scale)
     {
-        return xypair(x*scale, y*scale);
+        return xyipair(x*scale, y*scale);
     }
 
-    xypair operator*(const xypair &temp)
+    xyipair operator*(const xyipair &temp)
     {
-        return xypair(x*temp.x, y*temp.y);
+        return xyipair(x*temp.x, y*temp.y);
     }
 
-    xypair operator+(const xypair &temp)
+    xyipair operator+(const xyipair &temp)
     {
-        return xypair(x+temp.x, y+temp.y);
+        return xyipair(x+temp.x, y+temp.y);
+    }
+    // xyipair operator=(const xyfpair &temp)
+    // {
+    //     return xyipair(temp.x, temp.y);
+    // }
+};
+
+struct xyfpair
+{
+    float x,y;
+    xyfpair()
+    {
+        x=y=0.0;
+    }
+    xyfpair(float x_pos, float y_pos)
+    {
+        x=x_pos;
+        y=y_pos;
+    }
+    xyfpair zero()
+    {
+        return xyfpair(0,0);
+    }
+
+    xyfpair operator*(const float &scale)
+    {
+        return xyfpair(x*scale, y*scale);
+    }
+
+    xyfpair operator*(const xyipair &temp)
+    {
+        return xyfpair(x*temp.x, y*temp.y);
+    }
+
+    xyfpair operator+(const xyipair &temp)
+    {
+        return xyfpair(x+temp.x, y+temp.y);
     }
 
 };
-
 #endif // !1 GLOBALS_H

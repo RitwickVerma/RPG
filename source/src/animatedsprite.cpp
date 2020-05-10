@@ -13,7 +13,7 @@ AnimatedSprite::AnimatedSprite(Graphics &graphics, string filename, int sourceX,
     _currentAnimation="";
 }
 
-void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, xypair offset)
+void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, xyipair offset)
 {
     for(int i=0; i<frames; i++)
     {

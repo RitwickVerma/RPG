@@ -16,9 +16,18 @@ class Rectangle
             _width(width),
             _height(height)
         {}
+        Rectangle(SDL_Rect r):
+            _x(r.x),
+            _y(r.y),
+            _width(r.w),
+            _height(r.h)
+        {}
+
+        Rectangle operator*(const float &scale) { return Rectangle(_x*scale, _y*scale, _width*scale, _height*scale); }
 
         const int getCenterX() const { return this->_x + this->_width/2; }
         const int getCenterY() const { return this->_y + this->_height/2; }
+        const xyfpair getCenter() const { return xyfpair(this->getCenterX(), this->getCenterY()); }
 
         const int getLeft() const { return this->_x; }
         const int getRight() const { return this->_x + this->_width; }
@@ -38,6 +47,18 @@ class Rectangle
                 sides::NONE;
         }
 
+        void setCenterX(float x) { this->_x = x - this->_width/2; }
+        void setCenterY(float y) { this->_y = y - this->_height/2; }
+        void setCenter(float x, float y) { this->setCenterX(x); this->setCenterY(y); } 
+        void setCenter(xyfpair xy) { this->setCenterX(xy.x); this->setCenterY(xy.y); } 
+        
+        void setLeft(float x) { this->_x = x; }
+        void setRight(float x) { this->_x = x - this->_width; }
+        void setTop(float y) { this->_y = y; }
+        void setBottom(float y) { this->_y = y - this->_height; }
+
+        void addOffset(xyfpair offset) { _x+=offset.x; _y+=offset.y; }
+
         /* Checks collision with argument Rectangle */
         const bool collidesWith(const Rectangle &other) const{
             return 
@@ -54,7 +75,7 @@ class Rectangle
         }
 
     private:
-        int _x, _y, _height, _width;
+        float _x, _y, _height, _width;
 };
 
 #endif // !RECTANGLE_H

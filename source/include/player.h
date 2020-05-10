@@ -13,7 +13,7 @@ class Player : public AnimatedSprite
 {
     public:
         Player();
-        Player(Graphics &graphics, xypair spawnPoint);
+        Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera = NULL);
         void draw(Graphics &graphics);
         void update(float elapsedTime);
 
@@ -28,15 +28,19 @@ class Player : public AnimatedSprite
 
         void setCurrentLevel(Level *level);
         Level * getCurrentLevel();
+        void setCamera(Rectangle *camera) { this->_camera = camera; }
+
+        Rectangle getSpriteBox() { return Rectangle(this->_destRect); }
 
         void handleTileCollision(vector<Rectangle> colliding);
-        const float getX() const;
-        const float getY() const;
+        const float getX() const { return this->_x; }
+        const float getY() const { return this->_y; }
 
     private:
         float _dx, _dy;
         Direction _facing;
         Level *_currentLevel;
+        Rectangle *_camera;
         bool _grounded;
 };
 
