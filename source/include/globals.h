@@ -11,6 +11,8 @@ namespace globals
 {
     const int SCREEN_WIDTH = 1280;
     const int SCREEN_HEIGHT = 720;
+    const int CAMERA_WIDTH = 640;//SCREEN_WIDTH;
+    const int CAMERA_HEIGHT = 360;//SCREEN_HEIGHT;
     const float SCALING = 1;
     // const string SPRITE_DIR = "/content/sprite/";
 

@@ -24,7 +24,7 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
-    Rectangle camera = Rectangle(0, 0, 640, 360);
+    Rectangle camera = Rectangle(0, 0, globals::CAMERA_WIDTH, globals::CAMERA_HEIGHT);
     this->_level = Level(graphics, "trying.tmx", xyipair(100, 100), &camera);
     this->_player = Player(graphics, xyipair(globals::SCREEN_WIDTH/2, globals::SCREEN_HEIGHT/2), &camera);//this->_level.getPlayerSpawnPoint());
     this->_player.setCurrentLevel(&this->_level);
