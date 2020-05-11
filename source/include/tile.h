@@ -14,9 +14,8 @@ class Tile
         Tile();
         Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, xyfpair position);   
         void update(float elapsedTime);
-        void draw(Graphics &graphics);
-        void addOffset(xyfpair offset);
-        const xyfpair getXY() const { return this->_position; }
+        void draw(Graphics &graphics, xyfpair position);
+        const xyfpair getPosition() const { return this->_position; }
 
     private:
         int _ID;
@@ -24,6 +23,7 @@ class Tile
         xyipair _size;
         xyipair _tilesetPosition;
         xyfpair _position;
+        xyfpair _offset;
 };
 
 #endif // !TILE_H

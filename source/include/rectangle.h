@@ -25,18 +25,18 @@ class Rectangle
 
         Rectangle operator*(const float &scale) { return Rectangle(_x*scale, _y*scale, _width*scale, _height*scale); }
 
-        const int getCenterX() const { return this->_x + this->_width/2; }
-        const int getCenterY() const { return this->_y + this->_height/2; }
+        const float getCenterX() const { return this->_x + this->_width/2; }
+        const float getCenterY() const { return this->_y + this->_height/2; }
         const xyfpair getCenter() const { return xyfpair(this->getCenterX(), this->getCenterY()); }
 
-        const int getLeft() const { return this->_x; }
-        const int getRight() const { return this->_x + this->_width; }
-        const int getTop() const { return this->_y; }
-        const int getBottom() const { return this->_y + this->_height; }
+        const float getLeft() const { return this->_x; }
+        const float getRight() const { return this->_x + this->_width; }
+        const float getTop() const { return this->_y; }
+        const float getBottom() const { return this->_y + this->_height; }
         
 
-        const int getWidth() const { return this->_width; }
-        const int getHeight() const { return this->_height; }
+        const float getWidth() const { return this->_width; }
+        const float getHeight() const { return this->_height; }
 
         const int getSide(const sides::Side side) const {
             return 
@@ -57,8 +57,6 @@ class Rectangle
         void setTop(float y) { this->_y = y; }
         void setBottom(float y) { this->_y = y - this->_height; }
 
-        void addOffset(xyfpair offset) { _x+=offset.x; _y+=offset.y; }
-
         /* Checks collision with argument Rectangle */
         const bool collidesWith(const Rectangle &other) const{
             return 
@@ -66,6 +64,13 @@ class Rectangle
                 this->getLeft() <= other.getRight() &&
                 this->getTop() <= other.getBottom() &&
                 this->getBottom() >= other.getTop();
+        }
+        const bool containedWithin(const Rectangle &other) const{
+            return 
+                this->getLeft() > other.getLeft() &&
+                this->getRight()< other.getRight() &&
+                this->getTop() > other.getTop() &&
+                this->getBottom() < other.getBottom();
         }
 
         /* checks is a Rectangle is valid */

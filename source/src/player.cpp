@@ -152,17 +152,28 @@ void Player::update(float timeElapsed)
     // cout<<this->_dx*timeElapsed<<endl;
     // cout<<this->_currentLevel->getOffset().x;
 
-    // this->_x += this->_dx * timeElapsed;
-    // this->_y += this->_dy * timeElapsed;
+    
+    this->_x += this->_dx * timeElapsed;
+    this->_y += this->_dy * timeElapsed;
+    
+    if(!Rectangle(this->_x, this->_y, this->_destRect.w, this->_destRect.h).containedWithin(*this->_camera))
+    {
+        this->_x -= this->_dx * timeElapsed;
+        this->_y -= this->_dy * timeElapsed;
+    }
 
     this->_camera->setCenter(Rectangle(this->_x, this->_y, this->_destRect.w, this->_destRect.h).getCenter());
 
+    if(this->_camera->getLeft()<0) this->_camera->setLeft(0);
+    if(this->_camera->getRight()>this->_currentLevel->getMapSize().x) this->_camera->setRight(this->_currentLevel->getMapSize().x);
+    if(this->_camera->getTop()<0) this->_camera->setTop(0);
+    if(this->_camera->getBottom()>this->_currentLevel->getMapSize().y) this->_camera->setBottom(this->_currentLevel->getMapSize().y);
     // if(this->_dx<0) this->_dx=floor(this->_dx);
     // else this->_dx=ceil(this->_dx);
     // if(this->_dy<0) this->_dy=floor(this->_dy);
     // else this->_dy=ceil(this->_dy);
     
-    this->_currentLevel->setOffset(xyfpair(-this->_dx*timeElapsed, -this->_dy*timeElapsed));
+    // this->_currentLevel->setOffset(xyfpair(-this->_dx*timeElapsed, -this->_dy*timeElapsed));
     
     // this->_x = camera.getCenterX();
     // this->_y = camera.getCenterY();
@@ -172,5 +183,6 @@ void Player::update(float timeElapsed)
 
 void Player::draw(Graphics &graphics)
 {
-    AnimatedSprite::draw(graphics, this->_x, this->_y);
+    AnimatedSprite::draw(graphics, this->_x-this->_camera->getLeft(), this->_y-this->_camera->getTop());
+    // AnimatedSprite::draw(graphics, this->_x, this->_y);
 }

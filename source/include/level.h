@@ -23,6 +23,7 @@ class Level
         bool hasGravity() { return this->_hasGravity; }
 
         xyfpair getOffset() { return _mapOffset; }
+        xyipair getMapSize() { return _size; }
         void setOffset(xyfpair offset) { this->_mapOffset = offset; }
         
         void setCamera(Rectangle *camera) { this->_camera = camera; }

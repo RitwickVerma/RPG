@@ -132,10 +132,9 @@ void Level::draw_background(Graphics &graphics)
 {
     for(Tile &tile : this->_map[0])
     {   
-        tile.addOffset(this->_mapOffset);
-        if(tile.getXY().x > this->_camera->getLeft() - 10 && tile.getXY().x + this->_tileSize.x < this->_camera->getRight() + 10
-            && tile.getXY().y > this->_camera->getTop() - 10 && tile.getXY().y + this->_tileSize.y < this->_camera->getBottom() + 10)
-            tile.draw(graphics);
+        if(tile.getPosition().x > this->_camera->getLeft() - this->_tileSize.x && tile.getPosition().x + this->_tileSize.x < this->_camera->getRight() + this->_tileSize.x
+            && tile.getPosition().y > this->_camera->getTop() - this->_tileSize.y && tile.getPosition().y + this->_tileSize.y < this->_camera->getBottom() + this->_tileSize.y)
+            tile.draw(graphics, xyfpair(tile.getPosition().x - this->_camera->getLeft(), tile.getPosition().y - this->_camera->getTop()));
     }
 }
 
@@ -143,10 +142,9 @@ void Level::draw_foreground(Graphics &graphics)
 {
     for(Tile &tile : this->_map[1])
     {
-        tile.addOffset(this->_mapOffset);
-        if(tile.getXY().x > this->_camera->getLeft() - 10 && tile.getXY().x + this->_tileSize.x < this->_camera->getRight() + 10
-            && tile.getXY().y > this->_camera->getTop() - 10 && tile.getXY().y + this->_tileSize.y < this->_camera->getBottom() + 10)
-            tile.draw(graphics);
+        if(tile.getPosition().x > this->_camera->getLeft() - this->_tileSize.x && tile.getPosition().x + this->_tileSize.x < this->_camera->getRight() + this->_tileSize.x
+            && tile.getPosition().y > this->_camera->getTop() - this->_tileSize.y && tile.getPosition().y + this->_tileSize.y < this->_camera->getBottom() + this->_tileSize.y)
+            tile.draw(graphics, xyfpair(tile.getPosition().x - this->_camera->getLeft(), tile.getPosition().y - this->_camera->getTop()));
     }
 }
 
@@ -155,7 +153,6 @@ vector<Rectangle> Level::checkTileCollision(const Rectangle &other)
     vector<Rectangle> collidingRects;
     for(auto &rectangle : this->_collisionRects)
     {
-        rectangle.addOffset(this->_mapOffset);
         if(rectangle.collidesWith(other))
             collidingRects.push_back(rectangle);
     }
