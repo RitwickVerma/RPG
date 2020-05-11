@@ -65,12 +65,25 @@ class Rectangle
                 this->getTop() <= other.getBottom() &&
                 this->getBottom() >= other.getTop();
         }
+
         const bool containedWithin(const Rectangle &other) const{
             return 
                 this->getLeft() > other.getLeft() &&
                 this->getRight()< other.getRight() &&
                 this->getTop() > other.getTop() &&
                 this->getBottom() < other.getBottom();
+        }
+
+        void containWithin(const Rectangle &other) {
+            if(containedWithin(other))
+                return;
+            
+            if(getLeft()<other.getLeft())       setLeft(other.getLeft());
+            if(getRight()>other.getRight())     setRight(other.getRight());
+            if(getTop()<other.getTop())         setTop(other.getTop());
+            if(getBottom()>other.getBottom())   setBottom(other.getBottom());
+
+            if(!containedWithin(other)) SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Rectangle could not be contained within other");
         }
 
         /* checks is a Rectangle is valid */

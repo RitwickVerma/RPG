@@ -113,8 +113,6 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 {
                     if(object.getName() == "player")
                     {
-                        // cout<<object.getAABB().left;
-                        // SDL_Log(string(1, object.getAABB().left).c_str());
                         this->_playerSpawnPoint = xyipair(ceil(object.getAABB().left)*globals::SCALING, 
                             ceil(object.getAABB().top)*globals::SCALING);
                     }

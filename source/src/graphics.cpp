@@ -23,7 +23,6 @@ SDL_Surface * Graphics::loadImage(string &filepath)
 
 void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect) 
 {
-    // SDL_Rect tempdest = SDL_Rect(*destRect);
     SDL_RenderCopy(this->_renderer, source, sourceRect, destRect);        
 }
 

@@ -108,7 +108,6 @@ void Player::animationDone(string animation)
 
 void Player::handleTileCollision(vector<Rectangle> colliding)
 {
-    // SDL_Log("in player handleTileCollision : %d %d %d %d", this->_y, this->_boundingBox.getTop(), this->_sourceRect.h, this->_boundingBox.getHeight());
    for( Rectangle r : colliding)
    {
        sides::Side collisionSide = Sprite::getCollisionSide(r);
@@ -125,12 +124,10 @@ void Player::handleTileCollision(vector<Rectangle> colliding)
                     this->_dx=0;
                     break;
                case sides::TOP:
-                    // cout<<this->_destRect.y<<" "<<this->_boundingBox.getTop()<<"    "<<this->_sourceRect.h<<" "<<this->_boundingBox.getHeight()<<endl;
                     this->_y=r.getBottom() + 1 - abs(Rectangle(this->_destRect).getTop() - this->_boundingBox.getTop());
                     this->_dy=0;
                     break;
                case sides::BOTTOM:
-                    // this->_y=r.getTop() - this->_boundingBox.getHeight() - 1 - abs(this->_sourceRect.h - this->_boundingBox.getHeight());
                     this->_y=r.getTop() - 1 - abs(Rectangle(this->_destRect).getTop() - this->_boundingBox.getBottom());
                     this->_dy=0;
                     this->_grounded = (this->_currentLevel->hasGravity()) ? true : false;
@@ -149,10 +146,6 @@ void Player::update(float timeElapsed)
     if(this->_dy <= o::GRAVITY_CAP && this->_currentLevel->hasGravity())
         this->_dy += o::GRAVITY * timeElapsed; 
 
-    // cout<<this->_dx*timeElapsed<<endl;
-    // cout<<this->_currentLevel->getOffset().x;
-
-    
     this->_x += this->_dx * timeElapsed;
     this->_y += this->_dy * timeElapsed;
     
@@ -163,26 +156,13 @@ void Player::update(float timeElapsed)
     }
 
     this->_camera->setCenter(Rectangle(this->_x, this->_y, this->_destRect.w, this->_destRect.h).getCenter());
-
-    if(this->_camera->getLeft()<0) this->_camera->setLeft(0);
-    if(this->_camera->getRight()>this->_currentLevel->getMapSize().x) this->_camera->setRight(this->_currentLevel->getMapSize().x);
-    if(this->_camera->getTop()<0) this->_camera->setTop(0);
-    if(this->_camera->getBottom()>this->_currentLevel->getMapSize().y) this->_camera->setBottom(this->_currentLevel->getMapSize().y);
-    // if(this->_dx<0) this->_dx=floor(this->_dx);
-    // else this->_dx=ceil(this->_dx);
-    // if(this->_dy<0) this->_dy=floor(this->_dy);
-    // else this->_dy=ceil(this->_dy);
     
-    // this->_currentLevel->setOffset(xyfpair(-this->_dx*timeElapsed, -this->_dy*timeElapsed));
-    
-    // this->_x = camera.getCenterX();
-    // this->_y = camera.getCenterY();
+    this->_camera->containWithin(Rectangle(0, 0, this->_currentLevel->getMapSize().x, this->_currentLevel->getMapSize().y));
 
-    this->_boundingBox = Rectangle(this->_x+4, this->_y+32, o::_w-8, 16);
+    this->_boundingBox = Rectangle(this->_x+4, this->_y+46, o::_w-8, 16);
 }
 
 void Player::draw(Graphics &graphics)
 {
     AnimatedSprite::draw(graphics, this->_x-this->_camera->getLeft(), this->_y-this->_camera->getTop());
-    // AnimatedSprite::draw(graphics, this->_x, this->_y);
 }
