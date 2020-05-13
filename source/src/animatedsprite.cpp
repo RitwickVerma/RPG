@@ -76,8 +76,7 @@ void AnimatedSprite::draw(Graphics &graphics, int x, int y)
         SDL_Rect destRect = {
                                 x+this->_offsets[this->_currentAnimation].x,
                                 y+this->_offsets[this->_currentAnimation].y,
-                                this->_sourceRect.w * (int)globals::SCALING, 
-                                this->_sourceRect.h * (int)globals::SCALING 
+                                (int)this->_sprite.w , (int)this->_sprite.h  
                             };
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];

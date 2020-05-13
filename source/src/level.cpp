@@ -101,7 +101,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                         ceil(object.getAABB().top), 
                         ceil(object.getAABB().width),
                         ceil(object.getAABB().height));
-                    r=r*globals::SCALING; 
+                     
                     this->_collisionRects.push_back(r);
 
                 }
@@ -113,8 +113,8 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 {
                     if(object.getName() == "player")
                     {
-                        this->_playerSpawnPoint = xyipair(ceil(object.getAABB().left)*globals::SCALING, 
-                            ceil(object.getAABB().top)*globals::SCALING);
+                        this->_playerSpawnPoint = xyipair(ceil(object.getAABB().left), 
+                            ceil(object.getAABB().top));
                     }
                 }
             }

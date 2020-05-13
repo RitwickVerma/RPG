@@ -11,11 +11,8 @@ namespace globals
 {
     const int SCREEN_WIDTH = 1280;
     const int SCREEN_HEIGHT = 720;
-    const int CAMERA_WIDTH = SCREEN_WIDTH;
-    const int CAMERA_HEIGHT = SCREEN_HEIGHT;
-    const float SCALING = 1;
-    // const string SPRITE_DIR = "/content/sprite/";
-
+    const float SCALING_X = 1;
+    const float SCALING_Y = 1;
 }
 
 namespace sides
@@ -43,15 +40,15 @@ enum Direction
 
 struct xyipair
 {
-    int x,y;
+    int x,y,w,h;
     xyipair()
     {
-        x=y=0;
+        x=y=w=h=0;
     }
     xyipair(int x_pos, int y_pos)
     {
-        x=x_pos;
-        y=y_pos;
+        x=w=x_pos;
+        y=h=y_pos;
     }
     xyipair zero()
     {

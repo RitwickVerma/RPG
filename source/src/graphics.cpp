@@ -6,6 +6,7 @@ Graphics::Graphics()
 {
     SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer);
     SDL_SetWindowTitle(this->_window, "Game");
+    SDL_RenderSetScale(this->_renderer, globals::SCALING_X, globals::SCALING_Y);
 }
 
 Graphics::~Graphics()

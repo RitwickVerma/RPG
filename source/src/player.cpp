@@ -3,7 +3,7 @@
 
 namespace o
 {
-    const float WALK_SPEED = 0.2f;
+    const float WALK_SPEED = 0.3f;
     const float GRAVITY = 0.002f;
     const float GRAVITY_CAP = 0.8f;
     const string CHARACTER_SPRITE = "character48.png";
@@ -23,7 +23,7 @@ Player::Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera) :
     this->setupAnimation();
     this->_facing=SOUTH;
     
-    this->_camera->setCenter(Rectangle(this->_x, this->_y, this->_destRect.w, this->_destRect.h).getCenter());
+    this->_camera->setCenter(this->_sprite.getCenter());
 }
 
 void Player::setupAnimation()
@@ -116,19 +116,19 @@ void Player::handleTileCollision(vector<Rectangle> colliding)
            switch(collisionSide)
            {
                case sides::LEFT:
-                    this->_x=r.getRight() + 1 - abs(Rectangle(this->_destRect).getLeft() - this->_boundingBox.getLeft());
+                    this->_sprite.x=r.getRight() + 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getLeft());
                     this->_dx=0;
                     break;
                case sides::RIGHT:
-                    this->_x=r.getLeft() - 1 - abs(Rectangle(this->_destRect).getLeft() - this->_boundingBox.getRight());
+                    this->_sprite.x=r.getLeft() - 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getRight());
                     this->_dx=0;
                     break;
                case sides::TOP:
-                    this->_y=r.getBottom() + 1 - abs(Rectangle(this->_destRect).getTop() - this->_boundingBox.getTop());
+                    this->_sprite.y=r.getBottom() + 1 - abs(this->_sprite.getTop() - this->_boundingBox.getTop());
                     this->_dy=0;
                     break;
                case sides::BOTTOM:
-                    this->_y=r.getTop() - 1 - abs(Rectangle(this->_destRect).getTop() - this->_boundingBox.getBottom());
+                    this->_sprite.y=r.getTop() - 1 - abs(this->_sprite.getTop() - this->_boundingBox.getBottom());
                     this->_dy=0;
                     this->_grounded = (this->_currentLevel->hasGravity()) ? true : false;
                     break;
@@ -146,23 +146,28 @@ void Player::update(float timeElapsed)
     if(this->_dy <= o::GRAVITY_CAP && this->_currentLevel->hasGravity())
         this->_dy += o::GRAVITY * timeElapsed; 
 
-    this->_x += this->_dx * timeElapsed;
-    this->_y += this->_dy * timeElapsed;
+    // Move player by changing x, y by velocity dx, dy
+    this->_sprite.x += this->_dx * timeElapsed;
+    this->_sprite.y += this->_dy * timeElapsed;
     
-    if(!Rectangle(this->_x, this->_y, this->_destRect.w, this->_destRect.h).containedWithin(*this->_camera))
+    // Check if the player is within camera after change. If not, move player back.
+    if(!this->_sprite.containedWithin(*this->_camera))
     {
-        this->_x -= this->_dx * timeElapsed;
-        this->_y -= this->_dy * timeElapsed;
+        this->_sprite.x -= this->_dx * timeElapsed;
+        this->_sprite.y -= this->_dy * timeElapsed;
     }
 
-    this->_camera->setCenter(Rectangle(this->_x, this->_y, this->_destRect.w, this->_destRect.h).getCenter());
+    // Change camera coordinates to follow player. Camera is centered on player.
+    this->_camera->setCenter(this->_sprite.getCenter());
     
+    // Contain camera within map. 
     this->_camera->containWithin(Rectangle(0, 0, this->_currentLevel->getMapSize().x, this->_currentLevel->getMapSize().y));
 
-    this->_boundingBox = Rectangle(this->_x+4, this->_y+46, o::_w-8, 16);
+    // BoundingBox for player (used for collisions)
+    this->_boundingBox = Rectangle(this->_sprite.x+4, this->_sprite.y+46, o::_w-8, 16);
 }
 
 void Player::draw(Graphics &graphics)
 {
-    AnimatedSprite::draw(graphics, this->_x-this->_camera->getLeft(), this->_y-this->_camera->getTop());
+    AnimatedSprite::draw(graphics, this->_sprite.x-this->_camera->getLeft(), this->_sprite.y-this->_camera->getTop());
 }

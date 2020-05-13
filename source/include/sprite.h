@@ -21,12 +21,14 @@ class Sprite
         const sides::Side getCollisionSide(Rectangle &other) const;
 
     protected:
-        SDL_Rect _sourceRect, _destRect;
         SDL_Texture *_spriteSheet;
-        float _x, _y; 
+        // float x, y; 
         Rectangle _boundingBox;
+        Rectangle _sprite;
+        // xyipair _size;
 
     private:
+        SDL_Rect _sourceRect ;
         string SPRITE_DIR;  
            
 };

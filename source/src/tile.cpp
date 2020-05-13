@@ -16,7 +16,7 @@ Tile::Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, 
     this->_ID=ID;
     this->_size=size;
     this->_tilesetPosition=tilesetPosition;
-    this->_position=position*globals::SCALING;
+    this->_position=position;
 }
 
 void Tile::update(float elapsedTime)
@@ -27,6 +27,6 @@ void Tile::draw(Graphics &graphics, xyfpair position)
     if(this->_tileset == NULL)  return;
 
     SDL_Rect sourceRect = { this->_tilesetPosition.x, this->_tilesetPosition.y, this->_size.x, this->_size.y};
-    SDL_Rect destRect = { round(position.x), round(position.y), this->_size.x * (int)globals::SCALING, this->_size.y * (int)globals::SCALING};
+    SDL_Rect destRect = { (int)round(position.x), (int)round(position.y), this->_size.x , this->_size.y };
     graphics.blitSurface(this->_tileset, &sourceRect, &destRect);
 }

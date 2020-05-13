@@ -30,11 +30,11 @@ class Player : public AnimatedSprite
         Level * getCurrentLevel();
         void setCamera(Rectangle *camera) { this->_camera = camera; }
 
-        Rectangle getSpriteBox() { return Rectangle(this->_destRect); }
+        Rectangle getSpriteBox() { return this->_sprite; }
 
         void handleTileCollision(vector<Rectangle> colliding);
-        const float getX() const { return this->_x; }
-        const float getY() const { return this->_y; }
+        const float getX() const { return this->_sprite.x; }
+        const float getY() const { return this->_sprite.y; }
 
     private:
         float _dx, _dy;

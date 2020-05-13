@@ -8,35 +8,35 @@
 class Rectangle
 {
     public:
-        Rectangle(){}
+        Rectangle(){} 
 
         Rectangle(int x, int y, int width, int height):
-            _x(x),
-            _y(y),
-            _width(width),
-            _height(height)
+            x(x),
+            y(y),
+            w(width),
+            h(height)
         {}
         Rectangle(SDL_Rect r):
-            _x(r.x),
-            _y(r.y),
-            _width(r.w),
-            _height(r.h)
+            x(r.x),
+            y(r.y),
+            w(r.w),
+            h(r.h)
         {}
 
-        Rectangle operator*(const float &scale) { return Rectangle(_x*scale, _y*scale, _width*scale, _height*scale); }
+        Rectangle operator*(const float &scale) { return Rectangle(x*scale, y*scale, w*scale, h*scale); }
 
-        const float getCenterX() const { return this->_x + this->_width/2; }
-        const float getCenterY() const { return this->_y + this->_height/2; }
+        const float getCenterX() const { return this->x + this->w/2; }
+        const float getCenterY() const { return this->y + this->h/2; }
         const xyfpair getCenter() const { return xyfpair(this->getCenterX(), this->getCenterY()); }
 
-        const float getLeft() const { return this->_x; }
-        const float getRight() const { return this->_x + this->_width; }
-        const float getTop() const { return this->_y; }
-        const float getBottom() const { return this->_y + this->_height; }
+        const float getLeft() const { return this->x; }
+        const float getRight() const { return this->x + this->w; }
+        const float getTop() const { return this->y; }
+        const float getBottom() const { return this->y + this->h; }
         
 
-        const float getWidth() const { return this->_width; }
-        const float getHeight() const { return this->_height; }
+        const float getWidth() const { return this->w; }
+        const float getHeight() const { return this->h; }
 
         const int getSide(const sides::Side side) const {
             return 
@@ -47,15 +47,15 @@ class Rectangle
                 sides::NONE;
         }
 
-        void setCenterX(float x) { this->_x = x - this->_width/2; }
-        void setCenterY(float y) { this->_y = y - this->_height/2; }
+        void setCenterX(float x) { this->x = x - this->w/2; }
+        void setCenterY(float y) { this->y = y - this->h/2; }
         void setCenter(float x, float y) { this->setCenterX(x); this->setCenterY(y); } 
         void setCenter(xyfpair xy) { this->setCenterX(xy.x); this->setCenterY(xy.y); } 
         
-        void setLeft(float x) { this->_x = x; }
-        void setRight(float x) { this->_x = x - this->_width; }
-        void setTop(float y) { this->_y = y; }
-        void setBottom(float y) { this->_y = y - this->_height; }
+        void setLeft(float x) { this->x = x; }
+        void setRight(float x) { this->x = x - this->w; }
+        void setTop(float y) { this->y = y; }
+        void setBottom(float y) { this->y = y - this->h; }
 
         /* Checks collision with argument Rectangle */
         const bool collidesWith(const Rectangle &other) const{
@@ -69,7 +69,7 @@ class Rectangle
         const bool containedWithin(const Rectangle &other) const{
             return 
                 this->getLeft() > other.getLeft() &&
-                this->getRight()< other.getRight() &&
+                this->getRight() < other.getRight() &&
                 this->getTop() > other.getTop() &&
                 this->getBottom() < other.getBottom();
         }
@@ -89,11 +89,10 @@ class Rectangle
         /* checks is a Rectangle is valid */
         const bool isValidRect() const 
         {
-            return this->_x>=0 && this->_y>=0 && this->_width>=0 && this->_height>=0;
+            return this->x>=0 && this->y>=0 && this->w>=0 && this->h>=0;
         }
 
-    private:
-        float _x, _y, _height, _width;
+        float x, y, h, w;
 };
 
 #endif // !RECTANGLE_H
