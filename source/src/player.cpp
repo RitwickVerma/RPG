@@ -39,6 +39,14 @@ void Player::setupAnimation()
     this->addAnimation(4, 0, o::_h*1, "walk_west", o::_w, o::_h, xyipair(0,0));
 }
 
+void Player::animationDone(string animation)
+{}
+
+void Player::updateBoundingBox()
+{
+    this->_boundingBox = Rectangle(this->_sprite.x+4, this->_sprite.y+46, o::_w-8, 16);
+}
+
 void Player::setCurrentLevel(Level *level)
 {
     this->_currentLevel = level;
@@ -103,39 +111,53 @@ void Player::stopMoving()
 
 }
 
-void Player::animationDone(string animation)
-{}
 
-void Player::handleTileCollision(vector<Rectangle> colliding)
+void Player::undoMove(float timeElapsed)
 {
-   for( Rectangle r : colliding)
-   {
-       sides::Side collisionSide = Sprite::getCollisionSide(r);
-       if(collisionSide != sides::NONE)
-       {
-           switch(collisionSide)
-           {
-               case sides::LEFT:
+    this->_sprite.x -= this->_dx * timeElapsed;
+    this->_sprite.y -= this->_dy * timeElapsed;
+    this->updateBoundingBox();
+}
+
+void Player::makeMove(float timeElapsed)
+{
+    this->_sprite.x += this->_dx * timeElapsed;
+    this->_sprite.y += this->_dy * timeElapsed;
+    this->updateBoundingBox();
+}
+
+void Player::handleTileCollision(vector<Rectangle> &colliding)
+{
+    for( Rectangle &r : colliding)
+    {
+        this->stopMoving();
+        sides::Side collisionSide = Sprite::getCollisionSide(r);
+        if(collisionSide != sides::NONE)
+        {
+            switch(collisionSide)
+            {
+                case sides::LEFT:
                     this->_sprite.x=r.getRight() + 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getLeft());
                     this->_dx=0;
                     break;
-               case sides::RIGHT:
+                case sides::RIGHT:
                     this->_sprite.x=r.getLeft() - 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getRight());
                     this->_dx=0;
                     break;
-               case sides::TOP:
+                case sides::TOP:
                     this->_sprite.y=r.getBottom() + 1 - abs(this->_sprite.getTop() - this->_boundingBox.getTop());
                     this->_dy=0;
                     break;
-               case sides::BOTTOM:
+                case sides::BOTTOM:
                     this->_sprite.y=r.getTop() - 1 - abs(this->_sprite.getTop() - this->_boundingBox.getBottom());
                     this->_dy=0;
                     this->_grounded = (this->_currentLevel->hasGravity()) ? true : false;
                     break;
             
-           }
-       }
-   } 
+            }
+        }
+    } 
+    colliding.clear();
 }
 
 void Player::update(float timeElapsed)
@@ -147,24 +169,31 @@ void Player::update(float timeElapsed)
         this->_dy += o::GRAVITY * timeElapsed; 
 
     // Move player by changing x, y by velocity dx, dy
-    this->_sprite.x += this->_dx * timeElapsed;
-    this->_sprite.y += this->_dy * timeElapsed;
-    
+    // this->_sprite.x += this->_dx * timeElapsed;
+    // this->_sprite.y += this->_dy * timeElapsed;
+    // this->updateBoundingBox();
+    this->makeMove(timeElapsed);
+
     // Check if the player is within camera after change. If not, move player back.
     if(!this->_sprite.containedWithin(*this->_camera))
     {
-        this->_sprite.x -= this->_dx * timeElapsed;
-        this->_sprite.y -= this->_dy * timeElapsed;
+        this->undoMove(timeElapsed);
+        this->stopMoving();
+    }
+
+    vector<Rectangle> colliding;
+    if((colliding = this->_currentLevel->checkTileCollision(this->getBoundingBox())).size() > 0)
+    {
+        this->undoMove(timeElapsed);
+        this->stopMoving();
     }
 
     // Change camera coordinates to follow player. Camera is centered on player.
     this->_camera->setCenter(this->_sprite.getCenter());
-    
+
     // Contain camera within map. 
     this->_camera->containWithin(Rectangle(0, 0, this->_currentLevel->getMapSize().x, this->_currentLevel->getMapSize().y));
 
-    // BoundingBox for player (used for collisions)
-    this->_boundingBox = Rectangle(this->_sprite.x+4, this->_sprite.y+46, o::_w-8, 16);
 }
 
 void Player::draw(Graphics &graphics)

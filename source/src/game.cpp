@@ -116,9 +116,9 @@ void Game::update(float elapsedTime)
     this->_level.update(elapsedTime);
 
     // Check collisions
-    vector<Rectangle> colliding;
-    if((colliding = this->_level.checkTileCollision(this->_player.getBoundingBox())).size() > 0)
-    {
-        this->_player.handleTileCollision(colliding);
-    }
+    // vector<Rectangle> colliding;
+    // if((colliding = this->_level.checkTileCollision(this->_player.getBoundingBox())).size() > 0)
+    // {
+    //     this->_player.handleTileCollision(colliding);
+    // }
 }

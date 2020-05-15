@@ -31,8 +31,12 @@ class Player : public AnimatedSprite
         void setCamera(Rectangle *camera) { this->_camera = camera; }
 
         Rectangle getSpriteBox() { return this->_sprite; }
+        
+        void handleTileCollision(vector<Rectangle> &colliding);
 
-        void handleTileCollision(vector<Rectangle> colliding);
+        void undoMove(float elapsedTime);
+        void makeMove(float elapsedTime);
+        void updateBoundingBox();
         const float getX() const { return this->_sprite.x; }
         const float getY() const { return this->_sprite.y; }
 

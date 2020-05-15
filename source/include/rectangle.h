@@ -93,6 +93,7 @@ class Rectangle
         }
 
         float x, y, h, w;
+
 };
 
 #endif // !RECTANGLE_H
