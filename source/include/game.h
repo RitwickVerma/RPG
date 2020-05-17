@@ -20,6 +20,7 @@ class Game
         void update(float elapsedTime);
         Player _player;
         Level _level;
+        Rectangle *_camera;
 };
 
 #endif

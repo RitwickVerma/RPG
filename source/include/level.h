@@ -46,6 +46,7 @@ class Level
         xyfpair _mapOffset;
         vector<vector<Tile>> _map;
         map<int, Tileset> _tilesets;
+        map<int, SDL_Texture*> _tileTextures;
         vector<Rectangle> _collisionRects;
 
         void loadMap(Graphics &graphics, string mapName);
@@ -54,6 +55,7 @@ class Level
 struct Tileset
 {
     SDL_Texture *Texture;
+    SDL_Surface *Surface;
     int firstGid;
 
     Tileset()
@@ -64,6 +66,12 @@ struct Tileset
     Tileset(SDL_Texture *texture, int first_gid)
     {
         Texture=texture;
+        firstGid=first_gid;
+    }
+    
+    Tileset(SDL_Surface *surface, int first_gid)
+    {
+        Surface=surface;
         firstGid=first_gid;
     }
 

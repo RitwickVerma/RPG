@@ -41,8 +41,13 @@ void Level::loadMap(Graphics &graphics, string mapName)
     for(auto &tileset : map.getTilesets())
     {
         string tilesetImagePath = tileset.getImagePath();
-        SDL_Texture *tileset_texture = SDL_CreateTextureFromSurface(graphics.getRenderer(), graphics.loadImage(tilesetImagePath));
-        this->_tilesets[tileset.getFirstGID()] = (Tileset(tileset_texture, tileset.getFirstGID()));
+        // SDL_Texture *tileset_texture = SDL_CreateTextureFromSurface(graphics.getRenderer(), graphics.loadImage(tilesetImagePath));
+        // if(tileset_texture == NULL)
+        // {
+        //     SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Could not create texture from surface");
+        //     cout<<SDL_GetError();
+        // }
+        this->_tilesets[tileset.getFirstGID()] = (Tileset(graphics.loadImage(tilesetImagePath), tileset.getFirstGID()));
     }
 
 
@@ -74,10 +79,15 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 {
                     if(tileset.hasTile(tile.ID))
                     {
+                        SDL_Surface *surface = this->_tilesets[tileset.getFirstGID()].Surface;
                         xyipair tilesetPosition = xyipair(tileset.getTile(tile.ID)->imagePosition.x, tileset.getTile(tile.ID)->imagePosition.y);
+                        // xyipair tilesetPosition = xyipair(0,0);
                         xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_tileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_tileSize.y);
+                        
+                        if(this->_tileTextures.count(tile.ID) == 0)
+                            this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, this->_tileSize);
 
-                        Tile m_tile = Tile(this->_tilesets[tileset.getFirstGID()].Texture, tile.ID, this->_tileSize, tilesetPosition, position);
+                        Tile m_tile = Tile(this->_tileTextures[tile.ID], tile.ID, this->_tileSize, xyipair(0,0), position);
 
                         this->_map[bfground][tileCounter] = m_tile;
 

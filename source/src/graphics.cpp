@@ -22,6 +22,22 @@ SDL_Surface * Graphics::loadImage(string &filepath)
     return this->_spriteSheets[filepath];
 }
 
+SDL_Surface *Graphics::getSurfaceFromRect(SDL_Surface *surface, xyipair pos, xyipair size)
+{
+    SDL_LockSurface(surface);
+    surface->userdata = (void*)((unsigned*)surface->pixels + pos.y*surface->w + pos.x);
+    SDL_UnlockSurface(surface);
+    SDL_Surface *newSurface = SDL_CreateRGBSurfaceWithFormatFrom(surface->userdata, size.x, size.y, surface->format->BitsPerPixel, surface->pitch, surface->format->format);
+    return newSurface;
+}
+
+SDL_Texture* Graphics::getTextureFromSurfaceRect(SDL_Surface *surface, xyipair pos, xyipair size)
+{
+    SDL_Surface *newSurface = this->getSurfaceFromRect(surface, pos, size);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(this->_renderer, newSurface);
+    return texture;
+}
+
 void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect) 
 {
     SDL_RenderCopy(this->_renderer, source, sourceRect, destRect);        

@@ -25,7 +25,8 @@ void Game::gameLoop()
     Input input;
 
     Rectangle camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
-    this->_level = Level(graphics, "trying.tmx", xyipair(100, 100), &camera);
+    this->_camera = &camera;
+    this->_level = Level(graphics, "map1.tmx", xyipair(100, 100), &camera);
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , &camera);
     this->_player.setCurrentLevel(&this->_level);
 
@@ -121,4 +122,17 @@ void Game::update(float elapsedTime)
     // {
     //     this->_player.handleTileCollision(colliding);
     // }
+
+    vector<Rectangle> colliding;
+    if((colliding = this->_level.checkTileCollision(this->_player.getBoundingBox())).size() > 0)
+    {
+        this->_player.undoMove(elapsedTime);
+        this->_player.stopMoving();
+    }
+
+
+    // Change camera coordinates to follow player. Camera is centered on player.
+    this->_camera->setCenter(this->_player.getSpriteBox().getCenter());
+    // Contain camera within map. 
+    this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
 }

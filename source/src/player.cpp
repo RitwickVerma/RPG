@@ -3,18 +3,18 @@
 
 namespace o
 {
-    const float WALK_SPEED = 0.3f;
+    const float WALK_SPEED = 0.2f;
     const float GRAVITY = 0.002f;
     const float GRAVITY_CAP = 0.8f;
-    const string CHARACTER_SPRITE = "character48.png";
-    int _w=48;
-    int _h=72;
+    const string CHARACTER_SPRITE = "player.png";
+    int _w=64;
+    int _h=64;
 }
 
 Player::Player(){}
 
 Player::Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera) :
-    AnimatedSprite(graphics, o::CHARACTER_SPRITE, 0, 0, o::_w, o::_h, spawnPoint.x, spawnPoint.y, 100)
+    AnimatedSprite(graphics, o::CHARACTER_SPRITE, 0, 0, o::_w, o::_h, spawnPoint.x, spawnPoint.y, 75)
 {
     this->_dx=0;
     this->_dy=0;
@@ -27,16 +27,16 @@ Player::Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera) :
 }
 
 void Player::setupAnimation()
-{
-    this->addAnimation(1, 0, o::_h*3, "idle_north", o::_w, o::_h, xyipair(0,0));
-    this->addAnimation(1, 0, o::_h*0, "idle_south", o::_w, o::_h, xyipair(0,0));
-    this->addAnimation(1, 0, o::_h*2, "idle_east", o::_w, o::_h, xyipair(0,0));
-    this->addAnimation(1, 0, o::_h*1, "idle_west", o::_w, o::_h, xyipair(0,0));
+{    
+    this->addAnimation(1, 0, o::_h*8, "idle_north", o::_w, o::_h, xyipair(0,0));
+    this->addAnimation(1, 0, o::_h*10, "idle_south", o::_w, o::_h, xyipair(0,0));
+    this->addAnimation(1, 0, o::_h*11, "idle_east", o::_w, o::_h, xyipair(0,0));
+    this->addAnimation(1, 0, o::_h*9, "idle_west", o::_w, o::_h, xyipair(0,0));
 
-    this->addAnimation(4, 0, o::_h*3, "walk_north", o::_w, o::_h, xyipair(0,0));
-    this->addAnimation(4, 0, o::_h*0, "walk_south", o::_w, o::_h, xyipair(0,0));
-    this->addAnimation(4, 0, o::_h*2, "walk_east", o::_w, o::_h, xyipair(0,0));
-    this->addAnimation(4, 0, o::_h*1, "walk_west", o::_w, o::_h, xyipair(0,0));
+    this->addAnimation(9, 0, o::_h*8, "walk_north", o::_w, o::_h, xyipair(0,0));
+    this->addAnimation(9, 0, o::_h*10, "walk_south", o::_w, o::_h, xyipair(0,0));
+    this->addAnimation(9, 0, o::_h*11, "walk_east", o::_w, o::_h, xyipair(0,0));
+    this->addAnimation(9, 0, o::_h*9, "walk_west", o::_w, o::_h, xyipair(0,0));
 }
 
 void Player::animationDone(string animation)
@@ -181,18 +181,6 @@ void Player::update(float timeElapsed)
         this->stopMoving();
     }
 
-    vector<Rectangle> colliding;
-    if((colliding = this->_currentLevel->checkTileCollision(this->getBoundingBox())).size() > 0)
-    {
-        this->undoMove(timeElapsed);
-        this->stopMoving();
-    }
-
-    // Change camera coordinates to follow player. Camera is centered on player.
-    this->_camera->setCenter(this->_sprite.getCenter());
-
-    // Contain camera within map. 
-    this->_camera->containWithin(Rectangle(0, 0, this->_currentLevel->getMapSize().x, this->_currentLevel->getMapSize().y));
 
 }
 

@@ -20,6 +20,12 @@ class Graphics
 
         /* Renders sourceRect from texture source to destRect on rendering target (window) */
         void blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect);
+        
+        /* Returns part of a surface from a bigger surface */
+        SDL_Surface* getSurfaceFromRect(SDL_Surface *surface, xyipair pos, xyipair size);
+        
+        /* Returns a texture from part of a surface (calls getSurfaceFromRect) */
+        SDL_Texture* getTextureFromSurfaceRect(SDL_Surface *surface, xyipair pos, xyipair size);
 
         /* Updates the screen with rendering performed since previous call */
         void flip();
