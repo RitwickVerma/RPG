@@ -6,6 +6,7 @@
 #include "globals.h"
 #include "tile.h"
 #include "rectangle.h"
+#include "slope.h"
 
 struct Graphics;
 struct SDL_Texture;
@@ -29,6 +30,7 @@ class Level
         void setCamera(Rectangle *camera) { this->_camera = camera; }
         
         vector<Rectangle> checkTileCollision(const Rectangle &other);
+        vector<Slope> checkSlopeCollision(const Rectangle &other);
         
         const xyipair getPlayerSpawnPoint() const;
 
@@ -48,6 +50,7 @@ class Level
         map<int, Tileset> _tilesets;
         map<int, SDL_Texture*> _tileTextures;
         vector<Rectangle> _collisionRects;
+        vector<Slope> _collisionSlopes;
 
         void loadMap(Graphics &graphics, string mapName);
 };

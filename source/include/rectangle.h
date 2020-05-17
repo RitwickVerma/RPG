@@ -33,6 +33,11 @@ class Rectangle
         const float getRight() const { return this->x + this->w; }
         const float getTop() const { return this->y; }
         const float getBottom() const { return this->y + this->h; }
+
+        const xyfpair getTopLeft() const { return xyfpair(this->getLeft(), this->getTop()); }
+        const xyfpair getTopRight() const { return xyfpair(this->getRight(), this->getTop()); }
+        const xyfpair getBottomLeft() const { return xyfpair(this->getLeft(), this->getBottom()); }
+        const xyfpair getBottomRight() const { return xyfpair(this->getRight(), this->getBottom()); }
         
 
         const float getWidth() const { return this->w; }
@@ -45,6 +50,16 @@ class Rectangle
                 side == sides::TOP ? this->getTop():
                 side == sides::BOTTOM ? this->getBottom():
                 sides::NONE;
+        }
+
+        const vector<xyfpair> getCorners() const
+        {
+            vector<xyfpair> corners;
+            corners.push_back(this->getTopLeft());
+            corners.push_back(this->getTopRight());
+            corners.push_back(this->getBottomLeft());
+            corners.push_back(this->getBottomRight());
+            return corners;
         }
 
         void setCenterX(float x) { this->x = x - this->w/2; }

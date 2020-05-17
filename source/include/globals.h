@@ -41,71 +41,53 @@ enum Direction
 struct xyipair
 {
     int x,y,w,h;
-    xyipair()
-    {
-        x=y=w=h=0;
-    }
+    xyipair() { x=y=w=h=0; }
     xyipair(int x_pos, int y_pos)
     {
         x=w=x_pos;
         y=h=y_pos;
     }
-    xyipair zero()
-    {
-        return xyipair(0,0);
-    }
 
-    xyipair operator*(const float &scale)
-    {
-        return xyipair(x*scale, y*scale);
-    }
+    xyipair zero() { return xyipair(0,0); }
 
-    xyipair operator*(const xyipair &temp)
-    {
-        return xyipair(x*temp.x, y*temp.y);
-    }
+    xyipair operator*(const float &scale) { return xyipair(x*scale, y*scale); }
 
-    xyipair operator+(const xyipair &temp)
-    {
-        return xyipair(x+temp.x, y+temp.y);
-    }
-    // xyipair operator=(const xyfpair &temp)
-    // {
-    //     return xyipair(temp.x, temp.y);
-    // }
+    xyipair operator*(const xyipair &temp) { return xyipair(x*temp.x, y*temp.y); }
+
+    xyipair operator+(const xyipair &temp) { return xyipair(x+temp.x, y+temp.y); }
+   
+    xyipair operator-(const xyipair &temp) { return xyipair(x-temp.x, y-temp.y); }
+    
+    void swapXY() { swap(x ,y); }
 };
 
 struct xyfpair
 {
     float x,y;
-    xyfpair()
-    {
-        x=y=0.0;
-    }
+    xyfpair() { x=y=0.0; }
     xyfpair(float x_pos, float y_pos)
     {
         x=x_pos;
         y=y_pos;
     }
-    xyfpair zero()
-    {
-        return xyfpair(0,0);
-    }
 
-    xyfpair operator*(const float &scale)
-    {
-        return xyfpair(x*scale, y*scale);
-    }
+    xyfpair zero() { return xyfpair(0,0); }
 
-    xyfpair operator*(const xyipair &temp)
-    {
-        return xyfpair(x*temp.x, y*temp.y);
-    }
+    xyfpair operator*(const float &scale) { return xyfpair(x*scale, y*scale); }
 
-    xyfpair operator+(const xyipair &temp)
-    {
-        return xyfpair(x+temp.x, y+temp.y);
-    }
+    xyfpair operator*(const xyfpair &temp) { return xyfpair(x*temp.x, y*temp.y); }
+
+    xyfpair operator+(const xyfpair &temp) { return xyfpair(x+temp.x, y+temp.y); }
+    
+    xyfpair operator-(const xyfpair &temp) { return xyfpair(x-temp.x, y-temp.y); }
+
+    bool operator==(const xyfpair &temp) { return x==temp.x && y==temp.y; }
+
+    bool operator!=(const xyfpair &temp) { return x!=temp.x && y!=temp.y; }
+
+    float dot(const xyfpair &temp) { return this->x*temp.x + this->y*temp.y; }
+    
+    void swapXY() { swap(x ,y); }
 
 };
 #endif // !1 GLOBALS_H

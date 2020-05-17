@@ -90,7 +90,16 @@ void Level::loadMap(Graphics &graphics, string mapName)
                         Tile m_tile = Tile(this->_tileTextures[tile.ID], tile.ID, this->_tileSize, xyipair(0,0), position);
 
                         this->_map[bfground][tileCounter] = m_tile;
-
+                        
+                        for(auto &object : tileset.getTile(tile.ID)->objectGroup.getObjects())
+                        {
+                            Rectangle r(ceil(position.x + object.getAABB().left), 
+                            ceil(position.y + object.getAABB().top), 
+                            ceil(object.getAABB().width),
+                            ceil(object.getAABB().height));
+                        
+                            this->_collisionRects.push_back(r);
+                        }
                         break;
                     }
                 }
@@ -107,12 +116,30 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 auto &objects = objectlayer.getObjects();
                 for(auto &object : objects)
                 {
-                    Rectangle r(ceil(object.getAABB().left), 
-                        ceil(object.getAABB().top), 
-                        ceil(object.getAABB().width),
-                        ceil(object.getAABB().height));
-                     
-                    this->_collisionRects.push_back(r);
+                    if(object.getShape() == tmx::Object::Shape::Rectangle)
+                    {
+                        Rectangle r(ceil(object.getAABB().left), 
+                            ceil(object.getAABB().top), 
+                            ceil(object.getAABB().width),
+                            ceil(object.getAABB().height));
+                        
+                        this->_collisionRects.push_back(r);
+                    }
+                    else if(object.getShape() == tmx::Object::Shape::Polyline ||
+                            object.getShape() == tmx::Object::Shape::Polygon)
+                    {
+                        xyfpair linePos = xyfpair(object.getPosition().x, object.getPosition().y);
+                        xyfpair lineStart = linePos;
+                        for(auto &point : object.getPoints())
+                        {
+                            xyfpair lineEnd = linePos+xyfpair(point.x, point.y);
+                            if(lineStart != lineEnd)
+                                this->_collisionSlopes.push_back(Slope(lineStart, lineEnd));
+                            lineStart = lineEnd;
+                        }
+                        if(object.getShape() == tmx::Object::Shape::Polygon)
+                            this->_collisionSlopes.push_back(Slope(lineStart, linePos));
+                    }
 
                 }
             }
@@ -165,6 +192,17 @@ vector<Rectangle> Level::checkTileCollision(const Rectangle &other)
             collidingRects.push_back(rectangle);
     }
     return collidingRects;
+}
+
+vector<Slope> Level::checkSlopeCollision(const Rectangle &other)
+{
+    vector<Slope> collidingSlopes;
+    for(auto &slope : this->_collisionSlopes)
+    {
+        if(slope.collidesWith(other))
+            collidingSlopes.push_back(slope);
+    }
+    return collidingSlopes;
 }
 
 const xyipair Level::getPlayerSpawnPoint() const{

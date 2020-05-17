@@ -123,16 +123,27 @@ void Game::update(float elapsedTime)
     //     this->_player.handleTileCollision(colliding);
     // }
 
-    vector<Rectangle> colliding;
-    if((colliding = this->_level.checkTileCollision(this->_player.getBoundingBox())).size() > 0)
+    vector<Rectangle> collidingRects = this->_level.checkTileCollision(this->_player.getBoundingBox());
+    if(collidingRects.size() > 0)
     {
         this->_player.undoMove(elapsedTime);
-        this->_player.stopMoving();
+    //     this->_player.stopMoving();
+            // this->_player.handleTileCollision(collidingRects);
     }
 
+    vector<Slope> collidingSlopes = this->_level.checkSlopeCollision(this->_player.getBoundingBox());
+    if(collidingSlopes.size() > 0)
+    {
+        // cout<<"slope collide"<<endl;
+        this->_player.undoMove(elapsedTime);
+        // this->_player.stopMoving();
+            // this->_player.handleTileCollision(colliding);
+    }
 
-    // Change camera coordinates to follow player. Camera is centered on player.
-    this->_camera->setCenter(this->_player.getSpriteBox().getCenter());
+    // Change camera coordinates to follow player if no collision is taking place. Camera is centered on player.
+    // if(collidingRects.size() == 0 && collidingSlopes.size() == 0)
+        this->_camera->setCenter(this->_player.getSpriteBox().getCenter());
+
     // Contain camera within map. 
     this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
 }

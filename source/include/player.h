@@ -33,6 +33,7 @@ class Player : public AnimatedSprite
         Rectangle getSpriteBox() { return this->_sprite; }
         
         void handleTileCollision(vector<Rectangle> &colliding);
+        void handleSlopeCollision(vector<Slope> &colliding);
 
         void undoMove(float elapsedTime);
         void makeMove(float elapsedTime);

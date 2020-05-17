@@ -44,7 +44,7 @@ void Player::animationDone(string animation)
 
 void Player::updateBoundingBox()
 {
-    this->_boundingBox = Rectangle(this->_sprite.x+4, this->_sprite.y+46, o::_w-8, 16);
+    this->_boundingBox = Rectangle(this->_sprite.x+14, this->_sprite.y+52, o::_w-32, 12);
 }
 
 void Player::setCurrentLevel(Level *level)
@@ -130,7 +130,6 @@ void Player::handleTileCollision(vector<Rectangle> &colliding)
 {
     for( Rectangle &r : colliding)
     {
-        this->stopMoving();
         sides::Side collisionSide = Sprite::getCollisionSide(r);
         if(collisionSide != sides::NONE)
         {
@@ -153,11 +152,17 @@ void Player::handleTileCollision(vector<Rectangle> &colliding)
                     this->_dy=0;
                     this->_grounded = (this->_currentLevel->hasGravity()) ? true : false;
                     break;
-            
             }
         }
     } 
-    colliding.clear();
+}
+
+void Player::handleSlopeCollision(vector<Slope> &colliding)
+{
+    for( Slope &slope : colliding)
+    {
+        continue;
+    }
 }
 
 void Player::update(float timeElapsed)
