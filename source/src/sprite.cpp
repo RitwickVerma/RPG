@@ -45,12 +45,29 @@ const sides::Side Sprite::getCollisionSide(Rectangle &other) const{
 
     int mini=min(amtRight, min(amtLeft, min(amtTop, amtBottom)));
 
-    return 
+    return
         mini == amtRight ? sides::RIGHT :
         mini == amtLeft ? sides::LEFT :
         mini == amtTop ? sides::TOP :
         mini == amtBottom ? sides::BOTTOM :
         sides::NONE;
+}
+
+const int Sprite::getCollisionSide(Line &other) const{
+    int mini=0;
+    float mindist = INT_MAX;
+    auto corners = this->_sprite.getCorners();
+    for(int i=0; i<corners.size(); i++)
+    {
+        float dist = utils::distance(corners[i], other);
+        if(mindist>dist)
+        {
+            mindist = dist;
+            mini = i;
+        }
+    }
+
+    return mini;
 }
 
 void Sprite::draw(Graphics &graphics, int x, int y)

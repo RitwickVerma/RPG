@@ -83,11 +83,11 @@ void Level::loadMap(Graphics &graphics, string mapName)
                         xyipair tilesetPosition = xyipair(tileset.getTile(tile.ID)->imagePosition.x, tileset.getTile(tile.ID)->imagePosition.y);
                         // xyipair tilesetPosition = xyipair(0,0);
                         xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_tileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_tileSize.y);
-                        
+                        position.y -= tileset.getTileSize().y - this->_tileSize.h;
                         if(this->_tileTextures.count(tile.ID) == 0)
-                            this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, this->_tileSize);
+                            this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tileset.getTileSize().x, tileset.getTileSize().y));
 
-                        Tile m_tile = Tile(this->_tileTextures[tile.ID], tile.ID, this->_tileSize, xyipair(0,0), position);
+                        Tile m_tile = Tile(this->_tileTextures[tile.ID], tile.ID, xyipair(tileset.getTileSize().x, tileset.getTileSize().y), xyipair(0,0), position);
 
                         this->_map[bfground][tileCounter] = m_tile;
                         
@@ -129,16 +129,13 @@ void Level::loadMap(Graphics &graphics, string mapName)
                             object.getShape() == tmx::Object::Shape::Polygon)
                     {
                         xyfpair linePos = xyfpair(object.getPosition().x, object.getPosition().y);
-                        xyfpair lineStart = linePos;
-                        for(auto &point : object.getPoints())
+                        auto points = object.getPoints();
+                        for(int i=0; i<(points.size()-((object.getShape() == tmx::Object::Shape::Polygon)? 0:1)) ; i++)
                         {
-                            xyfpair lineEnd = linePos+xyfpair(point.x, point.y);
-                            if(lineStart != lineEnd)
-                                this->_collisionSlopes.push_back(Slope(lineStart, lineEnd));
-                            lineStart = lineEnd;
+                            xyfpair lineStart = linePos + xyfpair(points[i].x, points[i].y);
+                            xyfpair lineEnd = linePos + xyfpair(points[(i+1)%points.size()].x, points[(i+1)%points.size()].y);
+                            this->_collisionSlopes.push_back(Line(lineStart, lineEnd));
                         }
-                        if(object.getShape() == tmx::Object::Shape::Polygon)
-                            this->_collisionSlopes.push_back(Slope(lineStart, linePos));
                     }
 
                 }
@@ -150,8 +147,8 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 {
                     if(object.getName() == "player")
                     {
-                        this->_playerSpawnPoint = xyipair(ceil(object.getAABB().left), 
-                            ceil(object.getAABB().top));
+                        this->_playerSpawnPoint = xyipair(ceil(object.getPosition().x), 
+                            ceil(object.getPosition().y));
                     }
                 }
             }
@@ -194,9 +191,9 @@ vector<Rectangle> Level::checkTileCollision(const Rectangle &other)
     return collidingRects;
 }
 
-vector<Slope> Level::checkSlopeCollision(const Rectangle &other)
+vector<Line> Level::checkLineCollision(const Rectangle &other)
 {
-    vector<Slope> collidingSlopes;
+    vector<Line> collidingSlopes;
     for(auto &slope : this->_collisionSlopes)
     {
         if(slope.collidesWith(other))

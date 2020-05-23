@@ -33,6 +33,11 @@ namespace sides
     }
 }
 
+namespace corners{
+    enum Corner
+    { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, NONE };
+}
+
 enum Direction
 {
     NORTH, SOUTH, EAST, WEST

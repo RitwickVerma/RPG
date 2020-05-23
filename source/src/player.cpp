@@ -112,17 +112,17 @@ void Player::stopMoving()
 }
 
 
-void Player::undoMove(float timeElapsed)
+void Player::undoMove(float elapsedTime)
 {
-    this->_sprite.x -= this->_dx * timeElapsed;
-    this->_sprite.y -= this->_dy * timeElapsed;
+    this->_sprite.x -= this->_dx * elapsedTime;
+    this->_sprite.y -= this->_dy * elapsedTime;
     this->updateBoundingBox();
 }
 
-void Player::makeMove(float timeElapsed)
+void Player::makeMove(float elapsedTime)
 {
-    this->_sprite.x += this->_dx * timeElapsed;
-    this->_sprite.y += this->_dy * timeElapsed;
+    this->_sprite.x += this->_dx * elapsedTime;
+    this->_sprite.y += this->_dy * elapsedTime;
     this->updateBoundingBox();
 }
 
@@ -157,32 +157,96 @@ void Player::handleTileCollision(vector<Rectangle> &colliding)
     } 
 }
 
-void Player::handleSlopeCollision(vector<Slope> &colliding)
+bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
 {
-    for( Slope &slope : colliding)
+    for( Line &line : colliding)
     {
-        continue;
+        float shiftx=0, shifty=0;
+        vector<bool> collidingSides = line.getCollidingSides(this->_boundingBox);
+        for(int i=0; i<collidingSides.size(); i++)
+        {
+            if(collidingSides[i] && collidingSides[(i+1)%collidingSides.size()])
+            {
+                xyfpair corner;
+                if(i==0) { corner = this->_boundingBox.getTopRight(); }
+                else if(i==1) { corner = this->_boundingBox.getBottomRight(); }
+                else if(i==2) { corner = this->_boundingBox.getBottomLeft(); }
+                else if(i==3) { corner = this->_boundingBox.getTopLeft(); }
+
+                float normal_m = -1/line.m;
+                float normal_b = corner.y - normal_m * corner.x;
+                float new_x = (normal_b - line.b)/(line.m - normal_m);
+                float new_y = normal_m * new_x + normal_b;
+                shiftx = new_x - corner.x;
+                shifty = new_y - corner.y;
+            }
+        }
+
+        float shift1, shift2;
+        if(collidingSides[0] && collidingSides[2])
+        {
+            if(line.pointsOnOppositeSide(this->_boundingBox.getTopLeft(), this->_boundingBox.getTopRight(), line.p1, line.p2))
+            {
+                if(this->_boundingBox.getRight() - line.p1.x < line.p1.x - this->_boundingBox.getLeft())
+                    shift1 = line.p1.x - this->_boundingBox.getRight();
+                else
+                    shift1 = line.p1.x - this->_boundingBox.getLeft();
+            }
+            if(line.pointsOnOppositeSide(this->_boundingBox.getBottomLeft(), this->_boundingBox.getBottomRight(), line.p1, line.p2))
+            {
+                if(this->_boundingBox.getRight() - line.p1.x < line.p1.x - this->_boundingBox.getLeft())
+                    shift2 = line.p1.x - this->_boundingBox.getRight();
+                else
+                    shift2 = line.p1.x - this->_boundingBox.getLeft();
+            }
+            shiftx = ((shift1<0 || shift2<0)? min(shift1, shift2): max(shift1, shift2));
+        }
+        else if(collidingSides[1] && collidingSides[3])
+        {
+            if(line.pointsOnOppositeSide(this->_boundingBox.getTopLeft(), this->_boundingBox.getBottomLeft(), line.p1, line.p2))
+            {
+                if(this->_boundingBox.getBottom() - line.p1.y < line.p1.y - this->_boundingBox.getTop())
+                    shift1 = line.p1.y - this->_boundingBox.getBottom();
+                else
+                    shift1 = line.p1.y - this->_boundingBox.getTop();
+
+            }
+            if(line.pointsOnOppositeSide(this->_boundingBox.getTopRight(), this->_boundingBox.getBottomRight(), line.p1, line.p2))
+            {
+                if(this->_boundingBox.getBottom() - line.p1.y < line.p1.y - this->_boundingBox.getTop())
+                    shift2 = line.p1.y - this->_boundingBox.getBottom();
+                else
+                    shift2 = line.p1.y - this->_boundingBox.getTop();
+                
+            }
+            shifty = ((shift1<0 || shift2<0)? min(shift1, shift2): max(shift1, shift2));
+        }
+
+        shiftx += ((shiftx == 0)?0:((shiftx>0)?1:-1)); 
+        shifty += ((shifty == 0)?0:((shifty>0)?1:-1)); 
+        this->_sprite.x += shiftx;
+        this->_sprite.y += shifty;
+
+        this->updateBoundingBox();
     }
+    return true;
 }
 
-void Player::update(float timeElapsed)
+void Player::update(float elapsedTime)
 {
-    AnimatedSprite::update(timeElapsed);
+    AnimatedSprite::update(elapsedTime);
 
     // Apply Gravity
     if(this->_dy <= o::GRAVITY_CAP && this->_currentLevel->hasGravity())
-        this->_dy += o::GRAVITY * timeElapsed; 
+        this->_dy += o::GRAVITY * elapsedTime; 
 
     // Move player by changing x, y by velocity dx, dy
-    // this->_sprite.x += this->_dx * timeElapsed;
-    // this->_sprite.y += this->_dy * timeElapsed;
-    // this->updateBoundingBox();
-    this->makeMove(timeElapsed);
+    this->makeMove(elapsedTime);
 
     // Check if the player is within camera after change. If not, move player back.
     if(!this->_sprite.containedWithin(*this->_camera))
     {
-        this->undoMove(timeElapsed);
+        this->undoMove(elapsedTime);
         this->stopMoving();
     }
 

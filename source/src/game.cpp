@@ -26,7 +26,7 @@ void Game::gameLoop()
 
     Rectangle camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
     this->_camera = &camera;
-    this->_level = Level(graphics, "map1.tmx", xyipair(100, 100), &camera);
+    this->_level = Level(graphics, "testing_map.tmx", xyipair(100, 100), &camera);
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , &camera);
     this->_player.setCurrentLevel(&this->_level);
 
@@ -86,6 +86,7 @@ void Game::gameLoop()
         LAST_TIME_MS = CURRENT_TIME_MS;
 
         this->draw(graphics);
+        SDL_Delay(2);
     }
 }
 
@@ -113,8 +114,6 @@ void Game::draw(Graphics &graphics)
 
 void Game::update(float elapsedTime)
 {
-    this->_player.update(elapsedTime);
-    this->_level.update(elapsedTime);
 
     // Check collisions
     // vector<Rectangle> colliding;
@@ -126,18 +125,20 @@ void Game::update(float elapsedTime)
     vector<Rectangle> collidingRects = this->_level.checkTileCollision(this->_player.getBoundingBox());
     if(collidingRects.size() > 0)
     {
-        this->_player.undoMove(elapsedTime);
+        // this->_player.undoMove(elapsedTime);
     //     this->_player.stopMoving();
-            // this->_player.handleTileCollision(collidingRects);
+            this->_player.handleTileCollision(collidingRects);
     }
 
-    vector<Slope> collidingSlopes = this->_level.checkSlopeCollision(this->_player.getBoundingBox());
-    if(collidingSlopes.size() > 0)
+    vector<Line> collidingLines = this->_level.checkLineCollision(this->_player.getBoundingBox());
+    if(collidingLines.size() > 0)
     {
         // cout<<"slope collide"<<endl;
-        this->_player.undoMove(elapsedTime);
+        // this->_player.undoMove(elapsedTime);
         // this->_player.stopMoving();
-            // this->_player.handleTileCollision(colliding);
+        // this->_player.undoMove(elapsedTime);
+        this->_player.handleLineCollision(collidingLines, elapsedTime);
+        // this->_player.makeMove(elapsedTime);
     }
 
     // Change camera coordinates to follow player if no collision is taking place. Camera is centered on player.
@@ -146,4 +147,7 @@ void Game::update(float elapsedTime)
 
     // Contain camera within map. 
     this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
+
+    this->_player.update(elapsedTime);
+    this->_level.update(elapsedTime);
 }

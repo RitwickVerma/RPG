@@ -6,6 +6,7 @@
 #include "animatedsprite.h"
 #include "level.h"
 #include "rectangle.h"
+#include "utils.h"
 
 struct Graphics;
 
@@ -33,7 +34,7 @@ class Player : public AnimatedSprite
         Rectangle getSpriteBox() { return this->_sprite; }
         
         void handleTileCollision(vector<Rectangle> &colliding);
-        void handleSlopeCollision(vector<Slope> &colliding);
+        bool handleLineCollision(vector<Line> &colliding, int elapsedTime = 1);
 
         void undoMove(float elapsedTime);
         void makeMove(float elapsedTime);

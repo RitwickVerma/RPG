@@ -57,8 +57,8 @@ class Rectangle
             vector<xyfpair> corners;
             corners.push_back(this->getTopLeft());
             corners.push_back(this->getTopRight());
-            corners.push_back(this->getBottomLeft());
             corners.push_back(this->getBottomRight());
+            corners.push_back(this->getBottomLeft());
             return corners;
         }
 
