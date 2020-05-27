@@ -4,6 +4,7 @@
 #pragma once
 
 #include "globals.h"
+#include "renderable.h"
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -27,6 +28,10 @@ class Graphics
         /* Returns a texture from part of a surface (calls getSurfaceFromRect) */
         SDL_Texture* getTextureFromSurfaceRect(SDL_Surface *surface, xyipair pos, xyipair size);
 
+        void addToRenderQueue(Renderable renderable);
+
+        void drawQueue();
+
         /* Updates the screen with rendering performed since previous call */
         void flip();
         
@@ -35,11 +40,17 @@ class Graphics
 
         /* Returns instance of Renderer */
         SDL_Renderer *getRenderer();
+        struct sort_by_z
+        {
+            bool operator()(Renderable &a, Renderable &b) { return a.getZ() < b.getZ(); }
+        };
 
     private:
         SDL_Window  *_window;
         SDL_Renderer *_renderer;
 
+
+        priority_queue< Renderable, vector<Renderable>, sort_by_z > _render_queue;
         std::map<std::string, SDL_Surface*> _spriteSheets;
 };
 

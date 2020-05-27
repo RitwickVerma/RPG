@@ -268,16 +268,17 @@ void Player::update(float elapsedTime)
     this->makeMove(elapsedTime);
 
     // Check if the player is within camera after change. If not, move player back.
-    if(!this->_sprite.containedWithin(*this->_camera))
-    {
-        this->undoMove(elapsedTime);
-        this->stopMoving();
-    }
+    // if(!this->_sprite.containedWithin(*this->_camera))
+    // {
+    //     this->undoMove(elapsedTime);
+    //     this->stopMoving();
+    // }
 
 
 }
 
 void Player::draw(Graphics &graphics)
 {
-    AnimatedSprite::draw(graphics, this->_sprite.x-this->_camera->getLeft(), this->_sprite.y-this->_camera->getTop());
+    // AnimatedSprite::draw(graphics, this->_sprite.x-this->_camera->getLeft(), this->_sprite.y-this->_camera->getTop());
+    AnimatedSprite::draw(graphics, this->_sprite.x, this->_sprite.y);
 }

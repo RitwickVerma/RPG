@@ -1,5 +1,6 @@
 #include "animatedsprite.h"
 #include "graphics.h"
+#include "renderable.h"
 
 AnimatedSprite::AnimatedSprite(){}
 
@@ -81,6 +82,8 @@ void AnimatedSprite::draw(Graphics &graphics, int x, int y)
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 
-        graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
+        Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect);
+        graphics.addToRenderQueue(r);
+        // graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
     }
 }

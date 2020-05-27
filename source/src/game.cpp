@@ -94,21 +94,23 @@ void Game::draw(Graphics &graphics)
 {
     graphics.clear();
 
-    this->_level.draw_background(graphics);
-    vector<Rectangle> colliding;
-    if((colliding = this->_level.checkTileCollision(Rectangle(this->_player.getBoundingBox().getLeft(), this->_player.getSpriteBox().getTop(), 
-        this->_player.getBoundingBox().getWidth() - 1,
-        abs(this->_player.getBoundingBox().getBottom()-this->_player.getSpriteBox().getTop() - 1 ) ))).size() > 0)
-    {
-        this->_level.draw_foreground(graphics);
-        this->_player.draw(graphics);
-    }
-    else
-    {
-        this->_player.draw(graphics);
-        this->_level.draw_foreground(graphics);
-    }
+    this->_player.draw(graphics);
     
+    // this->_level.draw_background(graphics);
+    // vector<Rectangle> colliding;
+    // if((colliding = this->_level.checkTileCollision(Rectangle(this->_player.getBoundingBox().getLeft(), this->_player.getSpriteBox().getTop(), 
+    //     this->_player.getBoundingBox().getWidth() - 1,
+    //     abs(this->_player.getBoundingBox().getBottom()-this->_player.getSpriteBox().getTop() - 1 ) ))).size() > 0)
+    // {
+    //     this->_level.draw_foreground(graphics);
+    //     this->_player.draw(graphics);
+    // }
+    // else
+    // {
+    //     this->_player.draw(graphics);
+    //     this->_level.draw_foreground(graphics);
+    // }
+    graphics.drawQueue();
     graphics.flip();
 }
 

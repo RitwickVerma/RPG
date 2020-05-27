@@ -38,6 +38,21 @@ SDL_Texture* Graphics::getTextureFromSurfaceRect(SDL_Surface *surface, xyipair p
     return texture;
 }
 
+void Graphics::addToRenderQueue(Renderable renderable)
+{
+    this->_render_queue.push(renderable);
+}
+
+void Graphics::drawQueue()
+{
+    while(!this->_render_queue.empty())
+    {   
+        auto renderable = this->_render_queue.top();
+        this->blitSurface(renderable.getTexture(), renderable.getSourceRect(), renderable.getDestRect());
+        this->_render_queue.pop();
+    }
+}
+
 void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect) 
 {
     SDL_RenderCopy(this->_renderer, source, sourceRect, destRect);        
