@@ -14,6 +14,7 @@ class Line
             p1(pt1),
             p2(pt2)
         {
+            if(p1.x>p2.x)   swap(p1, p2);
             if(this->p1.x != this->p2.x)
             {    
                 this->m = (this->p1.y - this->p2.y)/(this->p1.x - this->p2.x);    
@@ -53,6 +54,10 @@ class Line
                 if(line_collides && side_collides)
                     collidingSides[i] = true;
             }
+
+            // if(collidingSides[0] && collidingSides[2])  collidingSides[1] = collidingSides[3] = false;
+            // if(collidingSides[1] && collidingSides[3])  collidingSides[0] = collidingSides[2] = false;
+
             return collidingSides;
         }
         

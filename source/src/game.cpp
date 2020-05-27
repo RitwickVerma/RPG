@@ -26,10 +26,10 @@ void Game::gameLoop()
 
     Rectangle camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
     this->_camera = &camera;
-    this->_level = Level(graphics, "testing_map.tmx", xyipair(100, 100), &camera);
+    this->_level = Level(graphics, "map1.tmx", xyipair(100, 100), &camera);
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , &camera);
     this->_player.setCurrentLevel(&this->_level);
-
+    this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY()-300));
     int LAST_TIME_MS = SDL_GetTicks();
     while(true)
     {
@@ -114,6 +114,8 @@ void Game::draw(Graphics &graphics)
 
 void Game::update(float elapsedTime)
 {
+    this->_player.update(elapsedTime);
+    this->_level.update(elapsedTime);
 
     // Check collisions
     // vector<Rectangle> colliding;
@@ -142,12 +144,18 @@ void Game::update(float elapsedTime)
     }
 
     // Change camera coordinates to follow player if no collision is taking place. Camera is centered on player.
-    // if(collidingRects.size() == 0 && collidingSlopes.size() == 0)
-        this->_camera->setCenter(this->_player.getSpriteBox().getCenter());
+    // if(collidingRects.size() == 0 && collidingLines.size() == 0)
+    //     this->_camera->setCenter(this->_player.getBoundingBox().getCenter());
+
+    // Camera follows player in a much more natural way which looks animated and super cool.
+    float del_x = 0.005*(this->_camera->getCenterX() - this->_player.getBoundingBox().getCenterX());
+    float del_y = 0.01*(this->_camera->getCenterY() - this->_player.getBoundingBox().getCenterY());
+    del_x = round(del_x*10)/10;
+    del_y = round(del_y*10)/10;
+    this->_camera->setCenterX( (this->_camera->getCenterX() - del_x));
+    this->_camera->setCenterY( (this->_camera->getCenterY() - del_y));
 
     // Contain camera within map. 
     this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
 
-    this->_player.update(elapsedTime);
-    this->_level.update(elapsedTime);
 }

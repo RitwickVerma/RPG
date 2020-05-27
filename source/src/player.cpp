@@ -161,8 +161,26 @@ bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
 {
     for( Line &line : colliding)
     {
-        float shiftx=0, shifty=0;
+        float shiftx=0, shifty=0, shift1 = 0, shift2 = 0;
         vector<bool> collidingSides = line.getCollidingSides(this->_boundingBox);
+        int count=0;
+        for(bool sidecollide : collidingSides)
+            if(sidecollide)
+                count++;
+        
+        if(count==1)
+        {
+            Line templine = line;
+            float length = utils::distance(templine.p1, templine.p2);
+            float del_x = (templine.p2.x - templine.p1.x)/length;
+            float del_y = (templine.p2.y - templine.p1.y)/length;
+            templine.p1.x -= 50*del_x;
+            templine.p1.y -= 50*del_y;
+            templine.p2.x += 50*del_x;
+            templine.p2.y += 50*del_y;
+            collidingSides = templine.getCollidingSides(this->_boundingBox);
+        }
+
         for(int i=0; i<collidingSides.size(); i++)
         {
             if(collidingSides[i] && collidingSides[(i+1)%collidingSides.size()])
@@ -179,54 +197,60 @@ bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
                 float new_y = normal_m * new_x + normal_b;
                 shiftx = new_x - corner.x;
                 shifty = new_y - corner.y;
+
+                collidingSides[i] = collidingSides[(i+1)%collidingSides.size()] = false;
+                goto COLLISION_HANDLED;
             }
         }
 
-        float shift1, shift2;
         if(collidingSides[0] && collidingSides[2])
         {
+            xyfpair point = ((this->_boundingBox.getLeft() <= line.p1.x && line.p1.x <= this->_boundingBox.getRight())? line.p1 : line.p2);
             if(line.pointsOnOppositeSide(this->_boundingBox.getTopLeft(), this->_boundingBox.getTopRight(), line.p1, line.p2))
             {
-                if(this->_boundingBox.getRight() - line.p1.x < line.p1.x - this->_boundingBox.getLeft())
-                    shift1 = line.p1.x - this->_boundingBox.getRight();
+                if(this->_boundingBox.getRight() - point.x < point.x - this->_boundingBox.getLeft())
+                    shift1 = point.x - this->_boundingBox.getRight();
                 else
-                    shift1 = line.p1.x - this->_boundingBox.getLeft();
+                    shift1 = point.x - this->_boundingBox.getLeft();
             }
             if(line.pointsOnOppositeSide(this->_boundingBox.getBottomLeft(), this->_boundingBox.getBottomRight(), line.p1, line.p2))
             {
-                if(this->_boundingBox.getRight() - line.p1.x < line.p1.x - this->_boundingBox.getLeft())
-                    shift2 = line.p1.x - this->_boundingBox.getRight();
+                if(this->_boundingBox.getRight() - point.x < point.x - this->_boundingBox.getLeft())
+                    shift2 = point.x - this->_boundingBox.getRight();
                 else
-                    shift2 = line.p1.x - this->_boundingBox.getLeft();
+                    shift2 = point.x - this->_boundingBox.getLeft();
             }
             shiftx = ((shift1<0 || shift2<0)? min(shift1, shift2): max(shift1, shift2));
         }
         else if(collidingSides[1] && collidingSides[3])
         {
+            xyfpair point = ((this->_boundingBox.getTop() <= line.p1.y && line.p1.y <= this->_boundingBox.getBottom())? line.p1 : line.p2);
             if(line.pointsOnOppositeSide(this->_boundingBox.getTopLeft(), this->_boundingBox.getBottomLeft(), line.p1, line.p2))
             {
-                if(this->_boundingBox.getBottom() - line.p1.y < line.p1.y - this->_boundingBox.getTop())
-                    shift1 = line.p1.y - this->_boundingBox.getBottom();
+                if(this->_boundingBox.getBottom() - point.y < point.y - this->_boundingBox.getTop())
+                    shift1 = point.y - this->_boundingBox.getBottom();
                 else
-                    shift1 = line.p1.y - this->_boundingBox.getTop();
+                    shift1 = point.y - this->_boundingBox.getTop();
 
             }
             if(line.pointsOnOppositeSide(this->_boundingBox.getTopRight(), this->_boundingBox.getBottomRight(), line.p1, line.p2))
             {
-                if(this->_boundingBox.getBottom() - line.p1.y < line.p1.y - this->_boundingBox.getTop())
-                    shift2 = line.p1.y - this->_boundingBox.getBottom();
+                if(this->_boundingBox.getBottom() - point.y < point.y - this->_boundingBox.getTop())
+                    shift2 = point.y - this->_boundingBox.getBottom();
                 else
-                    shift2 = line.p1.y - this->_boundingBox.getTop();
+                    shift2 = point.y - this->_boundingBox.getTop();
                 
             }
             shifty = ((shift1<0 || shift2<0)? min(shift1, shift2): max(shift1, shift2));
         }
 
+        COLLISION_HANDLED:
+
         shiftx += ((shiftx == 0)?0:((shiftx>0)?1:-1)); 
         shifty += ((shifty == 0)?0:((shifty>0)?1:-1)); 
         this->_sprite.x += shiftx;
         this->_sprite.y += shifty;
-
+        this->_dx = this->_dy = 0;
         this->updateBoundingBox();
     }
     return true;

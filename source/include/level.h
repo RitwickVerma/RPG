@@ -43,7 +43,7 @@ class Level
         // SDL_Texture *_backgroundTexture;
         string MAP_DIR;        
 
-        xyipair _tileSize;
+        xyipair _mapTileSize;
         xyipair _tileCount;
         xyfpair _mapOffset;
         vector<vector<Tile>> _map;
