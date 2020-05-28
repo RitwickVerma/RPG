@@ -6,7 +6,7 @@
 #include "globals.h"
 #include "rectangle.h"
 #include "line.h"
-#include "utils.h"
+// #include "utils.h"
 
 struct Graphics;
 
@@ -21,7 +21,6 @@ class Sprite
 
         const Rectangle getBoundingBox() const;
         const sides::Side getCollisionSide(Rectangle &other) const;
-        const int getCollisionSide(Line &other) const;
 
     protected:
         SDL_Texture *_spriteSheet;

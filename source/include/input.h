@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <SDL2/SDL.h>
 #include "globals.h"
 
 class Input

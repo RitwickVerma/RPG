@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include "globals.h"
-
 class Renderable
 {
     public:

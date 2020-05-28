@@ -4,16 +4,21 @@
 #pragma once
 
 #include "globals.h"
-#include "renderable.h"
 #include "tile.h"
 
-class Thing : protected Renderable
+class Thing
 {
-    protected:
-       
+    public:
+        Thing();
+       void addTile(Tile &tile);
+       void draw(Graphics &graphics);
+       void setZ(float Z);
+       float getZ();
+       bool isEmpty();
 
     private:
-    vector<Tile> _thingTiles;
+        float z_comp;
+        vector<Tile> _thingTiles;
 };
 
 #endif // !THING_H

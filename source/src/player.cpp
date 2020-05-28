@@ -1,5 +1,6 @@
 #include "player.h"
 #include "graphics.h"
+// #include "utils.h"
 
 namespace o
 {
@@ -171,7 +172,7 @@ bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
         if(count==1)
         {
             Line templine = line;
-            float length = utils::distance(templine.p1, templine.p2);
+            float length = 0;// utils::distance(templine.p1, templine.p2);
             float del_x = (templine.p2.x - templine.p1.x)/length;
             float del_y = (templine.p2.y - templine.p1.y)/length;
             templine.p1.x -= 50*del_x;

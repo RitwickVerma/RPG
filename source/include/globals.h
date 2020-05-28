@@ -1,10 +1,17 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <bits/stdc++.h>
+#pragma once
+
+#include <iostream>
+#include <vector>
+#include <map>
+#include <queue>
+#include <string>
+#include <variant>
+#include <climits>
 #include <SDL2/SDL.h>
 
-#pragma once
 
 using namespace std;
 namespace globals

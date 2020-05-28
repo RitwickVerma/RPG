@@ -6,7 +6,6 @@
 #include "animatedsprite.h"
 #include "level.h"
 #include "rectangle.h"
-#include "utils.h"
 
 struct Graphics;
 

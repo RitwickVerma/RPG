@@ -94,6 +94,7 @@ void Game::draw(Graphics &graphics)
 {
     graphics.clear();
 
+    this->_level.draw(graphics);
     this->_player.draw(graphics);
     
     // this->_level.draw_background(graphics);

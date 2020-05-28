@@ -1,5 +1,6 @@
 #include "level.h"
 
+
 Level::Level()
 {
     MAP_DIR = "content/maps/";
@@ -24,22 +25,28 @@ void Level::update(float elapsedTime)
 
 void Level::draw_background(Graphics &graphics)
 {
-    for(Tile &tile : this->_map[0])
-    {   
-        if(tile.getPosition().x > this->_camera->getLeft() - this->_mapTileSize.x && tile.getPosition().x + this->_mapTileSize.x < this->_camera->getRight() + this->_mapTileSize.x
-            && tile.getPosition().y > this->_camera->getTop() - this->_mapTileSize.y && tile.getPosition().y + this->_mapTileSize.y < this->_camera->getBottom() + this->_mapTileSize.y)
-            tile.draw(graphics, xyfpair(tile.getPosition().x - this->_camera->getLeft(), tile.getPosition().y - this->_camera->getTop()));
-    }
+    // for(Tile &tile : this->_map[0])
+    // {   
+    //     if(tile.getPosition().x > this->_camera->getLeft() - this->_mapTileSize.x && tile.getPosition().x + this->_mapTileSize.x < this->_camera->getRight() + this->_mapTileSize.x
+    //         && tile.getPosition().y > this->_camera->getTop() - this->_mapTileSize.y && tile.getPosition().y + this->_mapTileSize.y < this->_camera->getBottom() + this->_mapTileSize.y)
+    //         tile.draw(graphics, xyfpair(tile.getPosition().x - this->_camera->getLeft(), tile.getPosition().y - this->_camera->getTop()));
+    // }
 }
 
 void Level::draw_foreground(Graphics &graphics)
 {
-    for(Tile &tile : this->_map[1])
-    {
-        if(tile.getPosition().x > this->_camera->getLeft() - this->_mapTileSize.x && tile.getPosition().x + this->_mapTileSize.x < this->_camera->getRight() + this->_mapTileSize.x
-            && tile.getPosition().y > this->_camera->getTop() - this->_mapTileSize.y && tile.getPosition().y + this->_mapTileSize.y < this->_camera->getBottom() + this->_mapTileSize.y)
-            tile.draw(graphics, xyfpair(tile.getPosition().x - this->_camera->getLeft(), tile.getPosition().y - this->_camera->getTop()));
-    }
+    // for(Tile &tile : this->_map[1])
+    // {
+    //     if(tile.getPosition().x > this->_camera->getLeft() - this->_mapTileSize.x && tile.getPosition().x + this->_mapTileSize.x < this->_camera->getRight() + this->_mapTileSize.x
+    //         && tile.getPosition().y > this->_camera->getTop() - this->_mapTileSize.y && tile.getPosition().y + this->_mapTileSize.y < this->_camera->getBottom() + this->_mapTileSize.y)
+    //         tile.draw(graphics, xyfpair(tile.getPosition().x - this->_camera->getLeft(), tile.getPosition().y - this->_camera->getTop()));
+    // }
+}
+
+void Level::draw(Graphics &graphics)
+{
+    for( auto &p : this->_map)
+        visit([&graphics](auto &&arg) { arg.draw(graphics); }, p);
 }
 
 vector<Rectangle> Level::checkTileCollision(const Rectangle &other)
