@@ -27,7 +27,7 @@ namespace utils
             return false; 
     
         // If one rectangle is above other 
-        if (a.getTopLeft().y <= b.getBottomRight().y || b.getTopLeft().y <= a.getBottomRight().y) 
+        if (a.getTopLeft().y >= b.getBottomRight().y || b.getTopLeft().y >= a.getBottomRight().y) 
             return false; 
     
         return true; 

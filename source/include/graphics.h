@@ -5,6 +5,7 @@
 
 #include "globals.h"
 #include "renderable.h"
+#include "rectangle.h"
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -40,6 +41,8 @@ class Graphics
 
         /* Returns instance of Renderer */
         SDL_Renderer *getRenderer();
+
+        Rectangle *getCamera();
         struct sort_by_z
         {
             bool operator()(Renderable &a, Renderable &b) { return a.getZ() > b.getZ(); }
@@ -48,7 +51,7 @@ class Graphics
     private:
         SDL_Window  *_window;
         SDL_Renderer *_renderer;
-
+        Rectangle _camera;
 
         priority_queue< Renderable, vector<Renderable>, sort_by_z > _render_queue;
         std::map<std::string, SDL_Surface*> _spriteSheets;

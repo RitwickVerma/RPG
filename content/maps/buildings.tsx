@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.3.3" name="buildings" tilewidth="32" tileheight="32" tilecount="1280" columns="32">
+<tileset version="1.2" tiledversion="1.3.5" name="buildings" tilewidth="32" tileheight="32" tilecount="1280" columns="32">
  <image source="../tilesets/buildings.png" width="1024" height="1280"/>
  <terraintypes>
   <terrain name="House_Brick_Red" tile="33"/>
@@ -133,7 +133,7 @@
  </tile>
  <tile id="977">
   <objectgroup draworder="index" id="2">
-   <object id="1" x="2.875" y="17.7813" width="26.25" height="13.3125">
+   <object id="1" x="2.875" y="17.7813" width="26.25" height="14.2187">
     <properties>
      <property name="collision" type="bool" value="true"/>
     </properties>

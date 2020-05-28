@@ -7,6 +7,7 @@ Graphics::Graphics()
     SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer);
     SDL_SetWindowTitle(this->_window, "Game");
     SDL_RenderSetScale(this->_renderer, globals::SCALING_X, globals::SCALING_Y);
+    this->_camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
 }
 
 Graphics::~Graphics()
@@ -40,6 +41,11 @@ SDL_Texture* Graphics::getTextureFromSurfaceRect(SDL_Surface *surface, xyipair p
 
 void Graphics::addToRenderQueue(Renderable renderable)
 {
+    if( renderable.getDestRect()->x >= this->_camera.getLeft() - 50 && 
+        renderable.getDestRect()->x + renderable.getDestRect()->w <= this->_camera.getRight() + 50 &&
+        renderable.getDestRect()->y >= this->_camera.getTop() - 50 && 
+        renderable.getDestRect()->y + renderable.getDestRect()->h <= this->_camera.getBottom() + 50)
+
     this->_render_queue.push(renderable);
 }
 
@@ -55,7 +61,8 @@ void Graphics::drawQueue()
 
 void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect) 
 {
-    SDL_RenderCopy(this->_renderer, source, sourceRect, destRect);        
+    SDL_Rect dest = {destRect->x - this->_camera.x, destRect->y - this->_camera.y, destRect->w, destRect->h};
+    SDL_RenderCopy(this->_renderer, source, sourceRect, &dest);        
 }
 
 void Graphics::flip()
@@ -71,4 +78,9 @@ void Graphics::clear()
 SDL_Renderer *Graphics::getRenderer()
 {
     return this->_renderer;
+}
+
+Rectangle *Graphics::getCamera()
+{
+    return &this->_camera;
 }

@@ -120,26 +120,32 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 {
                                     if(utils::checkOverlap(p.first, m_tile))
                                     {
+                                        m_tile.setZ(p.second.getZ() + 0.1*layercounter);
                                         p.second.addTile(m_tile);
-                                        p.second.setZ(p.second.getZ()+0.1*layercounter);
+                                        // p.second.setZ(p.second.getZ()+0.1*layercounter);
                                         goto TILE_ADDED;
                                     }
                                 }
-                                m_tile.setZ(position.y + tileset.getTileSize().y);
+
+                                if(mapLayer->getName() == "background")
+                                    m_tile.setZ(-100);
+                                else
+                                    m_tile.setZ(position.y + tileset.getTileSize().y);
                                 this->_map.push_back(m_tile);
                                 TILE_ADDED:
 
                                 // this->_map[bfground][tileCounter] = m_tile;
                                 
-                                // for(auto &object : tileset.getTile(tile.ID)->objectGroup.getObjects())
-                                // {
-                                //     Rectangle r(ceil(position.x + object.getAABB().left), 
-                                //     ceil(position.y + object.getAABB().top), 
-                                //     ceil(object.getAABB().width),
-                                //     ceil(object.getAABB().height));
+                                for(auto &object : tileset.getTile(tile.ID)->objectGroup.getObjects())
+                                {
+                                    Rectangle r(ceil(position.x + object.getAABB().left), 
+                                    ceil(position.y + object.getAABB().top), 
+                                    ceil(object.getAABB().width),
+                                    ceil(object.getAABB().height));
                                 
-                                //     this->_collisionRects.push_back(r);
-                                // }
+                                    this->_collisionRects.push_back(r);
+                                }
+                                
                                 break;
                             }
                         }

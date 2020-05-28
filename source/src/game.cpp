@@ -24,10 +24,10 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
-    Rectangle camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
-    this->_camera = &camera;
-    this->_level = Level(graphics, "testing_map.tmx", xyipair(100, 100), &camera);
-    this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , &camera);
+    // Rectangle camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
+    this->_camera = graphics.getCamera();
+    this->_level = Level(graphics, "map1.tmx", xyipair(100, 100), this->_camera);
+    this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , this->_camera);
     this->_player.setCurrentLevel(&this->_level);
     this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY()-300));
     int LAST_TIME_MS = SDL_GetTicks();

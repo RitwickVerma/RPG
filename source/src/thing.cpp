@@ -10,8 +10,7 @@ void Thing::addTile(Tile &tile)
 void Thing::draw(Graphics &graphics)
 {
     for(Tile &tile : this->_thingTiles)
-    {
-        tile.setZ(this->z_comp);
+    {    // tile.setZ(tile.getZ() + this->z_comp);
         tile.draw(graphics);
     }
 }
