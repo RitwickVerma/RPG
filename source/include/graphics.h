@@ -42,7 +42,7 @@ class Graphics
         SDL_Renderer *getRenderer();
         struct sort_by_z
         {
-            bool operator()(Renderable &a, Renderable &b) { return a.getZ() < b.getZ(); }
+            bool operator()(Renderable &a, Renderable &b) { return a.getZ() > b.getZ(); }
         };
 
     private:

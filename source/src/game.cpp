@@ -26,7 +26,7 @@ void Game::gameLoop()
 
     Rectangle camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
     this->_camera = &camera;
-    this->_level = Level(graphics, "map1.tmx", xyipair(100, 100), &camera);
+    this->_level = Level(graphics, "testing_map.tmx", xyipair(100, 100), &camera);
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , &camera);
     this->_player.setCurrentLevel(&this->_level);
     this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY()-300));

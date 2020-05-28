@@ -12,7 +12,7 @@ class Tile
 {
     public:
         Tile();
-        Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, xyfpair position, float Z=0);   
+        Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, xyfpair position, float Z=-100);   
         void update(float elapsedTime);
         void draw(Graphics &graphics);
         const xyfpair getPosition() const { return this->_position; }

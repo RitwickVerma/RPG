@@ -20,8 +20,7 @@ Tile::Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, 
     this->_tilesetPosition=tilesetPosition;
     this->_position=position;
 
-    if(Z!=0)   this->z_comp = Z;
-    else    this->z_comp = position.y + size.h;
+    this->z_comp = Z;
 }
 
 void Tile::update(float elapsedTime)
