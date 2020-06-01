@@ -84,6 +84,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                             }
                         }
                     }
+
                     for(auto &object : objects)
                     {
                         if(object.getShape() == tmx::Object::Shape::Point)
@@ -113,10 +114,14 @@ void Level::loadMap(Graphics &graphics, string mapName)
                     auto &tiles = tilelayer.getTiles();
                     int tileCounter=-1;
 
+
                     // Parse and handle tile properties
                     for(auto &tile : tiles)
                     {
                         tileCounter++;
+                        if(tile.ID == 0)
+                            continue;
+
                         for(auto &tileset : tilesets)
                         {
                             if(tileset.hasTile(tile.ID))
@@ -124,15 +129,18 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 auto &tmxtileset = tileset;
                                 auto &tmxtile = *tileset.getTile(tile.ID);
                                 xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
+                                
+                                position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
+                                
                                 for(auto &object : tmxtile.objectGroup.getObjects())
                                 {
+                                    Rectangle r(ceil(position.x+object.getAABB().left), 
+                                            ceil(position.y+object.getAABB().top), 
+                                            ceil(object.getAABB().width),
+                                            ceil(object.getAABB().height));
+
                                     for(auto &prop : object.getProperties())
                                     {
-                                        Rectangle r(ceil(position.x+object.getAABB().left), 
-                                                ceil(position.y+object.getAABB().top), 
-                                                ceil(object.getAABB().width),
-                                                ceil(object.getAABB().height));
-
                                         if(prop.getName() == "collision" and prop.getBoolValue() == true)
                                             this->_collisionRects.push_back(r);
                                         if(prop.getName() == "thing" and prop.getBoolValue() == true)

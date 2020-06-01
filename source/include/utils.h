@@ -20,7 +20,7 @@ namespace utils
         return dist;
     }
 
-    bool checkOverlap(Rectangle &a, Rectangle &b)
+    inline bool checkOverlap(Rectangle &a, Rectangle &b)
     { 
         // If one rectangle is on left side of other 
         if (a.getTopLeft().x >= b.getBottomRight().x || b.getTopLeft().x >= a.getBottomRight().x) 
@@ -33,13 +33,13 @@ namespace utils
         return true; 
     } 
 
-    bool checkOverlap(Rectangle &a, Tile &b)
+    inline bool checkOverlap(Rectangle &a, Tile &b)
     { 
         Rectangle r = b.getRectangle();
         return checkOverlap(a, r);
     } 
 
-    bool checkOverlap(Rectangle &a, xyfpair b)
+    inline bool checkOverlap(Rectangle &a, xyfpair b)
     { 
         return a.getLeft() <= b.x && 
                a.getRight() >= b.x &&
