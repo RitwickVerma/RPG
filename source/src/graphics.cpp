@@ -41,10 +41,10 @@ SDL_Texture* Graphics::getTextureFromSurfaceRect(SDL_Surface *surface, xyipair p
 
 void Graphics::addToRenderQueue(Renderable renderable)
 {
-    if( renderable.getDestRect()->x >= this->_camera.getLeft() - 50 && 
-        renderable.getDestRect()->x + renderable.getDestRect()->w <= this->_camera.getRight() + 50 &&
-        renderable.getDestRect()->y >= this->_camera.getTop() - 50 && 
-        renderable.getDestRect()->y + renderable.getDestRect()->h <= this->_camera.getBottom() + 50)
+    if( renderable.getDestRect()->x >= this->_camera.getLeft() - renderable.getDestRect()->w - 50 && 
+        renderable.getDestRect()->x + renderable.getDestRect()->w <= this->_camera.getRight() + renderable.getDestRect()->w + 50 &&
+        renderable.getDestRect()->y >= this->_camera.getTop() - renderable.getDestRect()->h - 50 && 
+        renderable.getDestRect()->y + renderable.getDestRect()->h <= this->_camera.getBottom() + renderable.getDestRect()->h + 50)
 
     this->_render_queue.push(renderable);
 }
@@ -61,7 +61,7 @@ void Graphics::drawQueue()
 
 void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect) 
 {
-    SDL_Rect dest = {destRect->x - this->_camera.x, destRect->y - this->_camera.y, destRect->w, destRect->h};
+    SDL_Rect dest = {int(destRect->x - round(this->_camera.x)), int(destRect->y - round(this->_camera.y)), destRect->w, destRect->h};
     SDL_RenderCopy(this->_renderer, source, sourceRect, &dest);        
 }
 

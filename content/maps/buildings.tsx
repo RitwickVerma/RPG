@@ -124,9 +124,10 @@
  </tile>
  <tile id="976">
   <objectgroup draworder="index" id="3">
-   <object id="2" x="3" y="1.875" width="26.25" height="13.3125">
+   <object id="2" x="3" y="-1.79167" width="26.25" height="16.9792">
     <properties>
      <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="true"/>
     </properties>
    </object>
   </objectgroup>
@@ -138,6 +139,11 @@
      <property name="collision" type="bool" value="true"/>
     </properties>
    </object>
+   <object id="2" x="3" y="-4.66667" width="25" height="36">
+    <properties>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
   </objectgroup>
  </tile>
  <tile id="978">
@@ -145,6 +151,7 @@
    <object id="1" x="16.9375" y="-13.2727" width="27.1591" height="43.1789">
     <properties>
      <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="true"/>
     </properties>
    </object>
    <object id="2" x="1.1875" y="4.65625" width="26.25" height="13.3125">

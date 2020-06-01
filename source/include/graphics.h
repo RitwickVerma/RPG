@@ -45,7 +45,12 @@ class Graphics
         Rectangle *getCamera();
         struct sort_by_z
         {
-            bool operator()(Renderable &a, Renderable &b) { return a.getZ() > b.getZ(); }
+            bool operator()(Renderable &a, Renderable &b) 
+            {
+                if(a.getZ() == b.getZ())
+                    return a.getDestRect()->x > b.getDestRect()->x;
+                return a.getZ() > b.getZ(); 
+            }
         };
 
     private:

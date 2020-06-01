@@ -151,8 +151,8 @@ void Game::update(float elapsedTime)
     //     this->_camera->setCenter(this->_player.getBoundingBox().getCenter());
 
     // Camera follows player in a much more natural way which looks animated and super cool.
-    float del_x = 0.005*(this->_camera->getCenterX() - this->_player.getBoundingBox().getCenterX());
-    float del_y = 0.01*(this->_camera->getCenterY() - this->_player.getBoundingBox().getCenterY());
+    float del_x = 0.01*(this->_camera->getCenterX() - this->_player.getBoundingBox().getCenterX());
+    float del_y = 0.02*(this->_camera->getCenterY() - this->_player.getBoundingBox().getCenterY());
     del_x = round(del_x*10)/10;
     del_y = round(del_y*10)/10;
     this->_camera->setCenterX( (this->_camera->getCenterX() - del_x));

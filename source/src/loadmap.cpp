@@ -8,6 +8,8 @@
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/LayerGroup.hpp>
 #include <tmxlite/Tileset.hpp>
+#include <tmxlite/Property.hpp>
+#include <tmxlite/Object.hpp>
 
 void Level::loadMap(Graphics &graphics, string mapName)
 {
@@ -64,6 +66,14 @@ void Level::loadMap(Graphics &graphics, string mapName)
                             Thing t = Thing();
                             t.setZ(r.getBottom());
                             thingvector.push_back(make_pair(r, t));
+
+                            for(auto &prop : object.getProperties())
+                            {
+                                if(prop.getName() == "collision" and prop.getBoolValue() == true)
+                                {
+                                    this->_collisionRects.push_back(r);
+                                }                            
+                            }
                         }
                     }
                     for(auto &object : objects)
@@ -128,7 +138,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 }
 
                                 if(mapLayer->getName() == "background")
-                                    m_tile.setZ(-100);
+                                    m_tile.setZ(-100 + 0.1*layercounter);
                                 else
                                     m_tile.setZ(position.y + tileset.getTileSize().y);
                                 this->_map.push_back(m_tile);
