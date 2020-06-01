@@ -11,6 +11,15 @@
 #include <tmxlite/Property.hpp>
 #include <tmxlite/Object.hpp>
 
+struct tile_info
+{
+    const tmx::Tileset *tmxtileset;
+    const tmx::Tileset::Tile *tmxtile;
+    vector<Rectangle> collisionRectObjects;
+    vector<Rectangle> thingRectObjects;
+};
+
+
 void Level::loadMap(Graphics &graphics, string mapName)
 {
     string filepath=this->MAP_DIR+mapName;
@@ -23,12 +32,34 @@ void Level::loadMap(Graphics &graphics, string mapName)
     this->_size=xyipair(this->_tileCount * this->_mapTileSize);
 
     // this->_map = vector<vector<Tile>>(2, vector<Tile>(this->_tileCount.y * this->_tileCount.x, Tile()));
-
+    unordered_map<int, tile_info> tileData;
     // Get all Tilesets and store them in the map _tilesets at key = firstGid
     for(auto &tileset : tmxmap.getTilesets())
     {
         string tilesetImagePath = tileset.getImagePath();
         this->_tilesets[tileset.getFirstGID()] = (Tileset(graphics.loadImage(tilesetImagePath), tileset.getFirstGID()));
+        
+        if(tileset.getName() != "terrain-map")
+            for(auto &tile : tileset.getTiles())
+            {
+                tileData[tile.ID].tmxtileset = &tileset;
+                tileData[tile.ID].tmxtile = &tile;
+                for(auto &object : tile.objectGroup.getObjects())
+                {
+                    for(auto &prop : object.getProperties())
+                    {
+                        Rectangle r(ceil(object.getAABB().left), 
+                                ceil(object.getAABB().top), 
+                                ceil(object.getAABB().width),
+                                ceil(object.getAABB().height));
+
+                        if(prop.getName() == "collision" and prop.getBoolValue() == true)
+                            tileData[tile.ID].collisionRectObjects.push_back(r);
+                        if(prop.getName() == "thing" and prop.getBoolValue() == true)
+                            tileData[tile.ID].thingRectObjects.push_back(r);
+                    }
+                }
+            }
     }
 
 
@@ -39,7 +70,6 @@ void Level::loadMap(Graphics &graphics, string mapName)
     {
         // Ignore layers that aren't visible
         if(!mapLayer->getVisible())    continue; 
-
 
         if(mapLayer->getType() == tmx::Layer::Type::Group)
         {
@@ -101,30 +131,51 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 {
                     layercounter++;
                     tmx::TileLayer &tilelayer = layers[i]->getLayerAs<tmx::TileLayer>();
-                    
-                    
                     auto &tiles = tilelayer.getTiles();
                     int tileCounter=-1;
+
+                    // for(auto &tile : tiles)
+                    // {
+                    //     tileCounter++;
+                    //     xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
+                    //     auto &tmxtile = tileData[tile.ID].tmxtile;
+                    //     for(auto &rect : tileData[tile.ID].collisionRectObjects)
+                    //     {
+                    //         Rectangle r(position.x + rect.getLeft(), position.y + rect.getTop(), rect.getWidth(), rect.getHeight());
+                    //         this->_collisionRects.push_back(r);
+                    //     }
+                    //     for(auto &rect : tileData[tile.ID].thingRectObjects)
+                    //     {
+                    //         Rectangle r(position.x + rect.getLeft(), position.y + rect.getTop(), rect.getWidth(), rect.getHeight());
+                    //         Thing t = Thing();
+                    //         t.setZ(rect.getBottom());
+                    //         thingvector.push_back(make_pair(r, t));
+                    //     }
+                    // }
+
+                    tileCounter = -1;
                     for(auto &tile : tiles)
                     {
                         tileCounter++;
                         if(tile.ID == 0)
                             continue;
 
-                        for(auto &tileset : tilesets)
-                        {
-                            if(tileset.hasTile(tile.ID))
-                            {
-                                SDL_Surface *surface = this->_tilesets[tileset.getFirstGID()].Surface;
-                                xyipair tilesetPosition = xyipair(tileset.getTile(tile.ID)->imagePosition.x, tileset.getTile(tile.ID)->imagePosition.y);
+                        // for(auto &tileset : tilesets)
+                        // {
+                        //     if(tileset.hasTile(tile.ID))
+                        //     {
+                                auto &tmxtileset = *tileData[tile.ID].tmxtileset;
+                                auto &tmxtile = *tileData[tile.ID].tmxtile;
+                                SDL_Surface *surface = this->_tilesets[tmxtileset.getFirstGID()].Surface;
+                                xyipair tilesetPosition = xyipair(tmxtile.imagePosition.x, tmxtile.imagePosition.y);
                                 xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
                                 
-                                position.y -= tileset.getTileSize().y - this->_mapTileSize.h;
+                                position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
                                 
                                 if(this->_tileTextures.count(tile.ID) == 0)
-                                    this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tileset.getTileSize().x, tileset.getTileSize().y));
+                                    this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y));
 
-                                Tile m_tile = Tile(this->_tileTextures[tile.ID], tile.ID, xyipair(tileset.getTileSize().x, tileset.getTileSize().y), xyipair(0,0), position);
+                                Tile m_tile = Tile(this->_tileTextures[tile.ID], tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
 
                                 for(auto &p : thingvector)
                                 {
@@ -140,25 +191,25 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 if(mapLayer->getName() == "background")
                                     m_tile.setZ(-100 + 0.1*layercounter);
                                 else
-                                    m_tile.setZ(position.y + tileset.getTileSize().y);
+                                    m_tile.setZ(position.y + tmxtileset.getTileSize().y);
                                 this->_map.push_back(m_tile);
-                                TILE_ADDED:
+                                TILE_ADDED:;
 
                                 // this->_map[bfground][tileCounter] = m_tile;
                                 
-                                for(auto &object : tileset.getTile(tile.ID)->objectGroup.getObjects())
-                                {
-                                    Rectangle r(ceil(position.x + object.getAABB().left), 
-                                    ceil(position.y + object.getAABB().top), 
-                                    ceil(object.getAABB().width),
-                                    ceil(object.getAABB().height));
+                                // for(auto &object : tileset.getTile(tile.ID)->objectGroup.getObjects())
+                                // {
+                                //     Rectangle r(ceil(position.x + object.getAABB().left), 
+                                //     ceil(position.y + object.getAABB().top), 
+                                //     ceil(object.getAABB().width),
+                                //     ceil(object.getAABB().height));
                                 
-                                    this->_collisionRects.push_back(r);
-                                }
+                                //     this->_collisionRects.push_back(r);
+                                // }
                                 
-                                break;
-                            }
-                        }
+                        //         break;
+                        //     }
+                        // }
                     }
 
                 }
