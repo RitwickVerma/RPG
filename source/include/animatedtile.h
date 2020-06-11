@@ -28,16 +28,16 @@ class AnimatedTile : public Tile
 
 struct animated_tile_frame
 {
-    animated_tile_frame(SDL_Texture *texture, SDL_Rect rect, int duration)
+    animated_tile_frame(SDL_Texture *texture, int duration, xyipair position = xyipair(0,0))
     {
         frameTexture = texture;
-        sourceRect = rect;
+        tilesetPosition = position;
         frameDuration = duration;
     }
 
     SDL_Texture *frameTexture;
     int frameDuration;
-    SDL_Rect sourceRect;
+    xyipair tilesetPosition;
 };
 
 #endif

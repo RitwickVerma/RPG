@@ -25,8 +25,7 @@ void AnimatedTile::update(float elapsedTime)
     
     animated_tile_frame tileFrame = this->_frameTiles[this->_frameIndex];
     this->_tileset = tileFrame.frameTexture;
-    this->_tilesetPosition = xyipair(tileFrame.sourceRect.x, tileFrame.sourceRect.y);
-    this->_size = xyipair(tileFrame.sourceRect.w, tileFrame.sourceRect.h);
+    this->_tilesetPosition = tileFrame.tilesetPosition; 
 }
 
 void AnimatedTile::draw(Graphics &graphics)

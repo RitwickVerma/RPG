@@ -242,8 +242,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                     AnimatedTile *m_tile = new AnimatedTile(tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
                                     for(auto &frame : tmxtile.animation.frames)
                                     {
-                                        SDL_Rect sdl_rect = {0, 0, tmxtileset.getTileSize().x, tmxtileset.getTileSize().y};
-                                        m_tile->addTileFrame(animated_tile_frame(this->_tileTextures[frame.tileID], sdl_rect, frame.duration));
+                                        m_tile->addTileFrame(animated_tile_frame(this->_tileTextures[frame.tileID], frame.duration));
                                     }
 
                                     for(auto &p : thingvector)
