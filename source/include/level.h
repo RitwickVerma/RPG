@@ -4,7 +4,7 @@
 #pragma once
 
 #include "globals.h"
-#include "tile.h"
+#include "animatedtile.h"
 #include "rectangle.h"
 #include "line.h"
 #include "thing.h"
@@ -23,8 +23,6 @@ class Level
         ~Level();
     
         void update(float elapsedTime);
-        void draw_background(Graphics &graphics);
-        void draw_foreground(Graphics &graphics);
         void draw(Graphics &graphics);
         bool hasGravity() { return this->_hasGravity; }
 
@@ -51,7 +49,7 @@ class Level
         xyipair _mapTileSize;
         xyipair _tileCount;
         xyfpair _mapOffset;
-        vector<variant<Tile, Thing>> _map;
+        vector<variant<Tile, AnimatedTile, Thing>> _map;
         map<int, Tileset> _tilesets;
         map<int, SDL_Texture*> _tileTextures;
         vector<Rectangle> _collisionRects;

@@ -8,7 +8,7 @@ AnimatedSprite::AnimatedSprite(Graphics &graphics, string filename, int sourceX,
     :Sprite(graphics, filename, sourceX, sourceY, w, h, posX, posY)
 {
     _frameIndex=0;
-    _timeToUpdate=timeToUpdate;
+    _updateDuration=timeToUpdate;
     _visible=true;
     _currentAnimationRepeat=false;
     _currentAnimation="";
@@ -54,18 +54,17 @@ void AnimatedSprite::stopAnimation()
 void AnimatedSprite::update(float elapsedTime)
 {
     Sprite::update();
-    this->_timeElapsed += elapsedTime;
-    if(this->_timeElapsed > this->_timeToUpdate)
+    this->_timeForUpdate += elapsedTime;
+    if(this->_timeForUpdate > this->_updateDuration)
     {
-        this->_timeElapsed -= this->_timeToUpdate;
+        this->_timeForUpdate -= this->_updateDuration;
         if(this->_frameIndex < this->_animations[this->_currentAnimation].size()-1)
             this->_frameIndex++;
         else
         {
             if(this->_currentAnimationRepeat == false)
                 this->setVisibility(false);
-            this->_frameIndex=0;
-            this->animationDone(this->_currentAnimation);
+            this->stopAnimation();
         }
     }
 }

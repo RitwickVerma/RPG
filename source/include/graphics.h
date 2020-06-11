@@ -7,11 +7,6 @@
 #include "renderable.h"
 #include "rectangle.h"
 
-struct SDL_Window;
-struct SDL_Renderer;
-struct SDL_Texture;
-struct SDL_Rect;
-
 class Graphics
 {
     public:
@@ -61,6 +56,7 @@ class Graphics
         priority_queue< Renderable, vector<Renderable>, sort_by_z > _render_queue;
         std::map<std::string, SDL_Surface*> _spriteSheets;
 };
+
 
 
 #endif

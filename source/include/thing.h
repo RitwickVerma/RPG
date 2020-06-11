@@ -9,8 +9,9 @@
 class Thing
 {
     public:
-        Thing();
+       Thing();
        void addTile(Tile &tile);
+       void update(float elapsedTime);
        void draw(Graphics &graphics);
        void setZ(float Z);
        float getZ();

@@ -7,6 +7,8 @@ void Thing::addTile(Tile &tile)
     this->_thingTiles.push_back(tile);
 }
 
+void Thing::update(float elapsedTime){};
+
 void Thing::draw(Graphics &graphics)
 {
     for(Tile &tile : this->_thingTiles)

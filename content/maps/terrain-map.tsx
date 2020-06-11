@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.3.3" name="terrain-map" tilewidth="32" tileheight="32" tilecount="15744" columns="16">
+<tileset version="1.2" tiledversion="1.3.5" name="terrain-map" tilewidth="32" tileheight="32" tilecount="15744" columns="16">
  <image source="../tilesets/terrain-map.png" width="512" height="31488"/>
  <terraintypes>
   <terrain name="Dirt_Brown" tile="0"/>
@@ -15648,9 +15648,30 @@
  <tile id="15681" terrain="9,9,9,9"/>
  <tile id="15683" terrain="2,2,2,2"/>
  <tile id="15684" terrain="2,2,2,2"/>
- <tile id="15686" terrain="32,32,32,32" probability="0.15"/>
- <tile id="15687" terrain="32,32,32,32" probability="0.15"/>
- <tile id="15688" terrain="32,32,32,32" probability="0.15"/>
+ <tile id="15686" terrain="32,32,32,32" probability="0.15">
+  <animation>
+   <frame tileid="15686" duration="300"/>
+   <frame tileid="15688" duration="300"/>
+   <frame tileid="15686" duration="300"/>
+   <frame tileid="15687" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="15687" terrain="32,32,32,32" probability="0.15">
+  <animation>
+   <frame tileid="15687" duration="300"/>
+   <frame tileid="15686" duration="300"/>
+   <frame tileid="15688" duration="300"/>
+   <frame tileid="15686" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="15688" terrain="32,32,32,32" probability="0.15">
+  <animation>
+   <frame tileid="15688" duration="300"/>
+   <frame tileid="15686" duration="300"/>
+   <frame tileid="15687" duration="300"/>
+   <frame tileid="15686" duration="300"/>
+  </animation>
+ </tile>
  <tile id="15689" terrain="28,28,28,28" probability="0.15"/>
  <tile id="15690" terrain="28,28,28,28" probability="0.15"/>
  <tile id="15691" terrain="28,28,28,28" probability="0.15"/>

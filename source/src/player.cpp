@@ -45,7 +45,7 @@ void Player::animationDone(string animation)
 
 void Player::updateBoundingBox()
 {
-    this->_boundingBox = Rectangle(this->_sprite.x+17, this->_sprite.y+52, o::_w-30, 12);
+    this->_boundingBox = Rectangle(this->_sprite.x+16, this->_sprite.y+52, o::_w-32, 12);
 }
 
 void Player::setCurrentLevel(Level *level)
@@ -169,7 +169,7 @@ bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
             if(sidecollide)
                 count++;
         
-        if(count==1)
+        if(count==1)// && (line.m == 0 || line.m == INT_MAX))
         {
             Line templine = line;
             float length = utils::distance(templine.p1, templine.p2);

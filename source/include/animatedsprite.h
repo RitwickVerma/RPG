@@ -19,7 +19,7 @@ class AnimatedSprite : public Sprite
 
     
     protected:
-        double _timeToUpdate;
+        float _updateDuration;
         bool _currentAnimationRepeat;
         string _currentAnimation;
 
@@ -36,7 +36,7 @@ class AnimatedSprite : public Sprite
         map<string, xyipair> _offsets;
 
         int _frameIndex;
-        double _timeElapsed;
+        float _timeForUpdate;
         bool _visible; 
 };
 

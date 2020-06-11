@@ -1,6 +1,7 @@
 #include "level.h"
 #include "graphics.h"
 #include "utils.h"
+#include "animatedtile.h"
 
 #include <tmxlite/Map.hpp>
 #include <tmxlite/Layer.hpp>
@@ -11,6 +12,17 @@
 #include <tmxlite/Property.hpp>
 #include <tmxlite/Object.hpp>
 
+struct tile_info
+{
+    // tile_info()
+    // {
+       
+    // }
+    tmx::Tileset &tmxtileset;
+    vector<Rectangle> collisionRectObjects;
+    vector<Rectangle> thingRectObjects;
+    float z_comp;
+};
 
 void Level::loadMap(Graphics &graphics, string mapName)
 {
@@ -24,12 +36,47 @@ void Level::loadMap(Graphics &graphics, string mapName)
     this->_size=xyipair(this->_tileCount * this->_mapTileSize);
 
     // this->_map = vector<vector<Tile>>(2, vector<Tile>(this->_tileCount.y * this->_tileCount.x, Tile()));
+    map<int, float> tileZ;
 
     // Get all Tilesets and store them in the map _tilesets at key = firstGid
     for(auto &tileset : tmxmap.getTilesets())
     {
         string tilesetImagePath = tileset.getImagePath();
         this->_tilesets[tileset.getFirstGID()] = (Tileset(graphics.loadImage(tilesetImagePath), tileset.getFirstGID()));
+
+        // if(tileset.getName() != "terrain-map")
+        // {
+        //     for(auto &tmxtile : tileset.getTiles())
+        //     {
+        //         auto &tmxtileset = tileset;
+        //         auto &tmxtile = *tileset.getTile(tile.ID);
+        //         // xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
+                
+        //         // position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
+                
+        //         for(auto &object : tmxtile.objectGroup.getObjects())
+        //         {
+        //             Rectangle r(ceil(position.x+object.getAABB().left), 
+        //                     ceil(position.y+object.getAABB().top), 
+        //                     ceil(object.getAABB().width),
+        //                     ceil(object.getAABB().height));
+
+        //             for(auto &prop : object.getProperties())
+        //             {
+        //                 if(prop.getName() == "collision" and prop.getBoolValue() == true)
+        //                     this->_collisionRects.push_back(r);
+        //                 if(prop.getName() == "thing" and prop.getBoolValue() == true)
+        //                 {    
+        //                     Thing t = Thing();
+        //                     t.setZ(r.getBottom());
+        //                     thingvector.push_back(make_pair(r, t));
+        //                 }
+        //             }
+        //         }
+        //         break;
+        //     }
+        // }
+
     
     }
 
@@ -128,9 +175,13 @@ void Level::loadMap(Graphics &graphics, string mapName)
                             {
                                 auto &tmxtileset = tileset;
                                 auto &tmxtile = *tileset.getTile(tile.ID);
+                                SDL_Surface *surface = this->_tilesets[tmxtileset.getFirstGID()].Surface;
+                                xyipair tilesetPosition = xyipair(tmxtile.imagePosition.x, tmxtile.imagePosition.y);
                                 xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
-                                
+
                                 position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
+                                if(this->_tileTextures.count(tile.ID) == 0)
+                                    this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y));
                                 
                                 for(auto &object : tmxtile.objectGroup.getObjects())
                                 {
@@ -148,6 +199,10 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                             Thing t = Thing();
                                             t.setZ(r.getBottom());
                                             thingvector.push_back(make_pair(r, t));
+                                        }
+                                        if(prop.getName() == "Z" and prop.getBoolValue() == true)
+                                        {    
+                                            tileZ[tile.ID] = r.getBottom();
                                         }
                                     }
                                 }
@@ -171,32 +226,87 @@ void Level::loadMap(Graphics &graphics, string mapName)
                             {
                                 auto &tmxtileset = tileset;//*tileData[tile.ID].tmxtileset;
                                 auto &tmxtile = *tileset.getTile(tile.ID);//*tileData[tile.ID].tmxtile;
-                                SDL_Surface *surface = this->_tilesets[tmxtileset.getFirstGID()].Surface;
-                                xyipair tilesetPosition = xyipair(tmxtile.imagePosition.x, tmxtile.imagePosition.y);
+                                // SDL_Surface *surface = this->_tilesets[tmxtileset.getFirstGID()].Surface;
+                                // xyipair tilesetPosition = xyipair(tmxtile.imagePosition.x, tmxtile.imagePosition.y);
                                 xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
                                 
                                 position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
                                 
-                                if(this->_tileTextures.count(tile.ID) == 0)
-                                    this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y));
+                                // if(this->_tileTextures.count(tile.ID) == 0)
+                                    // this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y));
 
-                                Tile m_tile = Tile(this->_tileTextures[tile.ID], tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
 
-                                for(auto &p : thingvector)
+                                // If Tile is Animated
+                                if(tmxtile.animation.frames.size()!=0)
                                 {
-                                    if(utils::checkOverlap(p.first, m_tile))
+                                    AnimatedTile *m_tile = new AnimatedTile(tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
+                                    for(auto &frame : tmxtile.animation.frames)
                                     {
-                                        m_tile.setZ(p.second.getZ() + 0.1*layercounter);
-                                        p.second.addTile(m_tile);
-                                        goto TILE_ADDED;
+                                        SDL_Rect sdl_rect = {0, 0, tmxtileset.getTileSize().x, tmxtileset.getTileSize().y};
+                                        m_tile->addTileFrame(animated_tile_frame(this->_tileTextures[frame.tileID], sdl_rect, frame.duration));
                                     }
+
+                                    for(auto &p : thingvector)
+                                    {
+                                        if(utils::checkOverlap(p.first, *m_tile))
+                                        {
+                                            m_tile->setZ(p.second.getZ() + 0.1*layercounter);
+                                            p.second.addTile(*m_tile);
+                                            goto TILE_ADDED;
+                                        }
+                                    }
+
+                                    if(mapLayer->getName() == "background")
+                                        m_tile->setZ(-5 + 0.1*layercounter);
+                                    else if(tileZ.count(tile.ID) == 1)
+                                        m_tile->setZ(tileZ[tile.ID]);
+                                    else
+                                        m_tile->setZ(position.y + tmxtileset.getTileSize().y);
+                                    this->_map.push_back(*m_tile);
                                 }
 
-                                if(mapLayer->getName() == "background")
-                                    m_tile.setZ(-100 + 0.1*layercounter);
+                                // If Tile isn't Animated
                                 else
-                                    m_tile.setZ(position.y + tmxtileset.getTileSize().y);
-                                this->_map.push_back(m_tile);
+                                {
+                                    Tile *m_tile = new Tile(this->_tileTextures[tile.ID], tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
+                                    
+                                    for(auto &p : thingvector)
+                                    {
+                                        if(utils::checkOverlap(p.first, *m_tile))
+                                        {
+                                            m_tile->setZ(p.second.getZ() + 0.1*layercounter);
+                                            p.second.addTile(*m_tile);
+                                            goto TILE_ADDED;
+                                        }
+                                    }
+
+                                    if(mapLayer->getName() == "background")
+                                        m_tile->setZ(-5 + 0.1*layercounter);
+                                    else if(tileZ.count(tile.ID) == 1)
+                                        m_tile->setZ(tileZ[tile.ID]);
+                                    else
+                                        m_tile->setZ(position.y + tmxtileset.getTileSize().y);
+                                    this->_map.push_back(*m_tile);
+                                }
+                                    
+                                    
+                                // for(auto &p : thingvector)
+                                // {
+                                //     if(utils::checkOverlap(p.first, *m_tile))
+                                //     {
+                                //         m_tile->setZ(p.second.getZ() + 0.1*layercounter);
+                                //         p.second.addTile(*m_tile);
+                                //         goto TILE_ADDED;
+                                //     }
+                                // }
+
+                                // if(mapLayer->getName() == "background")
+                                //     m_tile->setZ(-5 + 0.1*layercounter);
+                                // else if(tileZ.count(tile.ID) == 1)
+                                //     m_tile->setZ(tileZ[tile.ID]);
+                                // else
+                                //     m_tile->setZ(position.y + tmxtileset.getTileSize().y);
+                                // this->_map.push_back(*m_tile);
                                 TILE_ADDED:;
                                 
                                 break;

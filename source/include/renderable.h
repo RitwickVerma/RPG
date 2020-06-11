@@ -3,6 +3,13 @@
 
 #pragma once
 
+
+struct SDL_Window;
+struct SDL_Renderer;
+struct SDL_Texture;
+struct SDL_Rect;
+
+
 class Renderable
 {
     public:
@@ -33,4 +40,4 @@ class Renderable
 
 };
 
-#endif // !RENDERABLE_H
+#endif

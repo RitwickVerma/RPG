@@ -13,15 +13,15 @@ class Tile
     public:
         Tile();
         Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, xyfpair position, float Z=-100);   
-        void update(float elapsedTime);
-        void draw(Graphics &graphics);
+        virtual void update(float elapsedTime);
+        virtual void draw(Graphics &graphics);
         const xyfpair getPosition() const { return this->_position; }
 
         Rectangle getRectangle();
         const float getZ() const { return this->z_comp; }
         void setZ(float Z) { this->z_comp = Z; }
 
-    private:
+    protected:
         int _ID;
         float z_comp;
         SDL_Texture *_tileset;
