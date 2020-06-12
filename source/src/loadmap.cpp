@@ -288,24 +288,6 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                     this->_map.push_back(*m_tile);
                                 }
                                     
-                                    
-                                // for(auto &p : thingvector)
-                                // {
-                                //     if(utils::checkOverlap(p.first, *m_tile))
-                                //     {
-                                //         m_tile->setZ(p.second.getZ() + 0.1*layercounter);
-                                //         p.second.addTile(*m_tile);
-                                //         goto TILE_ADDED;
-                                //     }
-                                // }
-
-                                // if(mapLayer->getName() == "background")
-                                //     m_tile->setZ(-5 + 0.1*layercounter);
-                                // else if(tileZ.count(tile.ID) == 1)
-                                //     m_tile->setZ(tileZ[tile.ID]);
-                                // else
-                                //     m_tile->setZ(position.y + tmxtileset.getTileSize().y);
-                                // this->_map.push_back(*m_tile);
                                 TILE_ADDED:;
                                 
                                 break;

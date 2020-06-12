@@ -282,4 +282,5 @@ void Player::draw(Graphics &graphics)
 {
     // AnimatedSprite::draw(graphics, this->_sprite.x-this->_camera->getLeft(), this->_sprite.y-this->_camera->getTop());
     AnimatedSprite::draw(graphics, this->_sprite.x, this->_sprite.y);
+    
 }

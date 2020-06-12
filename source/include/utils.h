@@ -4,6 +4,7 @@
 #pragma once
 
 #include "tile.h"
+#include "line.h"
 
 namespace utils
 {
@@ -14,7 +15,7 @@ namespace utils
         return dist;
     }
     
-    inline float distance(xyfpair &p1, xyfpair &p2)
+    inline float distance(const xyfpair &p1, const xyfpair &p2)
     {
         float dist = sqrt((p2.y-p1.y)*(p2.y-p1.y) + (p2.x-p1.x)*(p2.x-p1.x));
         return dist;
@@ -39,6 +40,15 @@ namespace utils
         return checkOverlap(a, r);
     } 
 
+    inline bool checkOverlap(SDL_Rect *a, SDL_Rect *b)
+    {
+        if(!a || !b)    return false;
+        
+        Rectangle ar = Rectangle(*a);
+        Rectangle br = Rectangle(*b);
+        return checkOverlap(ar, br);
+    }
+
     inline bool checkOverlap(Rectangle &a, xyfpair b)
     { 
         return a.getLeft() <= b.x && 
@@ -46,6 +56,7 @@ namespace utils
                a.getTop() <= b.y &&
                a.getBottom() >= b.y;
     } 
+
 
 }
 

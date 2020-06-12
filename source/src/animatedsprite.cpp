@@ -81,7 +81,7 @@ void AnimatedSprite::draw(Graphics &graphics, int x, int y)
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 
-        Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect);
+        Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
         graphics.addToRenderQueue(r);
         // graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
     }

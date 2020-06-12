@@ -1,6 +1,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "graphics.h"
+#include "utils.h"
 
 Graphics::Graphics()
 {
@@ -51,10 +52,28 @@ void Graphics::addToRenderQueue(Renderable renderable)
 
 void Graphics::drawQueue()
 {
+    bool playerUnder = false;
+    SDL_Rect playerRect;
     while(!this->_render_queue.empty())
     {   
         auto renderable = this->_render_queue.top();
+
+        SDL_SetTextureAlphaMod(renderable.getTexture(), 255);
+        if(playerUnder && utils::checkOverlap(renderable.getDestRect(), &playerRect)) 
+        {    
+            float alphaCoffecient = utils::distance(Rectangle(*renderable.getDestRect()).getCenter(), Rectangle(playerRect).getCenter())/100;
+            if(alphaCoffecient<=0.3 )   alphaCoffecient = 0.3;
+            if(alphaCoffecient >=1.1)   alphaCoffecient = 1.1;
+            SDL_SetTextureAlphaMod(renderable.getTexture(), 200*alphaCoffecient );
+
+        }
         this->blitSurface(renderable.getTexture(), renderable.getSourceRect(), renderable.getDestRect());
+
+        if(renderable.getType() == "player")
+        {
+            playerUnder = true;
+            playerRect = *renderable.getDestRect();
+        }
         this->_render_queue.pop();
     }
 }

@@ -4,7 +4,7 @@
 
 #### Warm welcome and my sincerest yo.
 
-A RPG written in pure C++ without any using any game or physics engine, a decision I will regret later on. Also, the only way I could sanely spend the big quarantine of 2020 without becoming a braindead piggy. To be fair, it's an incredible learning process. From implementing camera to loading a 512x31488 texture onto GPU (Not really, it's not possible and I spent 3 days on that) Now, If you are -
+A RPG written in pure C++ without any using any game or physics engine, a decision I will regret later on. Also, the only way I could sanely spend the big quarantine of 2020 without becoming a braindead piggy.
 
 * Random github lurker : Help a dude out and star. or not. We're all gonna die someday anyway (please star regardless)
 * Someone who knows me : Hi
