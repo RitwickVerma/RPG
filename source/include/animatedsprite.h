@@ -31,7 +31,6 @@ class AnimatedSprite : public Sprite
         virtual void animationDone(string animation) = 0;
         virtual void setupAnimation() = 0;
 
-    private:
         map<string, vector<SDL_Rect>> _animations;
         map<string, xyipair> _offsets;
 

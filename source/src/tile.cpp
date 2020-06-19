@@ -41,6 +41,8 @@ void Tile::draw(Graphics &graphics)
     SDL_Rect destRect = { (int)this->_position.x, (int)this->_position.y, this->_size.x , this->_size.y };
     
     Renderable r = Renderable(this->z_comp, this->_tileset, sourceRect, destRect);
+    if(this->_size.y != 32)
+        r.setType("tree");
     graphics.addToRenderQueue(r);
     // graphics.blitSurface(this->_tileset, &sourceRect, &destRect);
 }

@@ -6,8 +6,8 @@
 #include "player.h"
 #include "level.h"
 #include "globals.h"
-
-struct Graphics;
+#include "hud.h"
+#include "graphics.h"
 
 class Game
 {
@@ -21,6 +21,8 @@ class Game
         Player _player;
         Level _level;
         Rectangle *_camera;
+        HUD _hud;
+        Graphics _graphics;
 };
 
 #endif

@@ -6,18 +6,23 @@ Level::Level()
     MAP_DIR = "content/maps/";
 }
 
-Level::Level(Graphics &graphics, string mapName, xyipair spawnPoint, Rectangle *camera):Level()
+Level::Level(Graphics &graphics, string mapName, Rectangle *camera):Level()
 {
     _mapName=mapName;
-    _playerSpawnPoint=spawnPoint;
+    _playerSpawnPoint = xyipair(100, 100);
     _size=xyipair(0,0);
     _camera=camera;
     this->_hasGravity = false;
 
+    graphics.fadeToBlack();
     this->loadMap(graphics, mapName); 
+    graphics.fadeFromBlack();
+    
 }
 
-Level::~Level(){}
+Level::~Level()
+{
+}
 
 
 void Level::update(float elapsedTime)
@@ -53,6 +58,17 @@ vector<Line> Level::checkLineCollision(const Rectangle &other)
             collidingSlopes.push_back(slope);
     }
     return collidingSlopes;
+}
+
+vector<Door> Level::checkDoorCollision(const Rectangle &other)
+{
+    vector<Door> collidingDoors;
+    for(auto &door : this->_doorRects)
+    {
+        if(door.collidesWith(other))
+            collidingDoors.push_back(door);
+    }
+    return collidingDoors;
 }
 
 const xyipair Level::getPlayerSpawnPoint() const{

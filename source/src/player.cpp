@@ -24,7 +24,8 @@ Player::Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera) :
     this->setupAnimation();
     this->_facing=SOUTH;
     
-    this->_camera->setCenter(this->_sprite.getCenter());
+    this->_maxHealth = 100;
+    this->_currentHealth = 100;
 }
 
 void Player::setupAnimation()
@@ -257,6 +258,18 @@ bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
     return true;
 }
 
+void Player::handleDoorCollision(vector<Door> &colliding, Level &level, Graphics &graphics)
+{
+    for(auto &door : colliding)
+    {
+        level = Level(graphics, door.getDestination()+".tmx");
+        this->_sprite.x = level.getPlayerSpawnPoint().x;
+        this->_sprite.y = level.getPlayerSpawnPoint().y;
+        this->_currentLevel = &level;
+        this->updateBoundingBox();
+    }
+}
+
 void Player::update(float elapsedTime)
 {
     AnimatedSprite::update(elapsedTime);
@@ -281,6 +294,17 @@ void Player::update(float elapsedTime)
 void Player::draw(Graphics &graphics)
 {
     // AnimatedSprite::draw(graphics, this->_sprite.x-this->_camera->getLeft(), this->_sprite.y-this->_camera->getTop());
-    AnimatedSprite::draw(graphics, this->_sprite.x, this->_sprite.y);
-    
+    if(this->_visible)
+    {
+        SDL_Rect destRect = {
+                                this->_sprite.x+this->_offsets[this->_currentAnimation].x,
+                                this->_sprite.y+this->_offsets[this->_currentAnimation].y,
+                                (int)this->_sprite.w , (int)this->_sprite.h  
+                            };
+
+        SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
+
+        Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
+        graphics.addToRenderQueue(r);
+    }
 }

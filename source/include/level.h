@@ -8,8 +8,9 @@
 #include "rectangle.h"
 #include "line.h"
 #include "thing.h"
+#include "door.h"
+#include "graphics.h"
 
-struct Graphics;
 struct SDL_Texture;
 struct Tileset;
 struct Thing;
@@ -19,7 +20,7 @@ class Level
 { 
     public :
         Level();
-        Level(Graphics &graphics, string mapName, xyipair spawnPoint, Rectangle *camera = NULL);
+        Level(Graphics &graphics, string mapName, Rectangle *camera = NULL);
         ~Level();
     
         void update(float elapsedTime);
@@ -34,7 +35,8 @@ class Level
         
         vector<Rectangle> checkTileCollision(const Rectangle &other);
         vector<Line> checkLineCollision(const Rectangle &other);
-        
+        vector<Door> checkDoorCollision(const Rectangle &other);
+
         const xyipair getPlayerSpawnPoint() const;
 
     private:
@@ -54,6 +56,7 @@ class Level
         map<int, SDL_Texture*> _tileTextures;
         vector<Rectangle> _collisionRects;
         vector<Line> _collisionSlopes;
+        vector<Door> _doorRects;
 
         void loadMap(Graphics &graphics, string mapName);
 };

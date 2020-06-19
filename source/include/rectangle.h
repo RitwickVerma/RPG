@@ -52,6 +52,8 @@ class Rectangle
                 sides::NONE;
         }
 
+        const Rectangle getRectangle() { return *this; }
+        
         const vector<xyfpair> getCorners() const
         {
             vector<xyfpair> corners;

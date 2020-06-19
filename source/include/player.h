@@ -34,12 +34,14 @@ class Player : public AnimatedSprite
         
         void handleTileCollision(vector<Rectangle> &colliding);
         bool handleLineCollision(vector<Line> &colliding, int elapsedTime = 1);
+        void handleDoorCollision(vector<Door> &colliding, Level &level, Graphics &graphics);
 
         void undoMove(float elapsedTime);
         void makeMove(float elapsedTime);
         void updateBoundingBox();
-        const float getX() const { return this->_sprite.x; }
-        const float getY() const { return this->_sprite.y; }
+        
+        const float getMaxHealth() const { return this->_maxHealth; }
+        const float getCurrentHealth() const { return this->_currentHealth; }
 
     private:
         float _dx, _dy;
@@ -47,6 +49,8 @@ class Player : public AnimatedSprite
         Level *_currentLevel;
         Rectangle *_camera;
         bool _grounded;
+        int _maxHealth;
+        int _currentHealth;
 };
 
 #endif // !1P PLAYER_H

@@ -22,6 +22,11 @@ class Sprite
         const Rectangle getBoundingBox() const;
         const sides::Side getCollisionSide(Rectangle &other) const;
 
+        const float getX() const { return this->_sprite.x; }
+        const float getY() const { return this->_sprite.y; }
+        const float getW() const { return this->_sprite.w; }
+        const float getH() const { return this->_sprite.h; }
+        
     protected:
         SDL_Texture *_spriteSheet;
         // float x, y; 

@@ -37,7 +37,13 @@ class Graphics
         /* Returns instance of Renderer */
         SDL_Renderer *getRenderer();
 
+        void fadeToBlack();
+        
+        void fadeFromBlack();
+
         Rectangle *getCamera();
+
+
         struct sort_by_z
         {
             bool operator()(Renderable &a, Renderable &b) 

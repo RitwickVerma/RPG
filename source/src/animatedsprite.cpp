@@ -71,18 +71,18 @@ void AnimatedSprite::update(float elapsedTime)
 
 void AnimatedSprite::draw(Graphics &graphics, int x, int y)
 {
-    if(this->_visible)
-    {
-        SDL_Rect destRect = {
-                                x+this->_offsets[this->_currentAnimation].x,
-                                y+this->_offsets[this->_currentAnimation].y,
-                                (int)this->_sprite.w , (int)this->_sprite.h  
-                            };
+    // if(this->_visible)
+    // {
+    //     SDL_Rect destRect = {
+    //                             x+this->_offsets[this->_currentAnimation].x,
+    //                             y+this->_offsets[this->_currentAnimation].y,
+    //                             (int)this->_sprite.w , (int)this->_sprite.h  
+    //                         };
 
-        SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
+    //     SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 
-        Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
-        graphics.addToRenderQueue(r);
-        // graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
-    }
+    //     Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
+    //     graphics.addToRenderQueue(r);
+    //     // graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
+    // }
 }

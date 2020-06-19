@@ -59,15 +59,18 @@ void Graphics::drawQueue()
         auto renderable = this->_render_queue.top();
 
         SDL_SetTextureAlphaMod(renderable.getTexture(), 255);
-        if(playerUnder && utils::checkOverlap(renderable.getDestRect(), &playerRect)) 
+        if(playerUnder && utils::checkOverlap(renderable.getDestRect(), &playerRect) && renderable.getType() == "tree") 
         {    
-            float alphaCoffecient = utils::distance(Rectangle(*renderable.getDestRect()).getCenter(), Rectangle(playerRect).getCenter())/100;
+            float alphaCoffecient = utils::distance(Rectangle(*renderable.getDestRect()).getCenter(), Rectangle(playerRect).getCenter());
+            alphaCoffecient/=100;
             if(alphaCoffecient<=0.3 )   alphaCoffecient = 0.3;
             if(alphaCoffecient >=1.1)   alphaCoffecient = 1.1;
             SDL_SetTextureAlphaMod(renderable.getTexture(), 200*alphaCoffecient );
 
         }
-        this->blitSurface(renderable.getTexture(), renderable.getSourceRect(), renderable.getDestRect());
+
+        SDL_Rect dest = {int(renderable.getDestRect()->x - round(this->_camera.x)), int(renderable.getDestRect()->y - round(this->_camera.y)), renderable.getDestRect()->w, renderable.getDestRect()->h};
+        this->blitSurface(renderable.getTexture(), renderable.getSourceRect(), &dest);
 
         if(renderable.getType() == "player")
         {
@@ -80,8 +83,43 @@ void Graphics::drawQueue()
 
 void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect) 
 {
-    SDL_Rect dest = {int(destRect->x - round(this->_camera.x)), int(destRect->y - round(this->_camera.y)), destRect->w, destRect->h};
-    SDL_RenderCopy(this->_renderer, source, sourceRect, &dest);        
+    SDL_RenderCopy(this->_renderer, source, sourceRect, destRect);        
+}
+
+void Graphics::fadeToBlack()
+{
+    float i;
+    SDL_Surface *surface;
+    SDL_Texture *texture;
+    SDL_Rect window = {0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT};
+
+    surface = SDL_CreateRGBSurface(0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 32, 0, 0, 0, 255);
+    texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
+
+    for (i=2;i<=255;i+=0.02) 
+    {
+        SDL_SetTextureAlphaMod(texture, i);
+        this->blitSurface(texture, &window, &window);
+        this->clear();
+    }
+}
+
+void Graphics::fadeFromBlack()
+{
+    float i;
+    SDL_Surface *surface;
+    SDL_Texture *texture;
+    SDL_Rect window = {0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT};
+
+    surface = SDL_CreateRGBSurface(0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 32, 0, 0, 0, 255);
+    texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
+
+    for (i=255;i>=2;i-=0.02) 
+    {
+        SDL_SetTextureAlphaMod(texture, i);
+        this->blitSurface(texture, &window, &window);
+        this->clear();
+    }
 }
 
 void Graphics::flip()

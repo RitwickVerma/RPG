@@ -2,6 +2,7 @@
 #include "graphics.h"
 #include "utils.h"
 #include "animatedtile.h"
+#include "door.h"
 
 #include <tmxlite/Map.hpp>
 #include <tmxlite/Layer.hpp>
@@ -394,6 +395,28 @@ void Level::loadMap(Graphics &graphics, string mapName)
                     }
                 }
             }
+
+            else if(objectlayer.getName() == "doors")
+            {
+                auto &objects = objectlayer.getObjects();
+                for(auto &object : objects)
+                {
+                    for(auto &prop : object.getProperties())
+                    {
+                        if(prop.getName() == "destination")
+                        {
+                            Rectangle r(ceil(object.getAABB().left), 
+                            ceil(object.getAABB().top), 
+                            ceil(object.getAABB().width),
+                            ceil(object.getAABB().height));
+
+                            Door d = Door(r, prop.getStringValue());
+                            this->_doorRects.push_back(d); 
+                        }
+                    }
+                }
+            }
+
         }
 
 
