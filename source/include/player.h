@@ -34,7 +34,7 @@ class Player : public AnimatedSprite
         
         void handleTileCollision(vector<Rectangle> &colliding);
         bool handleLineCollision(vector<Line> &colliding, int elapsedTime = 1);
-        void handleDoorCollision(vector<Door> &colliding, Level &level, Graphics &graphics);
+        void handleDoorCollision(vector<Door> &colliding, Level &level, unordered_map<string, Level> *allMaps, Graphics &graphics);
 
         void undoMove(float elapsedTime);
         void makeMove(float elapsedTime);

@@ -16,6 +16,7 @@ class Game
         ~Game();
     private:
         void gameLoop();
+        void loadAllMaps(Graphics &graphics);
         void draw(Graphics &graphics);
         void update(float elapsedTime);
         Player _player;
@@ -23,6 +24,7 @@ class Game
         Rectangle *_camera;
         HUD _hud;
         Graphics _graphics;
+        unordered_map<string, Level> _allMaps;
 };
 
 #endif

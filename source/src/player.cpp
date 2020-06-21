@@ -152,7 +152,7 @@ void Player::handleTileCollision(vector<Rectangle> &colliding)
                 case sides::BOTTOM:
                     this->_sprite.y=r.getTop() - 1 - abs(this->_sprite.getTop() - this->_boundingBox.getBottom());
                     this->_dy=0;
-                    this->_grounded = (this->_currentLevel->hasGravity()) ? true : false;
+                    this->_grounded = (this->_currentLevel->getGravity()) ? true : false;
                     break;
             }
         }
@@ -258,15 +258,36 @@ bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
     return true;
 }
 
-void Player::handleDoorCollision(vector<Door> &colliding, Level &level, Graphics &graphics)
+void Player::handleDoorCollision(vector<Door> &colliding, Level &level, unordered_map<string, Level> *allMaps, Graphics &graphics)
 {
-    for(auto &door : colliding)
+    for(auto &d : colliding)
     {
-        level = Level(graphics, door.getDestination()+".tmx");
-        this->_sprite.x = level.getPlayerSpawnPoint().x;
-        this->_sprite.y = level.getPlayerSpawnPoint().y;
+        // graphics.fadeToBlack();
+        string sourceLevel = level.getMapName();
+
+        level = allMaps->at(d.getDestination());
+        
+        Door door = Door();
+        for(Door &d2 : level.getDoors()) if(d2.getDestination() == sourceLevel)  door = d2;
+
+        string side = door.getSpawnSide();
+        xyipair spawn_point = level.getPlayerSpawnPoint();
+
+        if(side[0] == 't')
+            spawn_point = xyipair(door.getLeft(), door.getTop() - 30 - this->_sprite.h);
+        if(side[0] == 'b')
+            spawn_point = xyipair(door.getLeft(), door.getBottom() + 30 - this->_sprite.h);
+        if(side[0] == 'l')
+            spawn_point = xyipair(door.getLeft() - 30 - this->_sprite.w, door.getTop());
+        if(side[0] == 'r')
+            spawn_point = xyipair(door.getRight() + 30 - this->_sprite.w, door.getTop());
+
+        this->_sprite.x = spawn_point.x;
+        this->_sprite.y = spawn_point.y;
+        
         this->_currentLevel = &level;
         this->updateBoundingBox();
+        // graphics.fadeFromBlack();
     }
 }
 
@@ -275,20 +296,14 @@ void Player::update(float elapsedTime)
     AnimatedSprite::update(elapsedTime);
 
     // Apply Gravity
-    if(this->_dy <= o::GRAVITY_CAP && this->_currentLevel->hasGravity())
+    if(this->_dy <= o::GRAVITY_CAP && this->_currentLevel->getGravity())
         this->_dy += o::GRAVITY * elapsedTime; 
 
     // Move player by changing x, y by velocity dx, dy
     this->makeMove(elapsedTime);
 
-    // Check if the player is within camera after change. If not, move player back.
-    // if(!this->_sprite.containedWithin(*this->_camera))
-    // {
-    //     this->undoMove(elapsedTime);
-    //     this->stopMoving();
-    // }
-
-
+    // Contain Player within Camera.
+    this->_sprite.containWithin(*this->_camera);
 }
 
 void Player::draw(Graphics &graphics)

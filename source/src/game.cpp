@@ -14,8 +14,17 @@ Game::Game()
     this->gameLoop();
 }
 Game::~Game()
+{}
+
+void Game::loadAllMaps(Graphics &graphics)
 {
-    
+    vector<string> maps = {     
+            "map1",
+            "player_home"
+    };
+
+    for(string &map : maps)
+        this->_allMaps[map] = Level(graphics, map);
 }
 
 void Game::gameLoop()
@@ -24,8 +33,11 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
+    graphics.fadeToBlack();
+    this->loadAllMaps(graphics);
+    graphics.fadeFromBlack();
     this->_camera = graphics.getCamera();
-    this->_level = Level(graphics, "map1.tmx", this->_camera);
+    this->_level = this->_allMaps["map1"];//(graphics, "map1", this->_camera);
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , this->_camera);
     this->_player.setCurrentLevel(&this->_level);
     this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY()-100));
@@ -116,7 +128,7 @@ void Game::update(float elapsedTime)
     vector<Door> collidingDoors = this->_level.checkDoorCollision(this->_player.getBoundingBox());
     if(collidingDoors.size() > 0)
     {
-        this->_player.handleDoorCollision(collidingDoors, this->_level, this->_graphics);
+        this->_player.handleDoorCollision(collidingDoors, this->_level, &this->_allMaps, this->_graphics);
         this->_camera->setCenter(this->_player.getBoundingBox().getCenter());
     }   
 
@@ -130,8 +142,8 @@ void Game::update(float elapsedTime)
     this->_camera->setCenterY( (this->_camera->getCenterY() - del_y));
 
     // Contain camera within map. 
-    // this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
-
+    if(this->_level.getContainCamera())
+        this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
 }
 
 void Game::draw(Graphics &graphics)

@@ -25,10 +25,14 @@ class Level
     
         void update(float elapsedTime);
         void draw(Graphics &graphics);
-        bool hasGravity() { return this->_hasGravity; }
+        bool getGravity() { return this->_hasGravity; }
+        bool getContainCamera() { return this->_contain_camera; }
 
         xyfpair getOffset() { return _mapOffset; }
         xyipair getMapSize() { return _size; }
+        vector<Door> getDoors() { return this->_doorRects; }
+        string getMapName() { return this->_mapName; }
+        
         void setOffset(xyfpair offset) { this->_mapOffset = offset; }
         
         void setCamera(Rectangle *camera) { this->_camera = camera; }
@@ -42,6 +46,7 @@ class Level
     private:
         string _mapName;
         bool _hasGravity;
+        bool _contain_camera;
         xyipair _playerSpawnPoint;
         xyipair _size;
         Rectangle *_camera;

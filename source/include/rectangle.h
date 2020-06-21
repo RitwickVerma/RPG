@@ -4,6 +4,7 @@
 #pragma once
 
 #include "globals.h"
+// #include "utils.h"
 
 class Rectangle
 {
@@ -75,8 +76,8 @@ class Rectangle
         void setBottom(float y) { this->y = y - this->h; }
 
         /* Checks collision with argument Rectangle */
-        const bool collidesWith(const Rectangle &other) const{
-            return 
+        const bool collidesWith(const Rectangle &other) const {
+            return
                 this->getRight() >= other.getLeft() &&
                 this->getLeft() <= other.getRight() &&
                 this->getTop() <= other.getBottom() &&
@@ -100,7 +101,8 @@ class Rectangle
             if(getTop()<other.getTop())         setTop(other.getTop());
             if(getBottom()>other.getBottom())   setBottom(other.getBottom());
 
-            if(!containedWithin(other)) SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Rectangle could not be contained within other");
+            
+            // if(!containedWithin(other)) setCenter(other.getCenter());
         }
 
         /* checks is a Rectangle is valid */

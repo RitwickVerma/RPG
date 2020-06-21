@@ -21,6 +21,12 @@ namespace utils
         return dist;
     }
 
+
+
+
+
+
+
     inline bool checkOverlap(Rectangle &a, Rectangle &b)
     { 
         // If one rectangle is on left side of other 
@@ -32,7 +38,26 @@ namespace utils
             return false; 
     
         return true; 
+    }
+
+    inline bool checkOverlap(const Rectangle &a, const Rectangle &b)
+    { 
+        // If one rectangle is on left side of other 
+        if (a.getTopLeft().x >= b.getBottomRight().x || b.getTopLeft().x >= a.getBottomRight().x) 
+            return false; 
+    
+        // If one rectangle is above other 
+        if (a.getTopLeft().y >= b.getBottomRight().y || b.getTopLeft().y >= a.getBottomRight().y) 
+            return false; 
+    
+        return true; 
     } 
+
+
+
+
+
+
 
     inline bool checkOverlap(Rectangle &a, Tile &b)
     { 

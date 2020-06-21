@@ -8,7 +8,11 @@ Graphics::Graphics()
     SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer);
     SDL_SetWindowTitle(this->_window, "Game");
     SDL_RenderSetScale(this->_renderer, globals::SCALING_X, globals::SCALING_Y);
+    SDL_SetRenderDrawBlendMode(this->_renderer, SDL_BLENDMODE_BLEND);
+
+    // this->_textures = unordered_map<pair<SDL_Surface*, xyipair>, SDL_Texture*>();
     this->_camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
+
 }
 
 Graphics::~Graphics()
@@ -19,9 +23,9 @@ Graphics::~Graphics()
 
 SDL_Surface * Graphics::loadImage(string &filepath)
 {
-    if(this->_spriteSheets.count(filepath) == 0)
-        this->_spriteSheets[filepath] = IMG_Load(filepath.c_str());
-    return this->_spriteSheets[filepath];
+    if(this->_surfaces.count(filepath) == 0)
+        this->_surfaces[filepath] = IMG_Load(filepath.c_str());
+    return this->_surfaces[filepath];
 }
 
 SDL_Surface *Graphics::getSurfaceFromRect(SDL_Surface *surface, xyipair pos, xyipair size)
@@ -35,8 +39,14 @@ SDL_Surface *Graphics::getSurfaceFromRect(SDL_Surface *surface, xyipair pos, xyi
 
 SDL_Texture* Graphics::getTextureFromSurfaceRect(SDL_Surface *surface, xyipair pos, xyipair size)
 {
+    if(this->_textures.count(make_pair(surface, pos.hash())) != 0)
+        return this->_textures[make_pair(surface, pos.hash())];
+
     SDL_Surface *newSurface = this->getSurfaceFromRect(surface, pos, size);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(this->_renderer, newSurface);
+    SDL_FreeSurface(newSurface);
+
+    this->_textures[make_pair(surface, pos.hash())] = texture;
     return texture;
 }
 
@@ -58,6 +68,8 @@ void Graphics::drawQueue()
     {   
         auto renderable = this->_render_queue.top();
 
+
+
         SDL_SetTextureAlphaMod(renderable.getTexture(), 255);
         if(playerUnder && utils::checkOverlap(renderable.getDestRect(), &playerRect) && renderable.getType() == "tree") 
         {    
@@ -68,6 +80,7 @@ void Graphics::drawQueue()
             SDL_SetTextureAlphaMod(renderable.getTexture(), 200*alphaCoffecient );
 
         }
+
 
         SDL_Rect dest = {int(renderable.getDestRect()->x - round(this->_camera.x)), int(renderable.getDestRect()->y - round(this->_camera.y)), renderable.getDestRect()->w, renderable.getDestRect()->h};
         this->blitSurface(renderable.getTexture(), renderable.getSourceRect(), &dest);
@@ -88,37 +101,45 @@ void Graphics::blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *
 
 void Graphics::fadeToBlack()
 {
+    // this->_fade = true;
     float i;
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Rect window = {0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT};
 
-    surface = SDL_CreateRGBSurface(0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 32, 0, 0, 0, 255);
+    string dir = "content/sprites/black.png";
+    surface = loadImage(dir);
+    // surface = SDL_CreateRGBSurface(0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 32, 0, 0, 0, 255);
     texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
 
-    for (i=2;i<=255;i+=0.02) 
+    for (i=2;i<=255;i+=0.5) 
     {
+        this->clear();
         SDL_SetTextureAlphaMod(texture, i);
         this->blitSurface(texture, &window, &window);
-        this->clear();
+        this->flip();
     }
 }
 
 void Graphics::fadeFromBlack()
 {
+    // this->_fade = true;
     float i;
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Rect window = {0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT};
-
-    surface = SDL_CreateRGBSurface(0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 32, 0, 0, 0, 255);
+    
+    string dir = "content/sprites/black.png";
+    surface = loadImage(dir);
+    // surface = SDL_CreateRGBSurface(0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, 32, 0, 0, 0, 255);
     texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
 
-    for (i=255;i>=2;i-=0.02) 
+    for (i=255;i>=2;i-=0.5) 
     {
+        this->clear();
         SDL_SetTextureAlphaMod(texture, i);
         this->blitSurface(texture, &window, &window);
-        this->clear();
+        this->flip();
     }
 }
 

@@ -13,10 +13,11 @@ Level::Level(Graphics &graphics, string mapName, Rectangle *camera):Level()
     _size=xyipair(0,0);
     _camera=camera;
     this->_hasGravity = false;
+    this->_contain_camera = true;
 
-    graphics.fadeToBlack();
+    // graphics.fadeToBlack();
     this->loadMap(graphics, mapName); 
-    graphics.fadeFromBlack();
+    // graphics.fadeFromBlack();
     
 }
 

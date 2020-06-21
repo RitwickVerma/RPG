@@ -13,21 +13,10 @@
 #include <tmxlite/Property.hpp>
 #include <tmxlite/Object.hpp>
 
-struct tile_info
-{
-    // tile_info()
-    // {
-       
-    // }
-    tmx::Tileset &tmxtileset;
-    vector<Rectangle> collisionRectObjects;
-    vector<Rectangle> thingRectObjects;
-    float z_comp;
-};
 
 void Level::loadMap(Graphics &graphics, string mapName)
 {
-    string filepath=this->MAP_DIR+mapName;
+    string filepath=this->MAP_DIR+mapName+".tmx";
 
     tmx::Map tmxmap;
     tmxmap.load(filepath);
@@ -36,49 +25,19 @@ void Level::loadMap(Graphics &graphics, string mapName)
     this->_tileCount = xyipair(tmxmap.getTileCount().x, tmxmap.getTileCount().y);
     this->_size=xyipair(this->_tileCount * this->_mapTileSize);
 
-    // this->_map = vector<vector<Tile>>(2, vector<Tile>(this->_tileCount.y * this->_tileCount.x, Tile()));
     map<int, float> tileZ;
+
+    for(auto &prop : tmxmap.getProperties())
+    {
+        if(prop.getName() == "contain_camera")  this->_contain_camera = prop.getBoolValue();
+        if(prop.getName() == "gravity")  this->_hasGravity = prop.getBoolValue();
+    }
 
     // Get all Tilesets and store them in the map _tilesets at key = firstGid
     for(auto &tileset : tmxmap.getTilesets())
     {
         string tilesetImagePath = tileset.getImagePath();
-        this->_tilesets[tileset.getFirstGID()] = (Tileset(graphics.loadImage(tilesetImagePath), tileset.getFirstGID()));
-
-        // if(tileset.getName() != "terrain-map")
-        // {
-        //     for(auto &tmxtile : tileset.getTiles())
-        //     {
-        //         auto &tmxtileset = tileset;
-        //         auto &tmxtile = *tileset.getTile(tile.ID);
-        //         // xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
-                
-        //         // position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
-                
-        //         for(auto &object : tmxtile.objectGroup.getObjects())
-        //         {
-        //             Rectangle r(ceil(position.x+object.getAABB().left), 
-        //                     ceil(position.y+object.getAABB().top), 
-        //                     ceil(object.getAABB().width),
-        //                     ceil(object.getAABB().height));
-
-        //             for(auto &prop : object.getProperties())
-        //             {
-        //                 if(prop.getName() == "collision" and prop.getBoolValue() == true)
-        //                     this->_collisionRects.push_back(r);
-        //                 if(prop.getName() == "thing" and prop.getBoolValue() == true)
-        //                 {    
-        //                     Thing t = Thing();
-        //                     t.setZ(r.getBottom());
-        //                     thingvector.push_back(make_pair(r, t));
-        //                 }
-        //             }
-        //         }
-        //         break;
-        //     }
-        // }
-
-    
+        this->_tilesets[tileset.getFirstGID()] = (Tileset(graphics.loadImage(tilesetImagePath), tileset.getFirstGID()));    
     }
 
 
@@ -383,6 +342,36 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 }
             }
 
+
+            else if(objectlayer.getName() == "doors")
+            {
+                auto &objects = objectlayer.getObjects();
+                for(auto &object : objects)
+                {
+                    
+                    Rectangle r(ceil(object.getAABB().left), 
+                    ceil(object.getAABB().top), 
+                    ceil(object.getAABB().width),
+                    ceil(object.getAABB().height));
+
+                    string dest, spawn = "";
+                    for(auto &prop : object.getProperties())
+                    {
+                        if(prop.getName() == "destination")
+                        {
+                            dest = prop.getStringValue();
+                        }
+                        if(prop.getName() == "spawn_side")
+                        {
+                            spawn = prop.getStringValue();
+                            
+                        }
+                    }
+                    Door d = Door(r, dest, spawn);
+                    this->_doorRects.push_back(d); 
+                }
+            }
+
             else if(objectlayer.getName() == "spawn_points")
             {
                 auto &objects = objectlayer.getObjects();
@@ -390,33 +379,10 @@ void Level::loadMap(Graphics &graphics, string mapName)
                 {
                     if(object.getName() == "player")
                     {
-                        this->_playerSpawnPoint = xyipair(ceil(object.getPosition().x), 
-                            ceil(object.getPosition().y));
+                        this->_playerSpawnPoint = xyipair(ceil(object.getPosition().x), ceil(object.getPosition().y));
                     }
                 }
             }
-
-            else if(objectlayer.getName() == "doors")
-            {
-                auto &objects = objectlayer.getObjects();
-                for(auto &object : objects)
-                {
-                    for(auto &prop : object.getProperties())
-                    {
-                        if(prop.getName() == "destination")
-                        {
-                            Rectangle r(ceil(object.getAABB().left), 
-                            ceil(object.getAABB().top), 
-                            ceil(object.getAABB().width),
-                            ceil(object.getAABB().height));
-
-                            Door d = Door(r, prop.getStringValue());
-                            this->_doorRects.push_back(d); 
-                        }
-                    }
-                }
-            }
-
         }
 
 
