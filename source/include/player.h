@@ -22,6 +22,7 @@ class Player : public AnimatedSprite
         void moveEast();
         void moveWest();
         void stopMoving();
+        void interact(bool interact = true);
 
         virtual void animationDone(string currentAnimation);
         virtual void setupAnimation();
@@ -49,6 +50,7 @@ class Player : public AnimatedSprite
         Level *_currentLevel;
         Rectangle *_camera;
         bool _grounded;
+        bool _interact;
         int _maxHealth;
         int _currentHealth;
 };

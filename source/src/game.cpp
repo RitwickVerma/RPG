@@ -11,6 +11,7 @@ namespace
 Game::Game()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+
     this->gameLoop();
 }
 Game::~Game()
@@ -33,11 +34,12 @@ void Game::gameLoop()
     SDL_Event event;
     Input input;
 
-    graphics.fadeToBlack();
+    graphics.fadeTo("loading");
     this->loadAllMaps(graphics);
-    graphics.fadeFromBlack();
+    graphics.fadeFrom("loading");
+
     this->_camera = graphics.getCamera();
-    this->_level = this->_allMaps["map1"];//(graphics, "map1", this->_camera);
+    this->_level = this->_allMaps["map1"];
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , this->_camera);
     this->_player.setCurrentLevel(&this->_level);
     this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY()-100));
@@ -60,7 +62,6 @@ void Game::gameLoop()
             }
             else if(event.type == SDL_QUIT)
             {
-                // SDL_Quit();
                 return;
             }
         }
@@ -92,6 +93,10 @@ void Game::gameLoop()
             this->_player.stopMoving();
         }
         
+        if(input.isKeyHeld(SDL_SCANCODE_E))
+            this->_player.interact();
+        else if(!input.isKeyHeld(SDL_SCANCODE_E))
+            this->_player.interact(false);
         
         int CURRENT_TIME_MS = SDL_GetTicks();
         int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_TIME_MS;
@@ -129,7 +134,6 @@ void Game::update(float elapsedTime)
     if(collidingDoors.size() > 0)
     {
         this->_player.handleDoorCollision(collidingDoors, this->_level, &this->_allMaps, this->_graphics);
-        this->_camera->setCenter(this->_player.getBoundingBox().getCenter());
     }   
 
 

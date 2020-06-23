@@ -23,6 +23,7 @@ Player::Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera) :
     this->_grounded=false;
     this->setupAnimation();
     this->_facing=SOUTH;
+    this->_interact = false;
     
     this->_maxHealth = 100;
     this->_currentHealth = 100;
@@ -113,6 +114,10 @@ void Player::stopMoving()
 
 }
 
+void Player::interact(bool interact)
+{
+    this->_interact = interact;
+}
 
 void Player::undoMove(float elapsedTime)
 {
@@ -262,8 +267,12 @@ void Player::handleDoorCollision(vector<Door> &colliding, Level &level, unordere
 {
     for(auto &d : colliding)
     {
-        // graphics.fadeToBlack();
+        if(!this->_interact)
+            continue;
+        
+        graphics.fadeTo();
         string sourceLevel = level.getMapName();
+
 
         level = allMaps->at(d.getDestination());
         
@@ -282,12 +291,13 @@ void Player::handleDoorCollision(vector<Door> &colliding, Level &level, unordere
         if(side[0] == 'r')
             spawn_point = xyipair(door.getRight() + 30 - this->_sprite.w, door.getTop());
 
+
         this->_sprite.x = spawn_point.x;
         this->_sprite.y = spawn_point.y;
         
         this->_currentLevel = &level;
         this->updateBoundingBox();
-        // graphics.fadeFromBlack();
+        this->_camera->setCenter(this->getBoundingBox().getCenter());
     }
 }
 

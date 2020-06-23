@@ -37,9 +37,9 @@ class Graphics
         /* Returns instance of Renderer */
         SDL_Renderer *getRenderer();
 
-        void fadeToBlack();
+        void fadeTo(string filename = "black");
         
-        void fadeFromBlack();
+        void fadeFrom(string filename = "black");
 
         Rectangle *getCamera();
 

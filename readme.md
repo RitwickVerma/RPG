@@ -6,12 +6,6 @@
 
 A RPG written in pure C++ without any using any game or physics engine, a decision I will regret later on. Also, the only way I could sanely spend the big quarantine of 2020 without becoming a braindead piggy.
 
-* Random github lurker : Help a dude out and star. or not. We're all gonna die someday anyway (please star regardless)
-* Someone who knows me : Hi
-* Bojack Horseman : I'm a big fan <3
-* A virgin : HighFive!
-* A recuriter : See? me do the code. call me maybe?
-* My close friend/ animelover : [See point 4]
 
 ![image](screenshot.png)
 
@@ -48,4 +42,4 @@ I've only tried running it on linux. Don't think it'll compile elsewhere. You ca
 * SpriteSheets
   * [Universal LPC SpriteSheet Generator](https://opengameart.org/content/lpc-terrains)
 
-I have also included a credits.txt but man I can't thank these people enough for the incredible free art mainly because I'm shit at art.
+I have also included a credits.txt but man I can't thank these people enough for the incredible free art mainly because I'm bad at art.

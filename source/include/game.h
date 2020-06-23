@@ -25,6 +25,7 @@ class Game
         HUD _hud;
         Graphics _graphics;
         unordered_map<string, Level> _allMaps;
+
 };
 
 #endif
