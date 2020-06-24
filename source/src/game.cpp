@@ -148,6 +148,8 @@ void Game::update(float elapsedTime)
     // Contain camera within map. 
     if(this->_level.getContainCamera())
         this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
+    else
+        this->_camera->setCenter(xyfpair(this->_level.getMapSize().x/2, this->_level.getMapSize().y/2));
 }
 
 void Game::draw(Graphics &graphics)
