@@ -4,6 +4,7 @@
 #pragma once
 
 #include "globals.h"
+#include "tile.h" 
 #include "animatedtile.h"
 #include "rectangle.h"
 #include "line.h"
@@ -15,7 +16,6 @@ struct SDL_Texture;
 struct Tileset;
 struct Thing;
 struct Line;
-struct Tile;
 class Level
 { 
     public :

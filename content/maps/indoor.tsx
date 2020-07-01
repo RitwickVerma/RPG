@@ -1,6 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.0" name="indoor" tilewidth="32" tileheight="32" tilecount="2688" columns="42">
+<tileset version="1.4" tiledversion="1.4.1" name="indoor" tilewidth="32" tileheight="32" tilecount="2688" columns="42">
  <image source="../tilesets/indoor.png" width="1344" height="2048"/>
+ <tile id="600">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="1.59091" y="-12.9091" width="28.6364" height="44">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="1017">
+  <animation>
+   <frame tileid="1017" duration="300"/>
+   <frame tileid="1016" duration="300"/>
+   <frame tileid="1017" duration="300"/>
+   <frame tileid="1018" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="1059">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.49998" y="-52.5455" width="18.6364" height="72.5455">
+    <properties>
+     <property name="collision" type="bool" value="false"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="2" x="6.86362" y="1.72725" width="18.6364" height="17.4546">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="false"/>
+    </properties>
+   </object>
+  </objectgroup>
+  <animation>
+   <frame tileid="1059" duration="300"/>
+   <frame tileid="1058" duration="300"/>
+   <frame tileid="1059" duration="300"/>
+   <frame tileid="1060" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="1288">
+  <animation>
+   <frame tileid="1288" duration="300"/>
+   <frame tileid="1248" duration="300"/>
+   <frame tileid="1250" duration="300"/>
+   <frame tileid="1248" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="1326">
+  <animation>
+   <frame tileid="1326" duration="300"/>
+   <frame tileid="1327" duration="300"/>
+   <frame tileid="1328" duration="300"/>
+   <frame tileid="1327" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="1331">
+  <animation>
+   <frame tileid="1331" duration="300"/>
+   <frame tileid="1290" duration="300"/>
+   <frame tileid="1289" duration="300"/>
+   <frame tileid="1290" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="1408">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.772709" y="-14.9091" width="30.6364" height="40.9091">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="1409">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.6818" y="-15" width="30.6364" height="40.9091">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="1410">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0.6818" y="-15" width="30.6364" height="40.9091">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="1472">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.28575" y="14.7266" width="20.9285" height="17.0469">
+    <properties>
+     <property name="Z" type="bool" value="false"/>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="false"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="1473">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.91077" y="14.664" width="20.9285" height="17.0469">
+    <properties>
+     <property name="Z" type="bool" value="false"/>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="false"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="1796">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.5" y="13" width="53" height="78">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
  <tile id="2060">
   <objectgroup draworder="index" id="2">
    <object id="1" x="0.128077" y="-0.384231" width="32.2754" height="14.0885">

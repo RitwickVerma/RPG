@@ -65,6 +65,8 @@ void Level::loadMap(Graphics &graphics, string mapName)
             //////////////////////// Object Layer in Layer Group //////////////////////////////
             for(int i=0; i<layers.size(); i++)
             {
+                if(!layers[i]->getVisible())    continue; 
+
                 if(layers[i]->getType() == tmx::Layer::Type::Object && layers[i]->getName() == "things")
                 {
                     tmx::ObjectGroup &objectlayer = layers[i]->getLayerAs<tmx::ObjectGroup>();
@@ -114,6 +116,8 @@ void Level::loadMap(Graphics &graphics, string mapName)
             //////////////////////// Tile Layer in Layer Group //////////////////////////////
             for(int i=0; i<layers.size(); i++)
             {
+                if(!layers[i]->getVisible())    continue; 
+
                 if(layers[i]->getType() == tmx::Layer::Type::Tile)
                 {
                     layercounter++;
@@ -143,6 +147,17 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 if(this->_tileTextures.count(tile.ID) == 0)
                                     this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y));
                                 
+                                if(tmxtile.animation.frames.size()!=0)
+                                {
+                                    // AnimatedTile *m_tile = new AnimatedTile(tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
+                                    for(auto &frame : tmxtile.animation.frames)
+                                    {
+                                        auto &tmxframetile = *tileset.getTile(frame.tileID);
+                                        xyipair tilesetframePosition = xyipair(tmxframetile.imagePosition.x, tmxframetile.imagePosition.y);
+                                        this->_tileTextures[frame.tileID] = graphics.getTextureFromSurfaceRect(surface, tilesetframePosition, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y));
+                                    }
+                                }
+
                                 for(auto &object : tmxtile.objectGroup.getObjects())
                                 {
                                     Rectangle r(ceil(position.x+object.getAABB().left), 
@@ -184,21 +199,17 @@ void Level::loadMap(Graphics &graphics, string mapName)
                         {
                             if(tileset.hasTile(tile.ID))
                             {
-                                auto &tmxtileset = tileset;//*tileData[tile.ID].tmxtileset;
-                                auto &tmxtile = *tileset.getTile(tile.ID);//*tileData[tile.ID].tmxtile;
-                                // SDL_Surface *surface = this->_tilesets[tmxtileset.getFirstGID()].Surface;
-                                // xyipair tilesetPosition = xyipair(tmxtile.imagePosition.x, tmxtile.imagePosition.y);
+                                auto &tmxtileset = tileset;
+                                auto &tmxtile = *tileset.getTile(tile.ID);
                                 xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
                                 
                                 position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
-                                
-                                // if(this->_tileTextures.count(tile.ID) == 0)
-                                    // this->_tileTextures[tile.ID] = graphics.getTextureFromSurfaceRect(surface, tilesetPosition, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y));
-
-
+                    
                                 // If Tile is Animated
                                 if(tmxtile.animation.frames.size()!=0)
                                 {
+                                    if(tile.ID == 1018)
+                                        cout<<"hi";
                                     AnimatedTile *m_tile = new AnimatedTile(tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
                                     for(auto &frame : tmxtile.animation.frames)
                                     {
@@ -218,9 +229,9 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                     if(mapLayer->getName() == "background")
                                         m_tile->setZ(-5 + 0.1*layercounter);
                                     else if(tileZ.count(tile.ID) == 1)
-                                        m_tile->setZ(tileZ[tile.ID]);
+                                        m_tile->setZ(tileZ[tile.ID] + 0.1*layercounter);
                                     else
-                                        m_tile->setZ(position.y + tmxtileset.getTileSize().y);
+                                        m_tile->setZ(position.y + tmxtileset.getTileSize().y + 0.1*layercounter);
                                     this->_map.push_back(*m_tile);
                                 }
 
@@ -228,7 +239,6 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 else
                                 {
                                     Tile *m_tile = new Tile(this->_tileTextures[tile.ID], tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
-                                    
                                     for(auto &p : thingvector)
                                     {
                                         if(utils::checkOverlap(p.first, *m_tile))
@@ -242,12 +252,12 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                     if(mapLayer->getName() == "background")
                                         m_tile->setZ(-5 + 0.1*layercounter);
                                     else if(tileZ.count(tile.ID) == 1)
-                                        m_tile->setZ(tileZ[tile.ID]);
+                                        m_tile->setZ(tileZ[tile.ID] + 0.1*layercounter);
                                     else
-                                        m_tile->setZ(position.y + tmxtileset.getTileSize().y);
+                                        m_tile->setZ(position.y + tmxtileset.getTileSize().y + 0.1*layercounter);
                                     this->_map.push_back(*m_tile);
                                 }
-                                    
+
                                 TILE_ADDED:;
                                 
                                 break;
