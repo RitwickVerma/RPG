@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.3.5" name="outdoor" tilewidth="32" tileheight="32" tilecount="460" columns="23">
+<tileset version="1.4" tiledversion="1.4.1" name="outdoor" tilewidth="32" tileheight="32" tilecount="460" columns="23">
  <image source="../tilesets/outdoor.png" width="736" height="640"/>
  <tile id="45">
   <objectgroup draworder="index" id="2">
@@ -42,7 +42,7 @@
      <property name="thing" type="bool" value="true"/>
     </properties>
    </object>
-   <object id="2" x="1.17045" y="5.0895" width="26.25" height="13.3125">
+   <object id="2" x="1.17045" y="5.0895" width="26.25" height="18.1875">
     <properties>
      <property name="collision" type="bool" value="true"/>
     </properties>

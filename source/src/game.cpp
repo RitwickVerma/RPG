@@ -25,7 +25,7 @@ void Game::loadAllMaps(Graphics &graphics)
     };
 
     for(string &map : maps)
-        this->_allMaps[map] = Level(graphics, map);
+        this->_allMaps[map] = Level(graphics, map, &this->_player);
 }
 
 void Game::gameLoop()
@@ -70,34 +70,43 @@ void Game::gameLoop()
         {
             return;
         }
+        else if(input.wasKeyPressed(SDL_SCANCODE_SPACE))
+            this->_player.shoot();
         else if(input.isKeyHeld(SDL_SCANCODE_W))
-        {
-            this->_player.moveNorth();
-        }
+        { this->_player.moveNorth(); }
         else if(input.isKeyHeld(SDL_SCANCODE_S))
-        {
-            this->_player.moveSouth();
-        }
+        { this->_player.moveSouth(); }
         else if(input.isKeyHeld(SDL_SCANCODE_A))
-        {
-            this->_player.moveWest();
-        }
+        { this->_player.moveWest(); }
         else if(input.isKeyHeld(SDL_SCANCODE_D))
-        {
-            this->_player.moveEast();
-        }
-        
+        { this->_player.moveEast(); }
         else if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and 
-                !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D))
-        {
-            this->_player.stopMoving();
-        }
+                !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D) and
+                !input.wasKeyPressed(SDL_SCANCODE_SPACE))
+        { this->_player.stopMoving(); }
         
         if(input.isKeyHeld(SDL_SCANCODE_E))
-            this->_player.interact();
+            this->_player.interact(true);
         else if(!input.isKeyHeld(SDL_SCANCODE_E))
             this->_player.interact(false);
         
+        
+        if(input.isKeyHeld(SDL_SCANCODE_GRAVE))         globals::DEV_MODE = true;
+        else if(!input.isKeyHeld(SDL_SCANCODE_GRAVE))   globals::DEV_MODE = false;
+        
+        ////////////
+        //Dev Mode//
+        if(globals::DEV_MODE)
+        {
+            if(input.isKeyHeld(SDL_SCANCODE_M))
+            {
+                string mapname = this->_level.getMapName();
+                this->_allMaps[mapname] = Level(graphics, mapname, &this->_player);
+                this->_level = this->_allMaps[mapname];
+            }
+        }
+        ////////////
+
         int CURRENT_TIME_MS = SDL_GetTicks();
         int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_TIME_MS;
 

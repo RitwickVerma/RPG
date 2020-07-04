@@ -11,19 +11,18 @@ class AnimatedSprite : public Sprite
         AnimatedSprite();
         AnimatedSprite(Graphics &graphics, string filename, int sourceX, int sourceY, int w, int h, float posX, float posY, float timeToUpdate);
 
-        void playAnimation(string animation, bool repeat = true);
+        void playAnimation(string animation, bool restart = false, bool repeat = true);
         void update(float elapsedTime);
-
         void draw(Graphics &graphics, int x, int y);
-
 
     
     protected:
         float _updateDuration;
         bool _currentAnimationRepeat;
         string _currentAnimation;
+        bool _lockAnimation;
 
-        void addAnimation(int frames, int x, int y, string animation, int w, int h, xyipair offset);
+        void addAnimation(int frames, int x, int y, string animation, int w, int h, xyipair offset, float animationUpdateTime = -1);
         void resetAnimation();
         void stopAnimation();
         void setVisibility(bool visibility);
@@ -31,8 +30,9 @@ class AnimatedSprite : public Sprite
         virtual void animationDone(string animation) = 0;
         virtual void setupAnimation() = 0;
 
-        map<string, vector<SDL_Rect>> _animations;
-        map<string, xyipair> _offsets;
+        unordered_map<string, vector<SDL_Rect>> _animations;
+        unordered_map<string, float> _animationUpdateTimes;
+        unordered_map<string, xyipair> _offsets;
 
         int _frameIndex;
         float _timeForUpdate;

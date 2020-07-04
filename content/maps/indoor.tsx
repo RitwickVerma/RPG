@@ -21,7 +21,7 @@
  </tile>
  <tile id="1059">
   <objectgroup draworder="index" id="2">
-   <object id="1" x="6.49998" y="-52.5455" width="18.6364" height="72.5455">
+   <object id="1" x="6.49998" y="-52.5455" width="18.6364" height="74.7955">
     <properties>
      <property name="collision" type="bool" value="false"/>
      <property name="thing" type="bool" value="true"/>

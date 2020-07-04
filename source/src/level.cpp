@@ -6,11 +6,12 @@ Level::Level()
     MAP_DIR = "content/maps/";
 }
 
-Level::Level(Graphics &graphics, string mapName, Rectangle *camera):Level()
+Level::Level(Graphics &graphics, string mapName, Player *player, Rectangle *camera):Level()
 {
     _mapName=mapName;
     _playerSpawnPoint = xyipair(100, 100);
     _size=xyipair(0,0);
+    _player = player;
     _camera=camera;
     this->_hasGravity = false;
     this->_contain_camera = true;

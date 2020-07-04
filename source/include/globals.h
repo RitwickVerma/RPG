@@ -22,6 +22,7 @@ namespace globals
     const int SCREEN_HEIGHT = 720;
     const float SCALING_X = 1;
     const float SCALING_Y = 1;
+    inline bool DEV_MODE = false;
 }
 
 namespace sides

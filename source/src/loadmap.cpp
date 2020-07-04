@@ -208,8 +208,6 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 // If Tile is Animated
                                 if(tmxtile.animation.frames.size()!=0)
                                 {
-                                    if(tile.ID == 1018)
-                                        cout<<"hi";
                                     AnimatedTile *m_tile = new AnimatedTile(tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
                                     for(auto &frame : tmxtile.animation.frames)
                                     {
@@ -222,7 +220,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                         {
                                             m_tile->setZ(p.second.getZ() + 0.1*layercounter);
                                             p.second.addTile(*m_tile);
-                                            goto TILE_ADDED;
+                                            goto ANIMATED_THING_CREATED;
                                         }
                                     }
 
@@ -232,6 +230,8 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                         m_tile->setZ(tileZ[tile.ID] + 0.1*layercounter);
                                     else
                                         m_tile->setZ(position.y + tmxtileset.getTileSize().y + 0.1*layercounter);
+                                    
+                                    ANIMATED_THING_CREATED:;
                                     this->_map.push_back(*m_tile);
                                 }
 
@@ -245,7 +245,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                         {
                                             m_tile->setZ(p.second.getZ() + 0.1*layercounter);
                                             p.second.addTile(*m_tile);
-                                            goto TILE_ADDED;
+                                            goto THING_CREATED;
                                         }
                                     }
 
@@ -255,11 +255,11 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                         m_tile->setZ(tileZ[tile.ID] + 0.1*layercounter);
                                     else
                                         m_tile->setZ(position.y + tmxtileset.getTileSize().y + 0.1*layercounter);
+                                    
+                                    THING_CREATED:;
                                     this->_map.push_back(*m_tile);
                                 }
 
-                                TILE_ADDED:;
-                                
                                 break;
                             }
                         }

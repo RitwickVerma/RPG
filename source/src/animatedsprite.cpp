@@ -12,9 +12,10 @@ AnimatedSprite::AnimatedSprite(Graphics &graphics, string filename, int sourceX,
     _visible=true;
     _currentAnimationRepeat=false;
     _currentAnimation="";
+    _lockAnimation = false;
 }
 
-void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, xyipair offset)
+void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, xyipair offset, float animationUpdateTime)
 {
     for(int i=0; i<frames; i++)
     {
@@ -22,21 +23,29 @@ void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, in
         this->_animations[animation].push_back(tempRect);
     }
     this->_offsets[animation]=offset;
+    this->_animationUpdateTimes[animation] = ((animationUpdateTime==-1)?this->_updateDuration:animationUpdateTime);
 }
 
 void AnimatedSprite::resetAnimation()
 {
     this->_animations.clear();
     this->_offsets.clear();
+    this->_animationUpdateTimes.clear();
 }
 
-void AnimatedSprite::playAnimation(string animation, bool repeat)
-{
-    this->_currentAnimationRepeat=repeat;
-    if(this->_currentAnimation != animation)
+void AnimatedSprite::playAnimation(string animation, bool restart, bool repeat)
+{   
+    if(!this->_lockAnimation)
     {
-        this->_currentAnimation = animation;
-        this->_frameIndex=0;
+        this->_currentAnimationRepeat=repeat;
+        if(this->_currentAnimation != animation)
+        {
+            this->_currentAnimation = animation;
+            this->_frameIndex=0;
+        }
+        else if(restart)
+            this->_frameIndex=0;
+
     }
 }
 
@@ -45,25 +54,28 @@ void AnimatedSprite::setVisibility(bool visibility)
     this->_visible=visibility;
 }
 
+
 void AnimatedSprite::stopAnimation()
 {
-    this->_frameIndex = 0;
-    this->animationDone(this->_currentAnimation);
+    if(this->_currentAnimationRepeat == true)
+        this->_frameIndex = 0;
+    else
+        this->animationDone(this->_currentAnimation);
 }
 
 void AnimatedSprite::update(float elapsedTime)
 {
     Sprite::update();
     this->_timeForUpdate += elapsedTime;
-    if(this->_timeForUpdate > this->_updateDuration)
+    if(this->_timeForUpdate > this->_animationUpdateTimes[this->_currentAnimation])
     {
-        this->_timeForUpdate -= this->_updateDuration;
+        this->_timeForUpdate -= this->_animationUpdateTimes[this->_currentAnimation];
         if(this->_frameIndex < this->_animations[this->_currentAnimation].size()-1)
             this->_frameIndex++;
         else
         {
-            if(this->_currentAnimationRepeat == false)
-                this->setVisibility(false);
+            // if(this->_currentAnimationRepeat == false)
+                // this->setVisibility(false);
             this->stopAnimation();
         }
     }

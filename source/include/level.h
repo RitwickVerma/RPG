@@ -16,11 +16,12 @@ struct SDL_Texture;
 struct Tileset;
 struct Thing;
 struct Line;
+struct Player;
 class Level
 { 
     public :
         Level();
-        Level(Graphics &graphics, string mapName, Rectangle *camera = NULL);
+        Level(Graphics &graphics, string mapName, Player *player = NULL, Rectangle *camera = NULL);
         ~Level();
     
         void update(float elapsedTime);
@@ -50,6 +51,7 @@ class Level
         xyipair _playerSpawnPoint;
         xyipair _size;
         Rectangle *_camera;
+        Player *_player;
         // SDL_Texture *_backgroundTexture;
         string MAP_DIR;        
 

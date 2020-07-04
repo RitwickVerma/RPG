@@ -23,6 +23,7 @@ class Player : public AnimatedSprite
         void moveWest();
         void stopMoving();
         void interact(bool interact = true);
+        void shoot();
 
         virtual void animationDone(string currentAnimation);
         virtual void setupAnimation();
@@ -41,6 +42,7 @@ class Player : public AnimatedSprite
         void makeMove(float elapsedTime);
         void updateBoundingBox();
         
+        const float getZ() const { return this->_boundingBox.getBottom(); }
         const float getMaxHealth() const { return this->_maxHealth; }
         const float getCurrentHealth() const { return this->_currentHealth; }
 
