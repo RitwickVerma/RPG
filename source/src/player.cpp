@@ -194,7 +194,7 @@ void Player::draw(Graphics &graphics)
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 
-        Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
-        graphics.addToRenderQueue(r);
+        this->makeRenderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
+        graphics.addToRenderQueue(*this);
     }
 }

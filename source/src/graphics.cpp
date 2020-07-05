@@ -68,8 +68,6 @@ void Graphics::drawQueue()
     {   
         auto renderable = this->_render_queue.top();
 
-
-
         SDL_SetTextureAlphaMod(renderable.getTexture(), 255);
         if(playerUnder && utils::checkOverlap(renderable.getDestRect(), &playerRect) && renderable.getType() == "tree") 
         {    

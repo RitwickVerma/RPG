@@ -4,11 +4,13 @@
 #pragma once
 
 #include "globals.h"
+#include "renderable.h"
 
 struct Graphics;
 struct SDL_Texture;
 struct Rectangle;
-class Tile
+
+class Tile : public Renderable
 {
     public:
         Tile();

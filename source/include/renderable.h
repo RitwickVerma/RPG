@@ -13,14 +13,17 @@ struct SDL_Rect;
 class Renderable
 {
     public:
-        Renderable(float Z, SDL_Texture *texture, SDL_Rect &sourceRect, SDL_Rect &destRect, string type = "", int opacity = 100) :
-            z_comp(Z),
-            renderTexture(texture),
-            renderSourceRect(sourceRect),
-            renderDestRect(destRect),
-            renderOpacity(opacity),
-            renderType(type)
-        { }
+        Renderable(){}
+
+        void makeRenderable(float Z, SDL_Texture *texture, SDL_Rect &sourceRect, SDL_Rect &destRect, string type = NULL, int opacity = 100)
+        {
+            this->z_comp = Z;
+            this->renderTexture = texture;
+            this->renderSourceRect = sourceRect;
+            this->renderDestRect = destRect;
+            this->renderOpacity = opacity;
+            this->renderType = type;
+        }
 
         SDL_Texture *getTexture() const { return this->renderTexture; }
         SDL_Rect *getSourceRect() { return &this->renderSourceRect; }

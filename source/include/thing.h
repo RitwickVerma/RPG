@@ -6,8 +6,9 @@
 #include "globals.h"
 #include "tile.h"
 #include "animatedtile.h"
+#include "renderable.h"
 
-class Thing
+class Thing : public Renderable
 {
     public:
        Thing();

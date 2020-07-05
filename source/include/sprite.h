@@ -6,11 +6,12 @@
 #include "globals.h"
 #include "rectangle.h"
 #include "line.h"
+#include "renderable.h"
 // #include "utils.h"
 
 struct Graphics;
 
-class Sprite
+class Sprite : public Renderable
 {
     public:
         Sprite();
