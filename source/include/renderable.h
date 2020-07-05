@@ -15,7 +15,7 @@ class Renderable
     public:
         Renderable(){}
 
-        void makeRenderable(float Z, SDL_Texture *texture, SDL_Rect &sourceRect, SDL_Rect &destRect, string type = NULL, int opacity = 100)
+        void makeRenderable(float Z, SDL_Texture *texture, SDL_Rect &sourceRect, SDL_Rect &destRect, string type = "", int opacity = 100)
         {
             this->z_comp = Z;
             this->renderTexture = texture;

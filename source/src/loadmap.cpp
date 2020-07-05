@@ -204,7 +204,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 xyfpair position = xyfpair((tileCounter%(int)this->_tileCount.x)*this->_mapTileSize.x, (tileCounter/(int)this->_tileCount.x)*this->_mapTileSize.y);
                                 
                                 position.y -= tmxtileset.getTileSize().y - this->_mapTileSize.h;
-                    
+
                                 // If Tile is Animated
                                 if(tmxtile.animation.frames.size()!=0)
                                 {
@@ -213,7 +213,7 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                     {
                                         m_tile->addTileFrame(animated_tile_frame(this->_tileTextures[frame.tileID], frame.duration));
                                     }
-
+                                
                                     for(auto &p : thingvector)
                                     {
                                         if(utils::checkOverlap(p.first, *m_tile))
@@ -239,6 +239,8 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                 else
                                 {
                                     Tile *m_tile = new Tile(this->_tileTextures[tile.ID], tile.ID, xyipair(tmxtileset.getTileSize().x, tmxtileset.getTileSize().y), xyipair(0,0), position);
+                                
+
                                     for(auto &p : thingvector)
                                     {
                                         if(utils::checkOverlap(p.first, *m_tile))

@@ -52,38 +52,31 @@ void Game::gameLoop()
         if(SDL_PollEvent(&event)) 
         {
             if(event.type == SDL_KEYDOWN)
-            {
                 if(event.key.repeat == 0)  
                     input.keyDownEvent(event);
-            }
             else if(event.type == SDL_KEYUP)
-            {
                 input.keyUpEvent(event);
-            }
             else if(event.type == SDL_QUIT)
-            {
                 return;
-            }
         }
         
         if(input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
-        {
             return;
-        }
-        else if(input.wasKeyPressed(SDL_SCANCODE_SPACE))
-            this->_player.shoot();
+
+        // else if(input.wasKeyPressed(SDL_SCANCODE_SPACE))
+        //     this->_player.shoot();
         else if(input.isKeyHeld(SDL_SCANCODE_W))
-        { this->_player.moveNorth(); }
+            this->_player.moveNorth(); 
         else if(input.isKeyHeld(SDL_SCANCODE_S))
-        { this->_player.moveSouth(); }
+            this->_player.moveSouth();
         else if(input.isKeyHeld(SDL_SCANCODE_A))
-        { this->_player.moveWest(); }
+            this->_player.moveWest(); 
         else if(input.isKeyHeld(SDL_SCANCODE_D))
-        { this->_player.moveEast(); }
+            this->_player.moveEast(); 
         else if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and 
-                !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D) and
-                !input.wasKeyPressed(SDL_SCANCODE_SPACE))
-        { this->_player.stopMoving(); }
+                !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D) )
+            this->_player.stopMoving(); 
+    
         
         if(input.isKeyHeld(SDL_SCANCODE_E))
             this->_player.interact(true);

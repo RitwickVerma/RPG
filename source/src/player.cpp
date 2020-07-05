@@ -24,6 +24,7 @@ Player::Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera) :
     this->_facing=SOUTH;
     this->stopMoving();
     this->_interact = false;
+    this->_lockMovement = false;
     
     this->_maxHealth = 100;
     this->_currentHealth = 100;
@@ -50,7 +51,10 @@ void Player::setupAnimation()
 void Player::animationDone(string animation)
 {
     if(animation.find("shoot") != string::npos)
+    {
         this->_lockAnimation = false;
+        this->_lockMovement = false;
+    }
 }
 
 void Player::updateBoundingBox()
@@ -147,6 +151,7 @@ void Player::shoot()
             break;
     }
     this->_lockAnimation = true;
+    // this->_lockMovement = true;
 }
 
 void Player::undoMove(float elapsedTime)
@@ -158,7 +163,7 @@ void Player::undoMove(float elapsedTime)
 
 void Player::makeMove(float elapsedTime)
 {
-    if(this->_lockAnimation)    return;
+    // if(this->_lockMovement) return;
 
     this->_sprite.x += this->_dx * elapsedTime;
     this->_sprite.y += this->_dy * elapsedTime;
@@ -175,7 +180,8 @@ void Player::update(float elapsedTime)
         this->_dy += o::GRAVITY * elapsedTime; 
 
     // Move player by changing x, y by velocity dx, dy
-    this->makeMove(elapsedTime);
+    // if(!this->_lockAnimation and this->_currentAnimation.find("shoot") == string::npos)
+        this->makeMove(elapsedTime);
 
     // Contain Player within Camera.
     this->_sprite.containWithin(*this->_camera);

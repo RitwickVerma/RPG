@@ -23,6 +23,9 @@ Tile::Tile(SDL_Texture *tileset, int ID, xyipair size, xyipair tilesetPosition, 
     this->z_comp = Z;
 }
 
+void Tile::addTileFrame(animated_tile_frame tileFrame)
+{}
+
 void Tile::update(float elapsedTime)
 {}
 

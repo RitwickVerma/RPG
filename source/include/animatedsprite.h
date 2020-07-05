@@ -1,5 +1,5 @@
 #ifndef ANIMATEDSPRITE_H
-#define ANIMATEDSPRITE_H  
+#define ANIMATEDSPRITE_H
 
 #pragma once
 
@@ -15,7 +15,6 @@ class AnimatedSprite : public Sprite
         void update(float elapsedTime);
         void draw(Graphics &graphics, int x, int y);
 
-    
     protected:
         float _updateDuration;
         bool _currentAnimationRepeat;
@@ -36,7 +35,7 @@ class AnimatedSprite : public Sprite
 
         int _frameIndex;
         float _timeForUpdate;
-        bool _visible; 
+        bool _visible;
 };
 
 #endif // !1ANIMATEDSPRITE_H

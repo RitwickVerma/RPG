@@ -17,9 +17,9 @@ class Input
         bool isKeyHeld(SDL_Scancode key);
     
     private:
-        std::map<SDL_Scancode, bool> _heldKeys;
-        std::map<SDL_Scancode, bool> _pressedKeys;
-        std::map<SDL_Scancode, bool> _releasedKeys;
+        unordered_map<SDL_Scancode, bool> _heldKeys;
+        unordered_map<SDL_Scancode, bool> _pressedKeys;
+        unordered_map<SDL_Scancode, bool> _releasedKeys;
 
 };
 

@@ -26,18 +26,5 @@ class AnimatedTile : public Tile
     
 };
 
-struct animated_tile_frame
-{
-    animated_tile_frame(SDL_Texture *texture, int duration, xyipair position = xyipair(0,0))
-    {
-        frameTexture = texture;
-        tilesetPosition = position;
-        frameDuration = duration;
-    }
-
-    SDL_Texture *frameTexture;
-    int frameDuration;
-    xyipair tilesetPosition;
-};
 
 #endif
