@@ -59,7 +59,7 @@ void Player::animationDone(string animation)
 
 void Player::updateBoundingBox()
 {
-    this->_boundingBox = Rectangle(this->_sprite.x+16, this->_sprite.y+52, o::_w-32, 12);
+    this->_boundingBox.update(this->_sprite.x()+16, this->_sprite.y()+52, o::_w-32, 12);
 }
 
 void Player::setCurrentLevel(Level *level)
@@ -151,22 +151,20 @@ void Player::shoot()
             break;
     }
     this->_lockAnimation = true;
-    // this->_lockMovement = true;
+    this->_lockMovement = true;
 }
 
 void Player::undoMove(float elapsedTime)
 {
-    this->_sprite.x -= this->_dx * elapsedTime;
-    this->_sprite.y -= this->_dy * elapsedTime;
+    this->_sprite.x() -= this->_dx * elapsedTime;
+    this->_sprite.y() -= this->_dy * elapsedTime;
     this->updateBoundingBox();
 }
 
 void Player::makeMove(float elapsedTime)
 {
-    // if(this->_lockMovement) return;
-
-    this->_sprite.x += this->_dx * elapsedTime;
-    this->_sprite.y += this->_dy * elapsedTime;
+    this->_sprite.x() += this->_dx * elapsedTime;
+    this->_sprite.y() += this->_dy * elapsedTime;
     this->updateBoundingBox();
 }
 
@@ -193,9 +191,9 @@ void Player::draw(Graphics &graphics)
     if(this->_visible)
     {
         SDL_Rect destRect = {
-                                this->_sprite.x+this->_offsets[this->_currentAnimation].x,
-                                this->_sprite.y+this->_offsets[this->_currentAnimation].y,
-                                (int)this->_sprite.w , (int)this->_sprite.h  
+                                this->_sprite.x()+this->_offsets[this->_currentAnimation].x,
+                                this->_sprite.y()+this->_offsets[this->_currentAnimation].y,
+                                (int)this->_sprite.w() , (int)this->_sprite.h()  
                             };
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];

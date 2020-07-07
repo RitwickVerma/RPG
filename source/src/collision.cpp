@@ -11,19 +11,19 @@ void Player::handleTileCollision(vector<Rectangle> &colliding)
             switch (collisionSide)
             {
             case sides::LEFT:
-                this->_sprite.x = r.getRight() + 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getLeft());
+                this->_sprite.x() = r.getRight() + 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getLeft());
                 this->_dx = 0;
                 break;
             case sides::RIGHT:
-                this->_sprite.x = r.getLeft() - 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getRight());
+                this->_sprite.x() = r.getLeft() - 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getRight());
                 this->_dx = 0;
                 break;
             case sides::TOP:
-                this->_sprite.y = r.getBottom() + 1 - abs(this->_sprite.getTop() - this->_boundingBox.getTop());
+                this->_sprite.y() = r.getBottom() + 1 - abs(this->_sprite.getTop() - this->_boundingBox.getTop());
                 this->_dy = 0;
                 break;
             case sides::BOTTOM:
-                this->_sprite.y = r.getTop() - 1 - abs(this->_sprite.getTop() - this->_boundingBox.getBottom());
+                this->_sprite.y() = r.getTop() - 1 - abs(this->_sprite.getTop() - this->_boundingBox.getBottom());
                 this->_dy = 0;
                 this->_grounded = (this->_currentLevel->getGravity()) ? true : false;
                 break;
@@ -133,8 +133,8 @@ bool Player::handleLineCollision(vector<Line> &colliding, int elapsedTime)
 
         shiftx += ((shiftx == 0) ? 0 : ((shiftx > 0) ? 1 : -1));
         shifty += ((shifty == 0) ? 0 : ((shifty > 0) ? 1 : -1));
-        this->_sprite.x += shiftx;
-        this->_sprite.y += shifty;
+        this->_sprite.x() += shiftx;
+        this->_sprite.y() += shifty;
         this->_dx = this->_dy = 0;
         this->updateBoundingBox();
     }
@@ -162,16 +162,16 @@ void Player::handleDoorCollision(vector<Door> &colliding, Level &level, unordere
         xyipair spawn_point = level.getPlayerSpawnPoint();
 
         if (side[0] == 't')
-            spawn_point = xyipair(door.getLeft(), door.getTop() - 30 - this->_sprite.h);
+            spawn_point = xyipair(door.getLeft(), door.getTop() - 30 - this->_sprite.h());
         if (side[0] == 'b')
-            spawn_point = xyipair(door.getLeft(), door.getBottom() + 30 - this->_sprite.h);
+            spawn_point = xyipair(door.getLeft(), door.getBottom() + 30 - this->_sprite.h());
         if (side[0] == 'l')
-            spawn_point = xyipair(door.getLeft() - 30 - this->_sprite.w, door.getTop());
+            spawn_point = xyipair(door.getLeft() - 30 - this->_sprite.w(), door.getTop());
         if (side[0] == 'r')
-            spawn_point = xyipair(door.getRight() + 30 - this->_sprite.w, door.getTop());
+            spawn_point = xyipair(door.getRight() + 30 - this->_sprite.w(), door.getTop());
 
-        this->_sprite.x = spawn_point.x;
-        this->_sprite.y = spawn_point.y;
+        this->_sprite.x() = spawn_point.x;
+        this->_sprite.y() = spawn_point.y;
 
         this->_currentLevel = &level;
         this->updateBoundingBox();

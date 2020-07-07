@@ -12,28 +12,43 @@ class Rectangle
         Rectangle(){} 
 
         Rectangle(int x, int y, int width, int height):
-            x(x),
-            y(y),
-            w(width),
-            h(height)
+            _x(x),
+            _y(y),
+            _w(width),
+            _h(height)
         {}
         Rectangle(SDL_Rect r):
-            x(r.x),
-            y(r.y),
-            w(r.w),
-            h(r.h)
+            _x(r.x),
+            _y(r.y),
+            _w(r.w),
+            _h(r.h)
         {}
 
-        Rectangle operator*(const float &scale) { return Rectangle(x*scale, y*scale, w*scale, h*scale); }
+        Rectangle operator*(const float &scale) { return Rectangle(_x*scale, _y*scale, _w*scale, _h*scale); }
 
-        const float getCenterX() const { return this->x + this->w/2; }
-        const float getCenterY() const { return this->y + this->h/2; }
+        void update(int x, int y, int width, int height)
+        {
+                this->_x = x;
+                this->_y = y;
+                this->_w = width;
+                this->_h = height;
+        }
+
+
+        float & x() { return this->_x; }
+        float & y() { return this->_y; }
+        float & w() { return this->_w; }
+        float & h() { return this->_h; }
+
+
+        const float getCenterX() const { return this->_x + this->_w/2; }
+        const float getCenterY() const { return this->_y + this->_h/2; }
         const xyfpair getCenter() const { return xyfpair(this->getCenterX(), this->getCenterY()); }
 
-        const float getLeft() const { return this->x; }
-        const float getRight() const { return this->x + this->w; }
-        const float getTop() const { return this->y; }
-        const float getBottom() const { return this->y + this->h; }
+        const float getLeft() const { return this->_x; }
+        const float getRight() const { return this->_x + this->_w; }
+        const float getTop() const { return this->_y; }
+        const float getBottom() const { return this->_y + this->_h; }
 
         const xyfpair getTopLeft() const { return xyfpair(this->getLeft(), this->getTop()); }
         const xyfpair getTopRight() const { return xyfpair(this->getRight(), this->getTop()); }
@@ -41,8 +56,8 @@ class Rectangle
         const xyfpair getBottomRight() const { return xyfpair(this->getRight(), this->getBottom()); }
         
 
-        const float getWidth() const { return this->w; }
-        const float getHeight() const { return this->h; }
+        const float getWidth() const { return this->_w; }
+        const float getHeight() const { return this->_h; }
 
         const int getSide(const sides::Side side) const {
             return 
@@ -65,15 +80,15 @@ class Rectangle
             return corners;
         }
 
-        void setCenterX(float x) { this->x = x - this->w/2; }
-        void setCenterY(float y) { this->y = y - this->h/2; }
+        void setCenterX(float x) { this->_x = x - this->_w/2; }
+        void setCenterY(float y) { this->_y = y - this->_h/2; }
         void setCenter(float x, float y) { this->setCenterX(x); this->setCenterY(y); } 
         void setCenter(xyfpair xy) { this->setCenterX(xy.x); this->setCenterY(xy.y); } 
         
-        void setLeft(float x) { this->x = x; }
-        void setRight(float x) { this->x = x - this->w; }
-        void setTop(float y) { this->y = y; }
-        void setBottom(float y) { this->y = y - this->h; }
+        void setLeft(float x) { this->_x = x; }
+        void setRight(float x) { this->_x = x - this->_w; }
+        void setTop(float y) { this->_y = y; }
+        void setBottom(float y) { this->_y = y - this->_h; }
 
         /* Checks collision with argument Rectangle */
         const bool collidesWith(const Rectangle &other) const {
@@ -108,10 +123,11 @@ class Rectangle
         /* checks is a Rectangle is valid */
         const bool isValidRect() const 
         {
-            return this->x>=0 && this->y>=0 && this->w>=0 && this->h>=0;
+            return this->_x>=0 && this->_y>=0 && this->_w>=0 && this->_h>=0;
         }
 
-        float x, y, h, w;
+    private:
+        float _x, _y, _h, _w;
 
 };
 

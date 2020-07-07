@@ -80,7 +80,7 @@ void Graphics::drawQueue()
         }
 
 
-        SDL_Rect dest = {int(renderable.getDestRect()->x - round(this->_camera.x)), int(renderable.getDestRect()->y - round(this->_camera.y)), renderable.getDestRect()->w, renderable.getDestRect()->h};
+        SDL_Rect dest = {int(renderable.getDestRect()->x - round(this->_camera.x())), int(renderable.getDestRect()->y - round(this->_camera.y())), renderable.getDestRect()->w, renderable.getDestRect()->h};
         this->blitSurface(renderable.getTexture(), renderable.getSourceRect(), &dest);
 
         if(renderable.getType() == "player")

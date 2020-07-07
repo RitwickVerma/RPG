@@ -23,10 +23,10 @@ class Sprite : public Renderable
         const Rectangle getBoundingBox() const;
         const sides::Side getCollisionSide(Rectangle &other) const;
 
-        const float getX() const { return this->_sprite.x; }
-        const float getY() const { return this->_sprite.y; }
-        const float getW() const { return this->_sprite.w; }
-        const float getH() const { return this->_sprite.h; }
+        const float getX() const { return this->_sprite.getLeft(); }
+        const float getY() const { return this->_sprite.getTop(); }
+        const float getW() const { return this->_sprite.getWidth(); }
+        const float getH() const { return this->_sprite.getHeight(); }
         
     protected:
         SDL_Texture *_spriteSheet;
