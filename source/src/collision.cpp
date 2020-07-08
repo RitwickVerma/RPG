@@ -12,22 +12,20 @@ void Player::handleTileCollision(vector<Rectangle> &colliding)
             {
             case sides::LEFT:
                 this->_sprite.x() = r.getRight() + 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getLeft());
-                this->_dx = 0;
                 break;
             case sides::RIGHT:
                 this->_sprite.x() = r.getLeft() - 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getRight());
-                this->_dx = 0;
                 break;
             case sides::TOP:
                 this->_sprite.y() = r.getBottom() + 1 - abs(this->_sprite.getTop() - this->_boundingBox.getTop());
-                this->_dy = 0;
                 break;
             case sides::BOTTOM:
                 this->_sprite.y() = r.getTop() - 1 - abs(this->_sprite.getTop() - this->_boundingBox.getBottom());
-                this->_dy = 0;
                 this->_grounded = (this->_currentLevel->getGravity()) ? true : false;
                 break;
             }
+            this->updateBoundingBox();
+            this->_dx = this->_dy = 0;
         }
     }
 }

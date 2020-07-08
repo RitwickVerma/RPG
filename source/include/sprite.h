@@ -7,7 +7,6 @@
 #include "rectangle.h"
 #include "line.h"
 #include "renderable.h"
-// #include "utils.h"
 
 struct Graphics;
 
@@ -30,10 +29,8 @@ class Sprite : public Renderable
         
     protected:
         SDL_Texture *_spriteSheet;
-        // float x, y; 
         Rectangle _boundingBox;
         Rectangle _sprite;
-        // xyipair _size;
 
     private:
         SDL_Rect _sourceRect ;

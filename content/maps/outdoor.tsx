@@ -49,6 +49,70 @@
    </object>
   </objectgroup>
  </tile>
+ <tile id="174">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.23863" y="-18.5894" width="21.1591" height="44.8153">
+    <properties>
+     <property name="collision" type="bool" value="false"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="2" x="12.7841" y="16.7742" width="6.79546" height="6.08799">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="false"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="175">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.42045" y="-18.9531" width="21.1591" height="44.8153">
+    <properties>
+     <property name="collision" type="bool" value="false"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="2" x="12.9659" y="16.4105" width="6.79546" height="6.08799">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="false"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="220">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.51136" y="-17.3167" width="21.1591" height="35.5426">
+    <properties>
+     <property name="collision" type="bool" value="false"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="2" x="2.42047" y="10.0469" width="27.1591" height="7.1789">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="false"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="221">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.51134" y="-17.5895" width="21.1591" height="35.5426">
+    <properties>
+     <property name="collision" type="bool" value="false"/>
+     <property name="thing" type="bool" value="true"/>
+    </properties>
+   </object>
+   <object id="2" x="2.42045" y="9.77412" width="27.1591" height="7.1789">
+    <properties>
+     <property name="collision" type="bool" value="true"/>
+     <property name="thing" type="bool" value="false"/>
+    </properties>
+   </object>
+  </objectgroup>
+ </tile>
  <tile id="239">
   <objectgroup draworder="index" id="2">
    <object id="1" x="4" y="8.375" width="25.125" height="14.625">

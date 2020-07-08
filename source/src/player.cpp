@@ -52,7 +52,7 @@ void Player::animationDone(string animation)
 {
     if(animation.find("shoot") != string::npos)
     {
-        this->_lockAnimation = false;
+        this->lockAnimation(false);
         this->_lockMovement = false;
     }
 }
@@ -133,7 +133,7 @@ void Player::interact(bool interact)
 
 void Player::shoot()
 {
-    this->_lockAnimation = false;
+    this->lockAnimation(false);
     this->_dx = this->_dy = 0;
     switch(this->_facing)
     {
@@ -150,7 +150,7 @@ void Player::shoot()
             this->playAnimation("shoot_west", true, false);
             break;
     }
-    this->_lockAnimation = true;
+    this->lockAnimation(true);
     this->_lockMovement = true;
 }
 
@@ -163,6 +163,8 @@ void Player::undoMove(float elapsedTime)
 
 void Player::makeMove(float elapsedTime)
 {
+    if(this->_lockMovement) return;
+    
     this->_sprite.x() += this->_dx * elapsedTime;
     this->_sprite.y() += this->_dy * elapsedTime;
     this->updateBoundingBox();
@@ -178,8 +180,7 @@ void Player::update(float elapsedTime)
         this->_dy += o::GRAVITY * elapsedTime; 
 
     // Move player by changing x, y by velocity dx, dy
-    // if(!this->_lockAnimation and this->_currentAnimation.find("shoot") == string::npos)
-        this->makeMove(elapsedTime);
+    this->makeMove(elapsedTime);
 
     // Contain Player within Camera.
     this->_sprite.containWithin(*this->_camera);
@@ -187,18 +188,5 @@ void Player::update(float elapsedTime)
 
 void Player::draw(Graphics &graphics)
 {
-    // AnimatedSprite::draw(graphics, this->_sprite.x-this->_camera->getLeft(), this->_sprite.y-this->_camera->getTop());
-    if(this->_visible)
-    {
-        SDL_Rect destRect = {
-                                this->_sprite.x()+this->_offsets[this->_currentAnimation].x,
-                                this->_sprite.y()+this->_offsets[this->_currentAnimation].y,
-                                (int)this->_sprite.w() , (int)this->_sprite.h()  
-                            };
-
-        SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
-
-        this->makeRenderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
-        graphics.addToRenderQueue(*this);
-    }
+    AnimatedSprite::draw(graphics, "player");
 }

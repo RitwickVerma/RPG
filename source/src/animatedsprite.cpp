@@ -53,6 +53,16 @@ void AnimatedSprite::setVisibility(bool visibility)
     this->_visible = visibility;
 }
 
+bool AnimatedSprite::getVisibility()
+{
+    return this->_visible;
+}
+
+void AnimatedSprite::lockAnimation(bool lock)
+{
+    this->_lockAnimation = lock;
+}
+
 void AnimatedSprite::stopAnimation()
 {
     if (this->_currentAnimationRepeat == true)
@@ -79,20 +89,19 @@ void AnimatedSprite::update(float elapsedTime)
     }
 }
 
-void AnimatedSprite::draw(Graphics &graphics, int x, int y)
+void AnimatedSprite::draw(Graphics &graphics, string type)
 {
-    // if(this->_visible)
-    // {
-    //     SDL_Rect destRect = {
-    //                             x+this->_offsets[this->_currentAnimation].x,
-    //                             y+this->_offsets[this->_currentAnimation].y,
-    //                             (int)this->_sprite.w , (int)this->_sprite.h
-    //                         };
+    if(this->getVisibility())
+    {
+        SDL_Rect destRect = {
+                                this->_sprite.x()+this->_offsets[this->_currentAnimation].x,
+                                this->_sprite.y()+this->_offsets[this->_currentAnimation].y,
+                                (int)this->_sprite.w() , (int)this->_sprite.h()  
+                            };
 
-    //     SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
+        SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 
-    //     Renderable r = Renderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, "player");
-    //     graphics.addToRenderQueue(r);
-    //     // graphics.blitSurface(this->_spriteSheet, &sourceRect, &destRect);
-    // }
+        this->makeRenderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, type);
+        graphics.addToRenderQueue(*this);
+    }
 }

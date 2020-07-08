@@ -10,7 +10,6 @@ Graphics::Graphics()
     SDL_RenderSetScale(this->_renderer, globals::SCALING_X, globals::SCALING_Y);
     // SDL_SetRenderDrawBlendMode(this->_renderer, SDL_BLENDMODE_BLEND);
 
-    // this->_textures = unordered_map<pair<SDL_Surface*, xyipair>, SDL_Texture*>();
     this->_camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
 
 }

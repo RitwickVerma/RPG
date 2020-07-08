@@ -8,7 +8,6 @@ Sprite::Sprite()
 
 Sprite::Sprite(Graphics &graphics, string filename, int sourceX, int sourceY, int w, int h, float posX, float posY)
 {
-    // Sprite();
     this->SPRITE_DIR="content/sprites/";
 
     this->_sourceRect.x=sourceX;
@@ -16,11 +15,8 @@ Sprite::Sprite(Graphics &graphics, string filename, int sourceX, int sourceY, in
     this->_sourceRect.w=w;
     this->_sourceRect.h=h;
 
-    // this->_boundingBox = Rectangle(this->x, this->y, this->_sourceRect.w*(int), this->_sourceRect.h*(int));
     this->_sprite = Rectangle(posX, posY, w, h);
 
-    // this->x=posX;
-    // this->y=posY;
     this->_boundingBox = Rectangle();
 
     string filepath=this->SPRITE_DIR+filename;
