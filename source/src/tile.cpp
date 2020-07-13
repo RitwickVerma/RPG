@@ -45,7 +45,7 @@ void Tile::draw(Graphics &graphics)
     
     this->makeRenderable(this->z_comp, this->_tileset, sourceRect, destRect);
     if(this->_size.y != 32)
-        this->setType("tree");
+        this->setRenderableType("tree");
     graphics.addToRenderQueue(*this);
     // graphics.blitSurface(this->_tileset, &sourceRect, &destRect);
 }

@@ -19,13 +19,19 @@ class Sprite : public Renderable
         virtual void update();
         void draw(Graphics &graphics, int x, int y);
 
+        void bindSpritePositionTo(Sprite*);
+
         const Rectangle getBoundingBox() const;
-        const sides::Side getCollisionSide(Rectangle &other) const;
+        Rectangle getSpriteBox() { return this->_sprite; }
+        const side::Side getCollisionSide(Rectangle &other) const;
+
+        void setSpriteTexture(SDL_Texture *texture);
 
         const float getX() const { return this->_sprite.getLeft(); }
         const float getY() const { return this->_sprite.getTop(); }
         const float getW() const { return this->_sprite.getWidth(); }
         const float getH() const { return this->_sprite.getHeight(); }
+        SDL_Texture * getSpriteTexture() { return this->_spriteSheet; }
         
     protected:
         SDL_Texture *_spriteSheet;
@@ -35,7 +41,9 @@ class Sprite : public Renderable
     private:
         SDL_Rect _sourceRect ;
         string SPRITE_DIR;  
+        string SPRITE_NAME;
            
+        Sprite *_bindedSprite;
 };
 
 

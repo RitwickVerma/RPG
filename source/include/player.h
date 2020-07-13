@@ -6,8 +6,10 @@
 #include "animatedsprite.h"
 #include "level.h"
 #include "rectangle.h"
+// #include "inventory.h"
 
 struct Graphics;
+struct Inventory;
 class Player : public AnimatedSprite
 {
 public:
@@ -27,11 +29,10 @@ public:
     virtual void animationDone(string currentAnimation);
     virtual void setupAnimation();
 
-    void setCurrentLevel(Level *level);
-    Level *getCurrentLevel();
     void setCamera(Rectangle *camera) { this->_camera = camera; }
+    void setCurrentLevel(Level *level);
+    void setInventory(Inventory *inventory) { this->_inventory = inventory; }
 
-    Rectangle getSpriteBox() { return this->_sprite; }
 
     void handleTileCollision(vector<Rectangle> &colliding);
     bool handleLineCollision(vector<Line> &colliding, int elapsedTime = 1);
@@ -43,11 +44,13 @@ public:
 
     const float getMaxHealth() const { return this->_maxHealth; }
     const float getCurrentHealth() const { return this->_currentHealth; }
+    Level *getCurrentLevel();
 
 private:
     float _dx, _dy;
-    Direction _facing;
+    direction::Direction _facing;
     Level *_currentLevel;
+    Inventory *_inventory;
     Rectangle *_camera;
     bool _lockMovement;
     bool _grounded;

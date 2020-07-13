@@ -25,18 +25,18 @@ class Renderable
             this->renderType = type;
         }
 
-        SDL_Texture *getTexture() const { return this->renderTexture; }
-        SDL_Rect *getSourceRect() { return &this->renderSourceRect; }
-        SDL_Rect *getDestRect() { return &this->renderDestRect; }
-        float getZ() const { return this->z_comp; }
-        string getType() const { return this->renderType; }
+        SDL_Texture *getRenderableTexture() const { return this->renderTexture; }
+        SDL_Rect *getRenderableSourceRect() { return &this->renderSourceRect; }
+        SDL_Rect *getRenderableDestRect() { return &this->renderDestRect; }
+        float getRenderableZ() const { return this->z_comp; }
+        string getRenderableType() const { return this->renderType; }
 
 
-        void setTexture(SDL_Texture *texture) { this->renderTexture = texture; }
-        void setSourceRect(SDL_Rect &sourceRect) { this->renderSourceRect = sourceRect; }
-        void setDestRect(SDL_Rect &destRect) { this->renderDestRect = destRect; }
-        void setZ(float z) { this->z_comp = z; }
-        void setType(string renderableType) { this->renderType = renderableType; }
+        void setRenderableTexture(SDL_Texture *texture) { this->renderTexture = texture; }
+        void setRenderableSourceRect(SDL_Rect &sourceRect) { this->renderSourceRect = sourceRect; }
+        void setRenderableDestRect(SDL_Rect &destRect) { this->renderDestRect = destRect; }
+        void setRenderableZ(float z) { this->z_comp = z; }
+        void setRenderableType(string renderableType) { this->renderType = renderableType; }
 
 
     private:

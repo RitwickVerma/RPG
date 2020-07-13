@@ -5,21 +5,21 @@ void Player::handleTileCollision(vector<Rectangle> &colliding)
 {
     for (Rectangle &r : colliding)
     {
-        sides::Side collisionSide = Sprite::getCollisionSide(r);
-        if (collisionSide != sides::NONE)
+        side::Side collisionSide = Sprite::getCollisionSide(r);
+        if (collisionSide != side::NONE)
         {
             switch (collisionSide)
             {
-            case sides::LEFT:
+            case side::LEFT:
                 this->_sprite.x() = r.getRight() + 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getLeft());
                 break;
-            case sides::RIGHT:
+            case side::RIGHT:
                 this->_sprite.x() = r.getLeft() - 1 - abs(this->_sprite.getLeft() - this->_boundingBox.getRight());
                 break;
-            case sides::TOP:
+            case side::TOP:
                 this->_sprite.y() = r.getBottom() + 1 - abs(this->_sprite.getTop() - this->_boundingBox.getTop());
                 break;
-            case sides::BOTTOM:
+            case side::BOTTOM:
                 this->_sprite.y() = r.getTop() - 1 - abs(this->_sprite.getTop() - this->_boundingBox.getBottom());
                 this->_grounded = (this->_currentLevel->getGravity()) ? true : false;
                 break;

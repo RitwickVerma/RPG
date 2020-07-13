@@ -40,8 +40,10 @@ void Game::gameLoop()
 
     this->_camera = graphics.getCamera();
     this->_level = this->_allMaps["map1"];
-    this->_player = Player(graphics, this->_level.getPlayerSpawnPoint() , this->_camera);
+    this->_player = Player(graphics, this->_level.getPlayerSpawnPoint(), this->_camera);
+    this->_inventory = Inventory(graphics, &this->_player);
     this->_player.setCurrentLevel(&this->_level);
+    this->_player.setInventory(&this->_inventory);
     this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY()-100));
     this->_hud = HUD(graphics, &this->_player);
     
@@ -65,17 +67,25 @@ void Game::gameLoop()
         if(input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
             return;
 
-        else if(input.wasKeyPressed(SDL_SCANCODE_SPACE))
+        if(input.wasKeyPressed(SDL_SCANCODE_SPACE))
             this->_player.shoot();
-        else if(input.isKeyHeld(SDL_SCANCODE_W))
-            this->_player.moveNorth(); 
-        else if(input.isKeyHeld(SDL_SCANCODE_S))
-            this->_player.moveSouth();
-        else if(input.isKeyHeld(SDL_SCANCODE_A))
+
+        if(input.isKeyHeld(SDL_SCANCODE_A))
             this->_player.moveWest(); 
         else if(input.isKeyHeld(SDL_SCANCODE_D))
             this->_player.moveEast(); 
-        else if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and 
+        // else if(!input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D))
+        //     this->_player.stopMoving();
+
+        if(input.isKeyHeld(SDL_SCANCODE_W))
+            this->_player.moveNorth(); 
+        else if(input.isKeyHeld(SDL_SCANCODE_S))
+            this->_player.moveSouth();
+        // else if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S))
+        //     this->_player.stopMoving();
+
+
+         if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and 
                 !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D) and
                 !input.wasKeyPressed(SDL_SCANCODE_SPACE))
             this->_player.stopMoving(); 
@@ -87,12 +97,12 @@ void Game::gameLoop()
             this->_player.interact(false);
         
         
-        if(input.isKeyHeld(SDL_SCANCODE_GRAVE))         globals::DEV_MODE = true;
-        else if(!input.isKeyHeld(SDL_SCANCODE_GRAVE))   globals::DEV_MODE = false;
+        if(input.isKeyHeld(SDL_SCANCODE_GRAVE))         global::DEV_MODE = true;
+        else if(!input.isKeyHeld(SDL_SCANCODE_GRAVE))   global::DEV_MODE = false;
         
         ////////////
         //Dev Mode//
-        if(globals::DEV_MODE)
+        if(global::DEV_MODE)
         {
             if(input.isKeyHeld(SDL_SCANCODE_M))
             {

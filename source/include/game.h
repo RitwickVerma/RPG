@@ -8,6 +8,7 @@
 #include "globals.h"
 #include "hud.h"
 #include "graphics.h"
+#include "inventory.h"
 
 class Game
 {
@@ -21,6 +22,7 @@ class Game
         void update(float elapsedTime);
         Player _player;
         Level _level;
+        Inventory _inventory;
         Rectangle *_camera;
         HUD _hud;
         Graphics _graphics;

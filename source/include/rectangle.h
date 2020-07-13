@@ -4,7 +4,8 @@
 #pragma once
 
 #include "globals.h"
-#include "utils.h"
+#include "xypair.h"
+// #include "utils.h"
 class Rectangle
 {
     public:
@@ -58,13 +59,13 @@ class Rectangle
         const float getWidth() const { return this->_w; }
         const float getHeight() const { return this->_h; }
 
-        const int getSide(const sides::Side side) const {
+        const int getSide(const side::Side side) const {
             return 
-                side == sides::LEFT ? this->getLeft():
-                side == sides::RIGHT ? this->getRight():
-                side == sides::TOP ? this->getTop():
-                side == sides::BOTTOM ? this->getBottom():
-                sides::NONE;
+                side == side::LEFT ? this->getLeft():
+                side == side::RIGHT ? this->getRight():
+                side == side::TOP ? this->getTop():
+                side == side::BOTTOM ? this->getBottom():
+                side::NONE;
         }
 
         const Rectangle getRectangle() { return *this; }

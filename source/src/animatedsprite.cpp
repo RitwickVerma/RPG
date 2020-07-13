@@ -13,6 +13,7 @@ AnimatedSprite::AnimatedSprite(Graphics &graphics, string filename, int sourceX,
     _currentAnimationRepeat = false;
     _currentAnimation = "";
     _lockAnimation = false;
+    this->_bindedAnimatedSprite = NULL;
 }
 
 void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, xyipair offset, float animationUpdateTime)
@@ -35,6 +36,8 @@ void AnimatedSprite::resetAnimation()
 
 void AnimatedSprite::playAnimation(string animation, bool restart, bool repeat)
 {
+    // if(this->_animations.count(animation) == 0)     return;
+
     if (!this->_lockAnimation)
     {
         this->_currentAnimationRepeat = repeat;
@@ -58,7 +61,12 @@ bool AnimatedSprite::getVisibility()
     return this->_visible;
 }
 
-void AnimatedSprite::lockAnimation(bool lock)
+string AnimatedSprite::getCurrentAnimation()
+{
+    return this->_currentAnimation;
+}
+
+void AnimatedSprite::setAnimationLock(bool lock)
 {
     this->_lockAnimation = lock;
 }
@@ -71,9 +79,28 @@ void AnimatedSprite::stopAnimation()
         this->animationDone(this->_currentAnimation);
 }
 
+void AnimatedSprite::bindAnimationTo(AnimatedSprite* animatedSprite)
+{
+    this->_bindedAnimatedSprite = animatedSprite;
+    this->_offsets = this->_bindedAnimatedSprite->getOffsets();
+    this->_animationUpdateTimes = this->_bindedAnimatedSprite->getUpdateTimes();
+}
+
 void AnimatedSprite::update(float elapsedTime)
 {
     Sprite::update();
+
+    if(this->_bindedAnimatedSprite != NULL)
+    {
+        this->_currentAnimationRepeat = this->_bindedAnimatedSprite->getAnimationRepeat();
+        this->_currentAnimation = this->_bindedAnimatedSprite->getCurrentAnimation();
+        this->_lockAnimation = this->_bindedAnimatedSprite->getAnimationLock();
+        this->_frameIndex = this->_bindedAnimatedSprite->getFrameIndex();
+        // return;
+        // float _timeForUpdate;
+        // bool _visible;
+    }
+
     this->_timeForUpdate += elapsedTime;
     if (this->_timeForUpdate > this->_animationUpdateTimes[this->_currentAnimation])
     {
@@ -101,7 +128,7 @@ void AnimatedSprite::draw(Graphics &graphics, string type)
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 
-        this->makeRenderable(this->_boundingBox.getBottom(), this->_spriteSheet, sourceRect, destRect, type);
+        this->makeRenderable(this->getRenderableZ(), this->_spriteSheet, sourceRect, destRect, type);
         graphics.addToRenderQueue(*this);
     }
 }

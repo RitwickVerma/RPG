@@ -6,33 +6,42 @@ Sprite::Sprite()
     this->SPRITE_DIR="content/sprites/";
 }
 
-Sprite::Sprite(Graphics &graphics, string filename, int sourceX, int sourceY, int w, int h, float posX, float posY)
+Sprite::Sprite(Graphics &graphics, string filename, int sourceX, int sourceY, int w, int h, float posX, float posY) 
 {
-    this->SPRITE_DIR="content/sprites/";
+    this->SPRITE_DIR = "content/sprites/";
+    this->SPRITE_NAME = filename;
 
-    this->_sourceRect.x=sourceX;
-    this->_sourceRect.y=sourceY;
-    this->_sourceRect.w=w;
-    this->_sourceRect.h=h;
+    this->_sourceRect.x = sourceX;
+    this->_sourceRect.y = sourceY;
+    this->_sourceRect.w = w;
+    this->_sourceRect.h = h;
 
     this->_sprite = Rectangle(posX, posY, w, h);
 
-    this->_boundingBox = Rectangle();
+    this->_boundingBox = this->_sprite;
+    this->_bindedSprite = NULL;
 
-    string filepath=this->SPRITE_DIR+filename;
+    string filepath = this->SPRITE_DIR+filename;
     this->_spriteSheet = SDL_CreateTextureFromSurface(graphics.getRenderer(), graphics.loadImage(filepath));
     if(this->_spriteSheet == NULL)  printf("Could not load the sprite");
 
 }
 
-void Sprite::update()
-{ }
+void Sprite::setSpriteTexture(SDL_Texture *texture)
+{
+    this->_spriteSheet = texture;
+}
 
 const Rectangle Sprite::getBoundingBox() const{
     return this->_boundingBox;
 }
 
-const sides::Side Sprite::getCollisionSide(Rectangle &other) const{
+void Sprite::bindSpritePositionTo(Sprite *sprite)
+{
+    this->_bindedSprite = sprite;
+}
+
+const side::Side Sprite::getCollisionSide(Rectangle &other) const{
     int amtRight, amtLeft, amtTop, amtBottom;
     amtRight = abs(this->_boundingBox.getRight() - other.getLeft());
     amtLeft = abs(this->_boundingBox.getLeft() - other.getRight());
@@ -42,13 +51,21 @@ const sides::Side Sprite::getCollisionSide(Rectangle &other) const{
     int mini=min(amtRight, min(amtLeft, min(amtTop, amtBottom)));
 
     return
-        mini == amtRight ? sides::RIGHT :
-        mini == amtLeft ? sides::LEFT :
-        mini == amtTop ? sides::TOP :
-        mini == amtBottom ? sides::BOTTOM :
-        sides::NONE;
+        mini == amtRight ? side::RIGHT :
+        mini == amtLeft ? side::LEFT :
+        mini == amtTop ? side::TOP :
+        mini == amtBottom ? side::BOTTOM :
+        side::NONE;
 }
 
+void Sprite::update()
+{ 
+    if(this->_bindedSprite != NULL)
+    {
+        this->_sprite.x() = this->_bindedSprite->getX();
+        this->_sprite.y() = this->_bindedSprite->getY();
+    }
+}
 
 void Sprite::draw(Graphics &graphics, int x, int y)
 {

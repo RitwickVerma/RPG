@@ -24,6 +24,8 @@ class Graphics
         /* Returns a texture from part of a surface (calls getSurfaceFromRect) */
         SDL_Texture* getTextureFromSurfaceRect(SDL_Surface *surface, xyipair pos, xyipair size);
 
+        SDL_Texture* getTextureFromSurface(SDL_Surface *surface);
+
         void addToRenderQueue(Renderable renderable);
 
         void drawQueue();
@@ -41,6 +43,8 @@ class Graphics
         
         void fadeFrom(string filename = "black");
 
+        SDL_Texture* makeSingleTexture(vector<SDL_Texture*>);
+
         Rectangle *getCamera();
 
 
@@ -48,9 +52,9 @@ class Graphics
         {
             bool operator()(Renderable &a, Renderable &b) 
             {
-                if(a.getZ() == b.getZ())
-                    return a.getDestRect()->x > b.getDestRect()->x;
-                return a.getZ() > b.getZ(); 
+                if(a.getRenderableZ() == b.getRenderableZ())
+                    return a.getRenderableDestRect()->x > b.getRenderableDestRect()->x;
+                return a.getRenderableZ() > b.getRenderableZ(); 
             }
         };
 

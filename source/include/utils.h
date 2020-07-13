@@ -53,12 +53,6 @@ namespace utils
         return true; 
     } 
 
-
-
-
-
-
-
     inline bool checkOverlap(Rectangle &a, Tile &b)
     { 
         Rectangle r = b.getRectangle();

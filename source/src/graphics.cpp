@@ -5,12 +5,12 @@
 
 Graphics::Graphics()
 {
-    SDL_CreateWindowAndRenderer(globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer);
+    SDL_CreateWindowAndRenderer(global::SCREEN_WIDTH, global::SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE, &this->_window, &this->_renderer);
     SDL_SetWindowTitle(this->_window, "Game");
-    SDL_RenderSetScale(this->_renderer, globals::SCALING_X, globals::SCALING_Y);
+    SDL_RenderSetScale(this->_renderer, global::SCALING_X, global::SCALING_Y);
     // SDL_SetRenderDrawBlendMode(this->_renderer, SDL_BLENDMODE_BLEND);
 
-    this->_camera = Rectangle(0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT);
+    this->_camera = Rectangle(0, 0, global::SCREEN_WIDTH, global::SCREEN_HEIGHT);
 
 }
 
@@ -49,12 +49,23 @@ SDL_Texture* Graphics::getTextureFromSurfaceRect(SDL_Surface *surface, xyipair p
     return texture;
 }
 
+SDL_Texture* Graphics::getTextureFromSurface(SDL_Surface *surface)
+{
+    if(this->_textures.count(make_pair(surface, xyipair().hash())) != 0)
+        return this->_textures[make_pair(surface, xyipair().hash())];
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
+    this->_textures[make_pair(surface, xyipair().hash())] = texture;
+
+    return texture;
+}
+
 void Graphics::addToRenderQueue(Renderable renderable)
 {
-    if( renderable.getDestRect()->x >= this->_camera.getLeft() - renderable.getDestRect()->w - 50 && 
-        renderable.getDestRect()->x + renderable.getDestRect()->w <= this->_camera.getRight() + renderable.getDestRect()->w + 50 &&
-        renderable.getDestRect()->y >= this->_camera.getTop() - renderable.getDestRect()->h - 50 && 
-        renderable.getDestRect()->y + renderable.getDestRect()->h <= this->_camera.getBottom() + renderable.getDestRect()->h + 50)
+    if( renderable.getRenderableDestRect()->x >= this->_camera.getLeft() - renderable.getRenderableDestRect()->w - 50 && 
+        renderable.getRenderableDestRect()->x + renderable.getRenderableDestRect()->w <= this->_camera.getRight() + renderable.getRenderableDestRect()->w + 50 &&
+        renderable.getRenderableDestRect()->y >= this->_camera.getTop() - renderable.getRenderableDestRect()->h - 50 && 
+        renderable.getRenderableDestRect()->y + renderable.getRenderableDestRect()->h <= this->_camera.getBottom() + renderable.getRenderableDestRect()->h + 50)
 
     this->_render_queue.push(renderable);
 }
@@ -67,25 +78,25 @@ void Graphics::drawQueue()
     {   
         auto renderable = this->_render_queue.top();
 
-        SDL_SetTextureAlphaMod(renderable.getTexture(), 255);
-        if(playerUnder && utils::checkOverlap(renderable.getDestRect(), &playerRect) && renderable.getType() == "tree") 
+        SDL_SetTextureAlphaMod(renderable.getRenderableTexture(), 255);
+        if(playerUnder && utils::checkOverlap(renderable.getRenderableDestRect(), &playerRect) && renderable.getRenderableType() == "tree") 
         {    
-            float alphaCoffecient = utils::distance(Rectangle(*renderable.getDestRect()).getCenter(), Rectangle(playerRect).getCenter());
+            float alphaCoffecient = utils::distance(Rectangle(*renderable.getRenderableDestRect()).getCenter(), Rectangle(playerRect).getCenter());
             alphaCoffecient/=100;
             if(alphaCoffecient<=0.3 )   alphaCoffecient = 0.3;
             if(alphaCoffecient >=1.1)   alphaCoffecient = 1.1;
-            SDL_SetTextureAlphaMod(renderable.getTexture(), 200*alphaCoffecient );
+            SDL_SetTextureAlphaMod(renderable.getRenderableTexture(), 200*alphaCoffecient );
 
         }
 
 
-        SDL_Rect dest = {int(renderable.getDestRect()->x - round(this->_camera.x())), int(renderable.getDestRect()->y - round(this->_camera.y())), renderable.getDestRect()->w, renderable.getDestRect()->h};
-        this->blitSurface(renderable.getTexture(), renderable.getSourceRect(), &dest);
+        SDL_Rect dest = {int(renderable.getRenderableDestRect()->x - round(this->_camera.x())), int(renderable.getRenderableDestRect()->y - round(this->_camera.y())), renderable.getRenderableDestRect()->w, renderable.getRenderableDestRect()->h};
+        this->blitSurface(renderable.getRenderableTexture(), renderable.getRenderableSourceRect(), &dest);
 
-        if(renderable.getType() == "player")
+        if(renderable.getRenderableType() == "player")
         {
             playerUnder = true;
-            playerRect = *renderable.getDestRect();
+            playerRect = *renderable.getRenderableDestRect();
         }
         this->_render_queue.pop();
     }
@@ -102,7 +113,7 @@ void Graphics::fadeTo(string filename)
     float i;
     SDL_Surface *surface;
     SDL_Texture *texture;
-    SDL_Rect window = {0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT};
+    SDL_Rect window = {0, 0, global::SCREEN_WIDTH, global::SCREEN_HEIGHT};
 
     string dir = "content/sprites/" + filename + ".png";
     surface = loadImage(dir);
@@ -124,7 +135,7 @@ void Graphics::fadeFrom(string filename)
     float i;
     SDL_Surface *surface;
     SDL_Texture *texture;
-    SDL_Rect window = {0, 0, globals::SCREEN_WIDTH, globals::SCREEN_HEIGHT};
+    SDL_Rect window = {0, 0, global::SCREEN_WIDTH, global::SCREEN_HEIGHT};
     
     string dir = "content/sprites/" + filename + ".png";
     surface = loadImage(dir);
@@ -137,6 +148,22 @@ void Graphics::fadeFrom(string filename)
         this->flip();
         SDL_Delay(5);
     }
+}
+
+SDL_Texture* Graphics::makeSingleTexture(vector<SDL_Texture*> textures)
+{
+    SDL_Texture* auxtexture = SDL_CreateTexture(this->_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 500, 500);
+    //change the target back to the default and then render the aux
+    SDL_SetRenderTarget(this->_renderer, auxtexture);
+
+    for(int i=0; i<textures.size(); i++)
+    {   
+        SDL_RenderCopy(this->_renderer, auxtexture, NULL, NULL);
+    }
+
+    SDL_SetRenderTarget(this->_renderer, NULL); //NULL SETS TO DEFAULT
+    // this->_textures[make_pair(surface, xyipair().hash())] = auxtexture;
+    return auxtexture;
 }
 
 void Graphics::flip()
