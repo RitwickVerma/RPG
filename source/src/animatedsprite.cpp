@@ -79,7 +79,7 @@ void AnimatedSprite::stopAnimation()
         this->animationDone(this->_currentAnimation);
 }
 
-void AnimatedSprite::bindAnimationTo(AnimatedSprite* animatedSprite)
+void AnimatedSprite::bindAnimationTo(AnimatedSprite *animatedSprite)
 {
     this->_bindedAnimatedSprite = animatedSprite;
     this->_offsets = this->_bindedAnimatedSprite->getOffsets();
@@ -90,7 +90,7 @@ void AnimatedSprite::update(float elapsedTime)
 {
     Sprite::update();
 
-    if(this->_bindedAnimatedSprite != NULL)
+    if (this->_bindedAnimatedSprite != NULL)
     {
         this->_currentAnimationRepeat = this->_bindedAnimatedSprite->getAnimationRepeat();
         this->_currentAnimation = this->_bindedAnimatedSprite->getCurrentAnimation();
@@ -118,13 +118,12 @@ void AnimatedSprite::update(float elapsedTime)
 
 void AnimatedSprite::draw(Graphics &graphics, string type)
 {
-    if(this->getVisibility())
+    if (this->getVisibility())
     {
         SDL_Rect destRect = {
-                                this->_sprite.x()+this->_offsets[this->_currentAnimation].x,
-                                this->_sprite.y()+this->_offsets[this->_currentAnimation].y,
-                                (int)this->_sprite.w() , (int)this->_sprite.h()  
-                            };
+            this->_sprite.x() + this->_offsets[this->_currentAnimation].x,
+            this->_sprite.y() + this->_offsets[this->_currentAnimation].y,
+            (int)this->_sprite.w(), (int)this->_sprite.h()};
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
 

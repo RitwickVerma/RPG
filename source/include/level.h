@@ -13,10 +13,35 @@
 #include "graphics.h"
 
 struct SDL_Texture;
-struct Tileset;
+// struct Tileset;
 struct Thing;
 struct Line;
 struct Player;
+
+struct Tileset
+{
+    SDL_Texture *Texture;
+    SDL_Surface *Surface;
+    int firstGid;
+
+    Tileset()
+    {
+        firstGid = -1;
+    }
+
+    Tileset(SDL_Texture *texture, int first_gid)
+    {
+        Texture = texture;
+        firstGid = first_gid;
+    }
+
+    Tileset(SDL_Surface *surface, int first_gid)
+    {
+        Surface = surface;
+        firstGid = first_gid;
+    }
+};
+
 class Level
 {
 public:
@@ -59,8 +84,8 @@ private:
     xyipair _tileCount;
     xyfpair _mapOffset;
     vector<variant<Tile, AnimatedTile, Thing>> _map;
-    map<int, Tileset> _tilesets;
-    map<int, SDL_Texture *> _tileTextures;
+    unordered_map<int, Tileset> _tilesets;
+    unordered_map<int, SDL_Texture *> _tileTextures;
     vector<Rectangle> _collisionRects;
     vector<Line> _collisionSlopes;
     vector<Door> _doorRects;
@@ -68,27 +93,4 @@ private:
     void loadMap(Graphics &graphics, string mapName);
 };
 
-struct Tileset
-{
-    SDL_Texture *Texture;
-    SDL_Surface *Surface;
-    int firstGid;
-
-    Tileset()
-    {
-        firstGid = -1;
-    }
-
-    Tileset(SDL_Texture *texture, int first_gid)
-    {
-        Texture = texture;
-        firstGid = first_gid;
-    }
-
-    Tileset(SDL_Surface *surface, int first_gid)
-    {
-        Surface = surface;
-        firstGid = first_gid;
-    }
-};
 #endif // !LEVEL_H

@@ -9,7 +9,7 @@
 // #include "inventory.h"
 
 struct Graphics;
-struct Inventory;
+struct IMS;
 class Player : public AnimatedSprite
 {
 public:
@@ -24,15 +24,14 @@ public:
     void moveWest();
     void stopMoving();
     void interact(bool interact = true);
-    void shoot();
+    void attack();
 
     virtual void animationDone(string currentAnimation);
     virtual void setupAnimation();
 
     void setCamera(Rectangle *camera) { this->_camera = camera; }
     void setCurrentLevel(Level *level);
-    void setInventory(Inventory *inventory) { this->_inventory = inventory; }
-
+    void setInventory(IMS *inventory) { this->_inventory = inventory; }
 
     void handleTileCollision(vector<Rectangle> &colliding);
     bool handleLineCollision(vector<Line> &colliding, int elapsedTime = 1);
@@ -50,7 +49,7 @@ private:
     float _dx, _dy;
     direction::Direction _facing;
     Level *_currentLevel;
-    Inventory *_inventory;
+    IMS *_inventory;
     Rectangle *_camera;
     bool _lockMovement;
     bool _grounded;

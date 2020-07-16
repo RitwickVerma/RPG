@@ -1,5 +1,5 @@
-#ifndef BOW_H
-#define BOW_H
+#ifndef AXE_H
+#define AXE_H
 
 #pragma once
 
@@ -7,10 +7,10 @@
 
 struct Player;
 
-class Bow : public Weapon
+class Axe : public Weapon
 {
 public:
-    Bow(Graphics &graphics, Player *);
+    Axe(Graphics &graphics, Player *);
     void animationDone(string currentAnimation);
     void update(float elapsedTime);
     void draw(Graphics &graphics);

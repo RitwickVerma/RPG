@@ -5,8 +5,8 @@
 
 #include <iostream>
 #include <vector>
-#include <map>
 #include <unordered_map>
+#include <unordered_set>
 #include <queue>
 #include <string>
 #include <variant>
@@ -25,36 +25,67 @@ namespace global
     const float SCALING_X = 1;
     const float SCALING_Y = 1;
     inline bool DEV_MODE = false;
-}
+} // namespace global
 
 namespace side
 {
-    enum Side { TOP, BOTTOM, LEFT, RIGHT, NONE };
+    enum Side
+    {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT,
+        NONE
+    };
     inline Side getOppositeSide(Side side)
     {
-        return 
-            side == TOP ? BOTTOM:
-            side == BOTTOM ? TOP:
-            side == LEFT ? RIGHT:
-            side == RIGHT ? LEFT:
-            NONE;
-
+        return side == TOP ? BOTTOM : side == BOTTOM ? TOP : side == LEFT ? RIGHT : side == RIGHT ? LEFT : NONE;
     }
+} // namespace side
+
+namespace corner
+{
+    enum Corner
+    {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT,
+        NONE
+    };
 }
 
-namespace corner{
-    enum Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, NONE };
-}
-
-namespace direction {
-    enum Direction { NORTH, SOUTH, EAST, WEST };
+namespace direction
+{
+    enum Direction
+    {
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST
+    };
 }
 namespace inv
 {
-    namespace weapon
+    namespace weapons
     {
-        enum Weapons { BASIC_BOW, BASIC_SWORD };
-    }
-}
+        enum class Weapon
+        {
+            NONE,
+            BASIC_BOW,
+            BASIC_SWORD,
+            BASIC_AXE
+        };
+
+        enum class Class
+        {
+            NONE,
+            SLASH,
+            SHOOT,
+            THRUST,
+            SPELLCAST
+        };
+    } // namespace weapons
+} // namespace inv
 
 #endif // !1 GLOBALS_H

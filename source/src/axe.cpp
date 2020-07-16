@@ -1,41 +1,41 @@
-#include "bow.h"
+#include "axe.h"
 #include "graphics.h"
 #include "player.h"
 
 namespace o
 {
-    const string SPRITE_PATH = "bow.png";
+    const string SPRITE_PATH = "axe.png";
 }
 
-Bow::Bow(Graphics &graphics, Player *player)
+Axe::Axe(Graphics &graphics, Player *player)
     : Weapon(graphics, player, o::SPRITE_PATH, 0)
 {
     this->_player = player;
     // this->_weaponType = inv::weapons::Weapon::BASIC_BOW;
-    this->_type = inv::weapons::Weapon::BASIC_BOW;
-    this->_class = inv::weapons::Class::SHOOT;
+    this->_type = inv::weapons::Weapon::BASIC_AXE;
+    this->_class = inv::weapons::Class::SLASH;
 }
 
-void Bow::animationDone(string currentAnimation)
+void Axe::animationDone(string currentAnimation)
 {
 }
 
-inv::weapons::Weapon Bow::getType()
+inv::weapons::Weapon Axe::getType()
 {
     return this->_type;
 }
 
-inv::weapons::Class Bow::getClass()
+inv::weapons::Class Axe::getClass()
 {
     return this->_class;
 }
 
-void Bow::update(float elapsedTime)
+void Axe::update(float elapsedTime)
 {
     Weapon::update(elapsedTime);
 }
 
-void Bow::draw(Graphics &graphics)
+void Axe::draw(Graphics &graphics)
 {
     this->setRenderableZ(this->_player->getRenderableZ() + 0.1);
     Weapon::draw(graphics);

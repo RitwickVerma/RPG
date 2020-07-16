@@ -5,8 +5,8 @@
 namespace
 {
     const int FPS = 60;
-    const int MAX_FRAME_TIME = 1000/FPS;
-}
+    const int MAX_FRAME_TIME = 1000 / FPS;
+} // namespace
 
 Game::Game()
 {
@@ -15,16 +15,16 @@ Game::Game()
     this->gameLoop();
 }
 Game::~Game()
-{}
+{
+}
 
 void Game::loadAllMaps(Graphics &graphics)
 {
-    vector<string> maps = {     
-            "map1",
-            "player_home"
-    };
+    vector<string> maps = {
+        "map1",
+        "player_home"};
 
-    for(string &map : maps)
+    for (string &map : maps)
         this->_allMaps[map] = Level(graphics, map, &this->_player);
 }
 
@@ -41,70 +41,74 @@ void Game::gameLoop()
     this->_camera = graphics.getCamera();
     this->_level = this->_allMaps["map1"];
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint(), this->_camera);
-    this->_inventory = Inventory(graphics, &this->_player);
+    this->_inventory = IMS(graphics, &this->_player);
     this->_player.setCurrentLevel(&this->_level);
     this->_player.setInventory(&this->_inventory);
-    this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY()-100));
+    this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY() - 100));
     this->_hud = HUD(graphics, &this->_player);
-    
+
     int LAST_TIME_MS = SDL_GetTicks();
-    while(true)
+    while (true)
     {
         input.beginNewFrame();
-        if(SDL_PollEvent(&event)) 
+        if (SDL_PollEvent(&event))
         {
-            if(event.type == SDL_KEYDOWN)
-            {    
-                if(event.key.repeat == 0)  
+            if (event.type == SDL_KEYDOWN)
+            {
+                if (event.key.repeat == 0)
                     input.keyDownEvent(event);
             }
-            else if(event.type == SDL_KEYUP)
+            else if (event.type == SDL_KEYUP)
                 input.keyUpEvent(event);
-            else if(event.type == SDL_QUIT)
+            else if (event.type == SDL_QUIT)
                 return;
         }
-        
-        if(input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
+
+        if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
             return;
 
-        if(input.wasKeyPressed(SDL_SCANCODE_SPACE))
-            this->_player.shoot();
+        if (input.wasKeyPressed(SDL_SCANCODE_SPACE))
+            this->_player.attack();
 
-        if(input.isKeyHeld(SDL_SCANCODE_A))
-            this->_player.moveWest(); 
-        else if(input.isKeyHeld(SDL_SCANCODE_D))
-            this->_player.moveEast(); 
+        if (input.isKeyHeld(SDL_SCANCODE_A))
+            this->_player.moveWest();
+        else if (input.isKeyHeld(SDL_SCANCODE_D))
+            this->_player.moveEast();
         // else if(!input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D))
         //     this->_player.stopMoving();
 
-        if(input.isKeyHeld(SDL_SCANCODE_W))
-            this->_player.moveNorth(); 
-        else if(input.isKeyHeld(SDL_SCANCODE_S))
+        if (input.isKeyHeld(SDL_SCANCODE_W))
+            this->_player.moveNorth();
+        else if (input.isKeyHeld(SDL_SCANCODE_S))
             this->_player.moveSouth();
         // else if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S))
         //     this->_player.stopMoving();
 
+        if (!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and
+            !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D) and
+            !input.wasKeyPressed(SDL_SCANCODE_SPACE))
+            this->_player.stopMoving();
 
-         if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and 
-                !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D) and
-                !input.wasKeyPressed(SDL_SCANCODE_SPACE))
-            this->_player.stopMoving(); 
-    
-        
-        if(input.isKeyHeld(SDL_SCANCODE_E))
+        if (input.isKeyHeld(SDL_SCANCODE_E))
             this->_player.interact(true);
-        else if(!input.isKeyHeld(SDL_SCANCODE_E))
+        else if (!input.isKeyHeld(SDL_SCANCODE_E))
             this->_player.interact(false);
-        
-        
-        if(input.isKeyHeld(SDL_SCANCODE_GRAVE))         global::DEV_MODE = true;
-        else if(!input.isKeyHeld(SDL_SCANCODE_GRAVE))   global::DEV_MODE = false;
-        
+
+        if (input.wasKeyPressed(SDL_SCANCODE_1))
+            this->_inventory.setEquippedWeapon(inv::weapons::Weapon::BASIC_BOW);
+        else if (input.wasKeyPressed(SDL_SCANCODE_2))
+            this->_inventory.setEquippedWeapon(inv::weapons::Weapon::BASIC_AXE);
+
+        if (input.isKeyHeld(SDL_SCANCODE_GRAVE))
+            global::DEV_MODE = true;
+        else if (!input.isKeyHeld(SDL_SCANCODE_GRAVE))
+            global::DEV_MODE = false;
+
         ////////////
         //Dev Mode//
-        if(global::DEV_MODE)
+        if (global::DEV_MODE)
         {
-            if(input.isKeyHeld(SDL_SCANCODE_M))
+            if (input.isKeyHeld(SDL_SCANCODE_M))
             {
                 string mapname = this->_level.getMapName();
                 this->_allMaps[mapname] = Level(graphics, mapname, &this->_player);
@@ -126,45 +130,42 @@ void Game::gameLoop()
     }
 }
 
-
 void Game::update(float elapsedTime)
 {
     this->_player.update(elapsedTime);
     this->_level.update(elapsedTime);
 
     vector<Rectangle> collidingRects = this->_level.checkTileCollision(this->_player.getBoundingBox());
-    if(collidingRects.size() > 0)
+    if (collidingRects.size() > 0)
     {
         this->_player.handleTileCollision(collidingRects);
     }
 
     vector<Line> collidingLines = this->_level.checkLineCollision(this->_player.getBoundingBox());
-    if(collidingLines.size() > 0)
+    if (collidingLines.size() > 0)
     {
         this->_player.handleLineCollision(collidingLines, elapsedTime);
     }
 
-
     vector<Door> collidingDoors = this->_level.checkDoorCollision(this->_player.getBoundingBox());
-    if(collidingDoors.size() > 0)
+    if (collidingDoors.size() > 0)
     {
         this->_player.handleDoorCollision(collidingDoors, this->_level, &this->_allMaps, this->_graphics);
-    }   
-
+    }
 
     // Camera follows player in a much more natural way which looks animated and super cool.
-    float del_x = 0.02*(this->_camera->getCenterX() - this->_player.getBoundingBox().getCenterX());
-    float del_y = 0.04*(this->_camera->getCenterY() - this->_player.getBoundingBox().getCenterY());
-    del_x = round(del_x*10)/10;
-    del_y = round(del_y*10)/10;
-    this->_camera->setCenterX( (this->_camera->getCenterX() - del_x));
-    this->_camera->setCenterY( (this->_camera->getCenterY() - del_y));
+    float del_x = 0.02 * (this->_camera->getCenterX() - this->_player.getBoundingBox().getCenterX());
+    float del_y = 0.04 * (this->_camera->getCenterY() - this->_player.getBoundingBox().getCenterY());
+    del_x = round(del_x * 10) / 10;
+    del_y = round(del_y * 10) / 10;
+    this->_camera->setCenterX((this->_camera->getCenterX() - del_x));
+    this->_camera->setCenterY((this->_camera->getCenterY() - del_y));
 
-    // Contain camera within map. 
-    if(this->_level.getContainCamera())
+    // Contain camera within map.
+    if (this->_level.getContainCamera())
         this->_camera->containWithin(Rectangle(0, 0, this->_level.getMapSize().x, this->_level.getMapSize().y));
     else
-        this->_camera->setCenter(xyfpair(this->_level.getMapSize().x/2, this->_level.getMapSize().y/2));
+        this->_camera->setCenter(xyfpair(this->_level.getMapSize().x / 2, this->_level.getMapSize().y / 2));
 }
 
 void Game::draw(Graphics &graphics)
