@@ -1,6 +1,5 @@
 #include "game.h"
 #include "graphics.h"
-#include "input.h"
 
 namespace
 {
@@ -16,6 +15,7 @@ Game::Game()
 }
 Game::~Game()
 {
+    SDL_Quit();
 }
 
 void Game::loadAllMaps(Graphics &graphics)
@@ -31,91 +31,33 @@ void Game::loadAllMaps(Graphics &graphics)
 void Game::gameLoop()
 {
     Graphics graphics;
-    SDL_Event event;
-    Input input;
+    // SDL_Event event;
+    // Input input;
+    KeyboardHandler kbh;
 
-    graphics.fadeTo("loading");
+    this->_graphics = graphics;
+    this->_graphics.fadeTo("loading");
     this->loadAllMaps(graphics);
-    graphics.fadeFrom("loading");
+    this->_graphics.fadeFrom("loading");
 
     this->_camera = graphics.getCamera();
+
     this->_level = this->_allMaps["map1"];
+
     this->_player = Player(graphics, this->_level.getPlayerSpawnPoint(), this->_camera);
     this->_inventory = IMS(graphics, &this->_player);
     this->_player.setCurrentLevel(&this->_level);
     this->_player.setInventory(&this->_inventory);
+
     this->_camera->setCenter(xyfpair(this->_player.getBoundingBox().getCenterX(), this->_player.getBoundingBox().getCenterY() - 100));
+
     this->_hud = HUD(graphics, &this->_player);
+    this->_textbox = TextBox(graphics);
 
     int LAST_TIME_MS = SDL_GetTicks();
     while (true)
     {
-        input.beginNewFrame();
-        if (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_KEYDOWN)
-            {
-                if (event.key.repeat == 0)
-                    input.keyDownEvent(event);
-            }
-            else if (event.type == SDL_KEYUP)
-                input.keyUpEvent(event);
-            else if (event.type == SDL_QUIT)
-                return;
-        }
-
-        if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
-            return;
-
-        if (input.wasKeyPressed(SDL_SCANCODE_SPACE))
-            this->_player.attack();
-
-        if (input.isKeyHeld(SDL_SCANCODE_A))
-            this->_player.moveWest();
-        else if (input.isKeyHeld(SDL_SCANCODE_D))
-            this->_player.moveEast();
-        // else if(!input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D))
-        //     this->_player.stopMoving();
-
-        if (input.isKeyHeld(SDL_SCANCODE_W))
-            this->_player.moveNorth();
-        else if (input.isKeyHeld(SDL_SCANCODE_S))
-            this->_player.moveSouth();
-        // else if(!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S))
-        //     this->_player.stopMoving();
-
-        if (!input.isKeyHeld(SDL_SCANCODE_W) and !input.isKeyHeld(SDL_SCANCODE_S) and
-            !input.isKeyHeld(SDL_SCANCODE_A) and !input.isKeyHeld(SDL_SCANCODE_D) and
-            !input.wasKeyPressed(SDL_SCANCODE_SPACE))
-            this->_player.stopMoving();
-
-        if (input.isKeyHeld(SDL_SCANCODE_E))
-            this->_player.interact(true);
-        else if (!input.isKeyHeld(SDL_SCANCODE_E))
-            this->_player.interact(false);
-
-        if (input.wasKeyPressed(SDL_SCANCODE_1))
-            this->_inventory.setEquippedWeapon(inv::weapons::Weapon::BASIC_BOW);
-        else if (input.wasKeyPressed(SDL_SCANCODE_2))
-            this->_inventory.setEquippedWeapon(inv::weapons::Weapon::BASIC_AXE);
-
-        if (input.isKeyHeld(SDL_SCANCODE_GRAVE))
-            global::DEV_MODE = true;
-        else if (!input.isKeyHeld(SDL_SCANCODE_GRAVE))
-            global::DEV_MODE = false;
-
-        ////////////
-        //Dev Mode//
-        if (global::DEV_MODE)
-        {
-            if (input.isKeyHeld(SDL_SCANCODE_M))
-            {
-                string mapname = this->_level.getMapName();
-                this->_allMaps[mapname] = Level(graphics, mapname, &this->_player);
-                this->_level = this->_allMaps[mapname];
-            }
-        }
-        ////////////
+        kbh.handle(*this);
 
         int CURRENT_TIME_MS = SDL_GetTicks();
         int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_TIME_MS;
@@ -133,6 +75,7 @@ void Game::gameLoop()
 void Game::update(float elapsedTime)
 {
     this->_player.update(elapsedTime);
+    this->_inventory.update(elapsedTime);
     this->_level.update(elapsedTime);
 
     vector<Rectangle> collidingRects = this->_level.checkTileCollision(this->_player.getBoundingBox());
@@ -174,8 +117,10 @@ void Game::draw(Graphics &graphics)
 
     this->_level.draw(graphics);
     this->_player.draw(graphics);
+    this->_inventory.draw(graphics);
     graphics.drawQueue();
     this->_hud.draw(graphics);
+    this->_textbox.draw(graphics);
 
     graphics.flip();
 }

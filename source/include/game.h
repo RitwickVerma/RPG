@@ -7,8 +7,10 @@
 #include "level.h"
 #include "globals.h"
 #include "hud.h"
+#include "textbox.h"
 #include "graphics.h"
 #include "ims.h"
+#include "kbh.h"
 
 class Game
 {
@@ -26,8 +28,11 @@ private:
     IMS _inventory;
     Rectangle *_camera;
     HUD _hud;
+    TextBox _textbox;
     Graphics _graphics;
     unordered_map<string, Level> _allMaps;
+
+    friend class KeyboardHandler;
 };
 
 #endif

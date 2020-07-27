@@ -9,23 +9,6 @@
 // #include "player.h"
 struct Player;
 
-struct weapon_info
-{
-    inv::weapons::Weapon type;
-    inv::weapons::Class weaponClass;
-    weapon_info()
-    {
-        this->type = inv::weapons::Weapon::NONE;
-        this->weaponClass = inv::weapons::Class::NONE;
-    }
-
-    weapon_info(inv::weapons::Weapon type, inv::weapons::Class weaponClass)
-    {
-        this->type = type;
-        this->weaponClass = weaponClass;
-    }
-};
-
 class IMS
 {
 public:

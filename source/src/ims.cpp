@@ -1,7 +1,7 @@
 #include "ims.h"
 #include "player.h"
-#include "bow.h"
-#include "axe.h"
+// #include "bow.h"
+// #include "axe.h"
 
 IMS::IMS(Graphics &graphics, Player *player) : _player(player)
 {
@@ -13,9 +13,12 @@ IMS::IMS(Graphics &graphics, Player *player) : _player(player)
 
 void IMS::populateInventory()
 {
-    this->_allWeapons[inv::weapons::Weapon::NONE] = NULL;
-    this->_allWeapons[inv::weapons::Weapon::BASIC_BOW] = new Bow(*this->_graphics, this->_player);
-    this->_allWeapons[inv::weapons::Weapon::BASIC_AXE] = new Axe(*this->_graphics, this->_player);
+    // Weapons
+    this->_allWeapons = {
+        {inv::weapons::Weapon::NONE, NULL},
+        {inv::weapons::Weapon::BASIC_BOW, new Weapon(*this->_graphics, weapon_info("bow.png", inv::weapons::Weapon::BASIC_BOW), this->_player)},
+        {inv::weapons::Weapon::BASIC_AXE, new Weapon(*this->_graphics, weapon_info("axe2.png", inv::weapons::Weapon::BASIC_AXE), this->_player)},
+        {inv::weapons::Weapon::BASIC_SPEAR, new Weapon(*this->_graphics, weapon_info("spear.png", inv::weapons::Weapon::BASIC_SPEAR), this->_player)}};
 }
 
 void IMS::showInventory(bool show)
@@ -39,7 +42,7 @@ weapon_info IMS::getEquippedWeaponInfo()
 {
     if (!this->_currentEquippedWeapon)
         return weapon_info();
-    return weapon_info(this->_currentEquippedWeapon->getType(), this->_currentEquippedWeapon->getClass());
+    return this->_currentEquippedWeapon->getWeaponInfo();
 }
 
 void IMS::update(float elapsedTime)

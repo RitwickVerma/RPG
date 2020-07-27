@@ -20,27 +20,36 @@ void Input::keyUpEvent(const SDL_Event &event)
 
 bool Input::wasKeyPressed(SDL_Scancode key)
 {
-    try{
+    try
+    {
         return this->_pressedKeys.at(key);
-    }catch(out_of_range out) {
+    }
+    catch (out_of_range out)
+    {
         return false;
     }
 }
 
 bool Input::wasKeyReleased(SDL_Scancode key)
 {
-    try{
+    try
+    {
         return this->_releasedKeys.at(key);
-    }catch(out_of_range out) {
+    }
+    catch (out_of_range out)
+    {
         return false;
     }
 }
 
 bool Input::isKeyHeld(SDL_Scancode key)
 {
-    try{
+    try
+    {
         return this->_heldKeys.at(key);
-    }catch(out_of_range out) {
+    }
+    catch (out_of_range out)
+    {
         return false;
     }
 }

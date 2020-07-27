@@ -72,8 +72,9 @@ namespace inv
         enum class Weapon
         {
             NONE,
+            EXTRA,
             BASIC_BOW,
-            BASIC_SWORD,
+            BASIC_SPEAR,
             BASIC_AXE
         };
 

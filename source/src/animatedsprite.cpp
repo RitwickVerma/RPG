@@ -16,6 +16,45 @@ AnimatedSprite::AnimatedSprite(Graphics &graphics, string filename, int sourceX,
     this->_bindedAnimatedSprite = NULL;
 }
 
+void AnimatedSprite::setupStandardAnimations()
+{
+    // Idle
+    this->addAnimation(1, this->getW() * 0, this->getH() * 8, "idle_north", this->getW(), this->getH(), xyipair(0, 0));
+    this->addAnimation(1, this->getW() * 0, this->getH() * 10, "idle_south", this->getW(), this->getH(), xyipair(0, 0));
+    this->addAnimation(1, this->getW() * 0, this->getH() * 11, "idle_east", this->getW(), this->getH(), xyipair(0, 0));
+    this->addAnimation(1, this->getW() * 0, this->getH() * 9, "idle_west", this->getW(), this->getH(), xyipair(0, 0));
+
+    // Walk
+    this->addAnimation(9, this->getW() * 0, this->getH() * 8, "walk_north", this->getW(), this->getH(), xyipair(0, 0));
+    this->addAnimation(9, this->getW() * 0, this->getH() * 10, "walk_south", this->getW(), this->getH(), xyipair(0, 0));
+    this->addAnimation(9, this->getW() * 0, this->getH() * 11, "walk_east", this->getW(), this->getH(), xyipair(0, 0));
+    this->addAnimation(9, this->getW() * 0, this->getH() * 9, "walk_west", this->getW(), this->getH(), xyipair(0, 0));
+
+    // Spellcast
+    this->addAnimation(7, this->getW() * 0, this->getH() * 0, "spellcast_north", this->getW(), this->getH(), xyipair(0, 0), 75);
+    this->addAnimation(7, this->getW() * 0, this->getH() * 2, "spellcast_south", this->getW(), this->getH(), xyipair(0, 0), 75);
+    this->addAnimation(7, this->getW() * 0, this->getH() * 3, "spellcast_east", this->getW(), this->getH(), xyipair(0, 0), 75);
+    this->addAnimation(7, this->getW() * 0, this->getH() * 1, "spellcast_west", this->getW(), this->getH(), xyipair(0, 0), 75);
+
+    // Thrust
+    this->addAnimation(6, this->getW() * 2, this->getH() * 4, "thrust_north", this->getW(), this->getH(), xyipair(0, 0), 75);
+    this->addAnimation(6, this->getW() * 2, this->getH() * 6, "thrust_south", this->getW(), this->getH(), xyipair(0, 0), 75);
+    this->addAnimation(6, this->getW() * 2, this->getH() * 7, "thrust_east", this->getW(), this->getH(), xyipair(0, 0), 75);
+    this->addAnimation(6, this->getW() * 2, this->getH() * 5, "thrust_west", this->getW(), this->getH(), xyipair(0, 0), 75);
+
+    // Slash
+    this->addAnimation(6, this->getW() * 0, this->getH() * 12, "slash_north", this->getW(), this->getH(), xyipair(0, 0), 100);
+    this->addAnimation(6, this->getW() * 0, this->getH() * 14, "slash_south", this->getW(), this->getH(), xyipair(0, 0), 100);
+    this->addAnimation(6, this->getW() * 0, this->getH() * 15, "slash_east", this->getW(), this->getH(), xyipair(0, 0), 100);
+    this->addAnimation(6, this->getW() * 0, this->getH() * 13, "slash_west", this->getW(), this->getH(), xyipair(0, 0), 100);
+
+    // Shoot
+    this->addAnimation(8, this->getW() * 3, this->getH() * 16, "shoot_north", this->getW(), this->getH(), xyipair(0, 0), 50);
+    this->addAnimation(8, this->getW() * 3, this->getH() * 18, "shoot_south", this->getW(), this->getH(), xyipair(0, 0), 50);
+    this->addAnimation(8, this->getW() * 3, this->getH() * 19, "shoot_east", this->getW(), this->getH(), xyipair(0, 0), 50);
+    this->addAnimation(8, this->getW() * 3, this->getH() * 17, "shoot_west", this->getW(), this->getH(), xyipair(0, 0), 50);
+}
+
 void AnimatedSprite::addAnimation(int frames, int x, int y, string animation, int w, int h, xyipair offset, float animationUpdateTime)
 {
     for (int i = 0; i < frames; i++)

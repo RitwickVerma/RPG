@@ -33,35 +33,7 @@ Player::Player(Graphics &graphics, xyipair spawnPoint, Rectangle *camera) : // _
 
 void Player::setupAnimation()
 {
-    this->addAnimation(1, o::_w * 0, o::_h * 8, "idle_north", o::_w, o::_h, xyipair(0, 0));
-    this->addAnimation(1, o::_w * 0, o::_h * 10, "idle_south", o::_w, o::_h, xyipair(0, 0));
-    this->addAnimation(1, o::_w * 0, o::_h * 11, "idle_east", o::_w, o::_h, xyipair(0, 0));
-    this->addAnimation(1, o::_w * 0, o::_h * 9, "idle_west", o::_w, o::_h, xyipair(0, 0));
-
-    this->addAnimation(9, o::_w * 0, o::_h * 8, "walk_north", o::_w, o::_h, xyipair(0, 0));
-    this->addAnimation(9, o::_w * 0, o::_h * 10, "walk_south", o::_w, o::_h, xyipair(0, 0));
-    this->addAnimation(9, o::_w * 0, o::_h * 11, "walk_east", o::_w, o::_h, xyipair(0, 0));
-    this->addAnimation(9, o::_w * 0, o::_h * 9, "walk_west", o::_w, o::_h, xyipair(0, 0));
-
-    this->addAnimation(7, o::_w * 0, o::_h * 0, "spellcast_north", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(7, o::_w * 0, o::_h * 2, "spellcast_south", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(7, o::_w * 0, o::_h * 3, "spellcast_east", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(7, o::_w * 0, o::_h * 1, "spellcast_west", o::_w, o::_h, xyipair(0, 0), 50);
-
-    this->addAnimation(8, o::_w * 0, o::_h * 4, "thrust_north", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(8, o::_w * 0, o::_h * 6, "thrust_south", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(8, o::_w * 0, o::_h * 7, "thrust_east", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(8, o::_w * 0, o::_h * 5, "thrust_west", o::_w, o::_h, xyipair(0, 0), 50);
-
-    this->addAnimation(6, o::_w * 0, o::_h * 12, "slash_north", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(6, o::_w * 0, o::_h * 14, "slash_south", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(6, o::_w * 0, o::_h * 15, "slash_east", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(6, o::_w * 0, o::_h * 13, "slash_west", o::_w, o::_h, xyipair(0, 0), 50);
-
-    this->addAnimation(8, o::_w * 3, o::_h * 16, "shoot_north", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(8, o::_w * 3, o::_h * 18, "shoot_south", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(8, o::_w * 3, o::_h * 19, "shoot_east", o::_w, o::_h, xyipair(0, 0), 50);
-    this->addAnimation(8, o::_w * 3, o::_h * 17, "shoot_west", o::_w, o::_h, xyipair(0, 0), 50);
+    AnimatedSprite::setupStandardAnimations();
 }
 
 void Player::animationDone(string animation)
@@ -207,7 +179,6 @@ void Player::makeMove(float elapsedTime)
 void Player::update(float elapsedTime)
 {
     AnimatedSprite::update(elapsedTime);
-    this->_inventory->update(elapsedTime);
 
     // Apply Gravity
     if (this->_dy <= o::GRAVITY_CAP && this->_currentLevel->getGravity())
@@ -225,5 +196,4 @@ void Player::draw(Graphics &graphics)
 {
     this->setRenderableZ(this->getBoundingBox().getBottom());
     AnimatedSprite::draw(graphics, "player");
-    this->_inventory->draw(graphics);
 }
