@@ -18,6 +18,8 @@ public:
     /* Renders sourceRect from texture source to destRect on rendering target (window) */
     void blitSurface(SDL_Texture *source, SDL_Rect *sourceRect, SDL_Rect *destRect);
 
+    SDL_Surface *getSurfaceFromText(TextType texttype, string text, float width = global::SCREEN_WIDTH);
+
     /* Returns part of a surface from a bigger surface */
     SDL_Surface *getSurfaceFromRect(SDL_Surface *surface, xyipair pos, xyipair size);
 

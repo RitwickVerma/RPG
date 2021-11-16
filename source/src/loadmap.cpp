@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "animatedtile.h"
 #include "door.h"
+#include "signpost.h"
 
 #include <tmxlite/Map.hpp>
 #include <tmxlite/Layer.hpp>
@@ -176,6 +177,11 @@ void Level::loadMap(Graphics &graphics, string mapName)
                                         if (prop.getName() == "Z" and prop.getBoolValue() == true)
                                         {
                                             tileZ[tile.ID] = r.getBottom();
+                                        }
+                                        if (prop.getName() == "signpost")
+                                        {
+                                            SignPost s = SignPost(r, prop.getStringValue());
+                                            this->_signPostRects.push_back(s);
                                         }
                                     }
                                 }

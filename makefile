@@ -1,5 +1,5 @@
 CC=g++
-CLIBS=-lSDL2 -lSDL2_image -ltmxlite
+CLIBS=-lSDL2 -lSDL2_image -lSDL2_ttf -ltmxlite
 CFLAGS=-Isource/include -Wno-narrowing -g -std=c++17
 SRC_DIR=./source/src
 SRC_FILES=$(wildcard $(SRC_DIR)/*.cpp)

@@ -10,11 +10,13 @@
 #include "line.h"
 #include "thing.h"
 #include "door.h"
+#include "signpost.h"
 #include "graphics.h"
 
 struct SDL_Texture;
 // struct Tileset;
 struct Thing;
+struct SignPost;
 struct Line;
 struct Player;
 
@@ -66,6 +68,7 @@ public:
     vector<Rectangle> checkTileCollision(const Rectangle &other);
     vector<Line> checkLineCollision(const Rectangle &other);
     vector<Door> checkDoorCollision(const Rectangle &other);
+    vector<SignPost> checkSignPostCollision(const Rectangle &other);
 
     const xyipair getPlayerSpawnPoint() const;
 
@@ -89,6 +92,7 @@ private:
     vector<Rectangle> _collisionRects;
     vector<Line> _collisionSlopes;
     vector<Door> _doorRects;
+    vector<SignPost> _signPostRects;
 
     void loadMap(Graphics &graphics, string mapName);
 };

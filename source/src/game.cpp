@@ -10,7 +10,6 @@ namespace
 Game::Game()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-
     this->gameLoop();
 }
 Game::~Game()
@@ -96,6 +95,14 @@ void Game::update(float elapsedTime)
         this->_player.handleDoorCollision(collidingDoors, this->_level, &this->_allMaps, this->_graphics);
     }
 
+    vector<SignPost> collidingSignPosts = this->_level.checkSignPostCollision(this->_player.getBoundingBox());
+    if (collidingSignPosts.size() > 0)
+    {
+        this->_textbox.setText(collidingSignPosts[0].getMessage()).showForTime(200).show();
+        // this->_textbox.show();
+    }
+
+    this->_textbox.update(elapsedTime);
     // Camera follows player in a much more natural way which looks animated and super cool.
     float del_x = 0.02 * (this->_camera->getCenterX() - this->_player.getBoundingBox().getCenterX());
     float del_y = 0.04 * (this->_camera->getCenterY() - this->_player.getBoundingBox().getCenterY());

@@ -89,4 +89,10 @@ namespace inv
     } // namespace weapons
 } // namespace inv
 
+enum class TextType
+{
+    NONE,
+    DIALOGUE,
+    SIGNPOST
+};
 #endif // !1 GLOBALS_H

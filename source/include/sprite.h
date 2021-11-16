@@ -27,6 +27,11 @@ public:
 
     void setSpriteTexture(SDL_Texture *texture);
 
+    void setX(float x) { this->_sprite.setLeft(x); }
+    void setY(float y) { this->_sprite.setTop(y); }
+    void setW(float w) { this->_sprite.setWidth(w); }
+    void setH(float h) { this->_sprite.setHeight(h); }
+
     const float getX() const { return this->_sprite.getLeft(); }
     const float getY() const { return this->_sprite.getTop(); }
     const float getW() const { return this->_sprite.getWidth(); }
