@@ -1,6 +1,3 @@
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
-
 #pragma once
 
 #include "globals.h"
@@ -12,6 +9,10 @@ class Graphics
 public:
     Graphics();
     ~Graphics();
+
+    // Non-copyable class
+    Graphics(const Graphics&) = delete;
+    Graphics& operator=(Graphics&) = delete;
 
     SDL_Surface *loadImage(string &filename);
 
@@ -77,5 +78,3 @@ private:
     unordered_map<string, SDL_Surface *> _surfaces;
     unordered_map<pair<SDL_Surface *, long>, SDL_Texture *, hash_pair> _textures;
 };
-
-#endif

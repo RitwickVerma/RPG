@@ -1,0 +1,160 @@
+---
+Checks: >
+  -*,
+  boost-*,
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  clang-diagnostic-*,
+  concurrency-*,
+  cppcoreguidelines-*,
+  google-build-explicit-make-pair,
+  google-build-namespaces,
+  google-build-using-namespace,
+  google-default-arguments,
+  google-readability-casting,
+  hicpp-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -bugprone-macro-parentheses,
+  -bugprone-unchecked-optional-access,
+  -cert-dcl21-cpp,
+  -cert-dcl37-c,
+  -cert-dcl50-cpp,
+  -cert-dcl51-cpp,
+  -cert-err34-c,
+  -cert-err58-cpp,
+  -cert-oop54-cpp,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-avoid-const-or-ref-data-members,
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-interfaces-global-init,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-static-cast-downcast,
+  -cppcoreguidelines-pro-type-union-access,
+  -cppcoreguidelines-pro-type-vararg,
+  -hicpp-avoid-c-arrays,
+  -hicpp-braces-around-statements,
+  -hicpp-function-size,
+  -hicpp-member-init,
+  -hicpp-no-array-decay,
+  -hicpp-no-malloc,
+  -hicpp-noexcept-move,
+  -hicpp-signed-bitwise,
+  -hicpp-special-member-functions,
+  -hicpp-vararg,
+  -misc-confusable-identifiers,
+  -misc-no-recursion,
+  -modernize-avoid-c-arrays,
+  -modernize-use-nodiscard,
+  -modernize-use-trailing-return-type,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-qualified-auto,
+
+# bugprone-macro-parentheses: Not a trivial change. Maybe not doable.
+# bugprone-unchecked-optional-access: This is currently crashing on a couple files:
+# 'tensors/source/function_selection.cpp' and 'tensors/unittest/source/metrics_test.cpp'.
+# cert-dcl21-cpp: About operator++(int) returning const. Looks old fashioned.
+# cert-dcl37-c: Redirects to bugprone-reserved-identifier.
+# cert-dcl50-cpp: Same as cppcoreguidelines-pro-type-vararg.
+# cert-dcl51-cpp: Redirects to bugprone-reserved-identifier.
+# cert-err34-c: Not so trivial to replace sscanf by strtoul. It might be too constrained.
+# cert-err58-cpp: It won't let construct global constexpr objects whose constructors
+#                 are not noexcept.
+# cert-oop54-cpp: Redirects to bugprone-unhandled-self-assignment.
+# cppcoreguidelines-avoid-c-arrays: Redirects to modernize-avoid-c-arrays.
+# cppcoreguidelines-avoid-const-or-ref-data-members: Currently this check complains about
+#   references and const members of classes that were explicitly declared to be
+#   non-copyable. However, this should not complain on those cases, as agreed in
+#   <https://github.com/isocpp/CppCoreGuidelines/issues/2012>. Re-enable the check once
+#   the exclusion is implemented.
+# cppcoreguidelines-avoid-do-while: do-while loops are sometimes needed and there is no
+#   good replacement for them.
+# cppcoreguidelines-avoid-magic-numbers: Redirects to readability-magic-numbers.
+# cppcoreguidelines-avoid-non-const-global-variables: We currently can't avoid these
+#   variables as they are at least needed for counter_registration and CppUnit
+#   registrations.
+# cppcoreguidelines-interfaces-global-init: Not a trivial change.
+# cppcoreguidelines-pro-bounds-array-to-pointer-decay: Not a trivial change.
+# cppcoreguidelines-pro-bounds-constant-array-index: Not a trivial change.
+# cppcoreguidelines-pro-bounds-pointer-arithmetic: Not a trivial change.
+# cppcoreguidelines-pro-type-reinterpret-cast: Requires a lot of suppressions.
+# cppcoreguidelines-pro-type-union-access: Not a trivial change. Maybe not doable.
+# cppcoreguidelines-pro-type-vararg: Needs discussion. Not a trivial change.
+# hicpp-avoid-c-arrays: Redirects to modernize-avoid-c-arrays.
+# hicpp-braces-around-statements: Redirects to readability-braces-around-statements.
+# hicpp-function-size: Redirects to readability-function-size.
+# hicpp-member-init: Redirects to cppcoreguidelines-pro-type-member-init
+# hicpp-no-array-decay: Redirects to cppcoreguidelines-pro-bounds-array-to-pointer-decay.
+# hicpp-no-malloc: Redirects to cppcoreguidelines-no-malloc.
+# hicpp-noexcept-move: Redirects to performance-noexcept-move-constructor.
+# hicpp-special-member-functions: Redirects to cppcoreguidelines-special-member-functions.
+# hicpp-vararg: Redirects to  cppcoreguidelines-pro-type-vararg.
+# misc-no-recursion: Cassini relies on recursion in several places, e.g. when traversing
+#   a query expression tree.
+# modernize-use-nodiscard: Disabling it for now as it suggests adding [[nodiscard]] in all
+# observer functions, and that might become too noisy. For now, the conservative approach
+# described in the WG21 paper p0600r1 is preferred.
+# misc-confusable-identifiers: It's extremely slow
+# in 'tensors/source/function_selection.cpp' and other files (taking over 70% of the time),
+# and adds little value.
+# modernize-avoid-c-arrays: Disabling this as it will complain about make_unique<T[]>
+#   make_shared<T[]>, std::is_convertible<T (*)[], U (*)[]>, and about buffers we declare
+#   as C-style arrays (and usually uninitialized) because they are intended to be used as
+#   raw storage.
+# modernize-use-trailing-return-type: We don't want to use trailing return types
+#   everywhere, at least for now.
+# readability-identifier-length: Disabled for now as lots of places in Cassini use
+#   variables names of length 1 or 2, e.g. `qc`. Eventually, we might look into providing
+#   IgnoredParameterNames and IgnoredVariableNames and use this warning.
+# readability-magic-numbers: Disabled for now as it gets too verbose fixing these
+#                            in unittests.
+
+# TODO:
+# cppcoreguidelines-owning-memory: This one is a must.
+# hicpp-signed-bitwise
+# cppcoreguidelines-pro-type-static-cast-downcast: We can handle it by making a wrapper
+# (e.g. unsafe_downcast).
+
+HeaderFilterRegex: '.*'
+FormatStyle: file
+CheckOptions:
+  bugprone-easily-swappable-parameters.MinimumLength: 3
+  concurrency-mt-unsafe.FunctionSet: glibc
+  cppcoreguidelines-pro-type-member-init.IgnoreArrays: true
+  cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions: true
+  cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor: true
+  misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
+  readability-braces-around-statements.ShortStatementLines: 4
+  readability-function-cognitive-complexity.IgnoreMacros: true
+  readability-identifier-naming.ClassCase: lower_case
+  readability-identifier-naming.ClassConstantCase: lower_case
+  readability-identifier-naming.ClassConstantPrefix: ''
+  readability-identifier-naming.ClassMemberCase: lower_case
+  readability-identifier-naming.ClassMemberPrefix: 's_'
+  readability-identifier-naming.EnumCase: lower_case
+  readability-identifier-naming.EnumConstantCase: lower_case
+  readability-identifier-naming.FunctionCase: lower_case
+  readability-identifier-naming.GlobalConstantCase: lower_case
+  readability-identifier-naming.GlobalConstantPrefix: ''
+  readability-identifier-naming.GlobalVariableCase: lower_case
+  readability-identifier-naming.GlobalVariablePrefix: 'g_'
+  readability-identifier-naming.MacroDefinitionCase: UPPER_CASE
+  readability-identifier-naming.MemberCase: lower_case
+  readability-identifier-naming.NamespaceCase: lower_case
+  readability-identifier-naming.ParameterCase: lower_case
+  readability-identifier-naming.PrivateMemberCase: lower_case
+  readability-identifier-naming.PrivateMemberPrefix: 'm_'
+  readability-identifier-naming.TemplateParameterCase: CamelCase
+  readability-identifier-naming.TypeAliasCase: lower_case
+  readability-identifier-naming.UnionCase: lower_case
+  readability-identifier-naming.VariableCase: lower_case
